@@ -12,8 +12,10 @@
 
 ## Proches Aidés List Functionality
 - **Current status**: An API already exists which shows the aidés data.
-- **To do**: The API needs to also return the aide related pap status (in percentage form).
-
+- **To do**: 
+- The API needs to also return the aide related pap status (in percentage form).
+- the API must also return the aide related files (shared with them when an aidant adds a document for them)
+- add an API to allow an aidant to add a file for an aide (inside the profile).
 
 ## "Ma charge d'aidant" Button
 - **Clarification needed**: Where does this button take the user?

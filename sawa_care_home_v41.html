@@ -223,6 +223,7 @@
 
     /* SCROLL */
     .home-scroll {
+      position: relative;
       flex: 1;
       min-height: 0;
       overflow-y: auto;
@@ -919,47 +920,112 @@
       padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
-    .ai-row {
+    .menu-fab-container {
+      position: absolute;
+      bottom: 90px;
+      right: 20px;
       display: flex;
       align-items: center;
-      justify-content: flex-end;
-      padding: 9px 20px 5px;
       gap: 10px;
+      z-index: 9999;
+      pointer-events: auto;
     }
 
-    .ai-lbl {
+    .menu-sidebar {
+      position: fixed;
+      top: 0;
+      right: -70%;
+      width: 70%;
+      height: 100%;
+      background: white;
+      z-index: 10000;
+      box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s ease;
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-sidebar.open {
+      right: 0;
+    }
+
+    .menu-sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 9999;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .menu-sidebar-overlay.open {
+      display: block;
+      opacity: 1;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .menu-card {
+      background: #f5f3ff;
+      border-radius: 12px;
+      padding: 15px 5px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 1.5px solid #e8e0ff;
+      text-decoration: none;
+    }
+
+    .menu-card svg {
+      margin-bottom: 8px;
+    }
+
+    .menu-card span {
+      font-size: 10px;
+      font-weight: 800;
+      color: #2d1060;
+    }
+
+    .menu-lbl {
       font-size: 11px;
-      font-weight: 700;
-      color: #14233A;
-      background: #fcffad;
+      font-weight: 800;
+      color: #fff;
+      background: #2d1060;
       border-radius: 8px;
       padding: 5px 11px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .ai-fab {
+    .menu-fab {
       width: 58px;
       height: 58px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #b228FF, #7b2fff 45%, #27b6cc);
-      border: none;
+      background: linear-gradient(135deg, #b228FF, #8a2be2);
+      border: 3px solid #fff;
+      box-shadow: 0 4px 15px rgba(178, 40, 255, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 5px 18px rgba(178, 40, 255, 0.42);
-      overflow: hidden;
-      position: relative;
+      transition: transform 200ms;
     }
 
-    .ais {
-      position: absolute;
-      top: 5px;
-      left: 9px;
-      width: 36px;
-      height: 14px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      transform: rotate(-8deg);
+    .menu-fab:active {
+      transform: scale(0.9);
     }
 
     .bnav {
@@ -2235,20 +2301,14 @@
 
     <!-- BARRE BAS — identique v39 -->
     <div class="bottom-bar">
-      <div class="ai-row">
-        <span class="ai-lbl" aria-hidden="true">Assistant IA</span>
-        <button class="ai-fab" aria-label="Ouvrir l'assistant IA Sawa">
-          <div class="ais" aria-hidden="true"></div>
-          <svg width="28" height="28" viewBox="0 0 30 30" fill="none" aria-hidden="true">
-            <circle cx="15" cy="11" r="5.5" stroke="#14233A" stroke-width="2" />
-            <circle cx="15" cy="11" r="2" fill="#14233A" />
-            <rect x="8" y="18" width="14" height="9" rx="3.5" stroke="#14233A" stroke-width="2" />
-            <circle cx="11.5" cy="22" r="1.5" fill="#14233A" />
-            <circle cx="18.5" cy="22" r="1.5" fill="#14233A" />
-            <line x1="15" y1="5.5" x2="15" y2="3" stroke="#14233A" stroke-width="2" stroke-linecap="round" />
-            <circle cx="15" cy="2.5" r="1.5" fill="#14233A" />
-            <line x1="8" y1="21" x2="5.5" y2="21" stroke="#14233A" stroke-width="2" stroke-linecap="round" />
-            <line x1="22" y1="21" x2="24.5" y2="21" stroke="#14233A" stroke-width="2" stroke-linecap="round" />
+      <div class="menu-fab-container">
+        <span class="menu-lbl" aria-hidden="true">Menu</span>
+        <button class="menu-fab" onclick="openMenuSidebar()" aria-label="Ouvrir le menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
           </svg>
         </button>
       </div>
@@ -2287,13 +2347,14 @@
           </svg>
           <span class="nl">Agenda</span>
         </div>
-        <div class="ni" role="button" tabindex="0" aria-label="Mon profil">
+        <div class="ni" role="button" tabindex="0" aria-label="Assistant IA">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            <circle cx="12" cy="12" r="4" />
           </svg>
-          <span class="nl">Profil</span>
+          <span class="nl">AI</span>
         </div>
       </nav>
     </div>
@@ -2429,7 +2490,8 @@
       <div class="fsec" style="display:flex; justify-content:space-between; align-items:center;">
         <span>Cercle d'aidants de Martin</span>
         <div style="display:flex; align-items:center; gap:6px;">
-          <span style="font-size:10px; color:#8a7ab0; font-weight:700;" id="martin-cercle-view-label">Vue Propriétaire</span>
+          <span style="font-size:10px; color:#8a7ab0; font-weight:700;" id="martin-cercle-view-label">Vue
+            Propriétaire</span>
           <div id="martin-cercle-view-switch"
             style="width:32px; height:18px; background:#8210cc; border-radius:18px; position:relative; cursor:pointer; transition:0.3s;"
             onclick="toggleMartinCercleView()">
@@ -2439,7 +2501,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Container for Owner View -->
       <div class="cercle-fiche" id="martin-owner-view">
         <div class="cf-header">
@@ -2475,8 +2537,9 @@
           <p style="font-size:12px;font-weight:600;color:#8a7ab0;line-height:1.5;">Un frère, une sœur, un conjoint…
             Partagez le suivi de Martin avec votre entourage.</p>
         </div>
-        
-        <div id="martin-cercle-invite-container" style="margin-top:20px; border-top:1px solid #ede9f5; padding-top:20px;">
+
+        <div id="martin-cercle-invite-container"
+          style="margin-top:20px; border-top:1px solid #ede9f5; padding-top:20px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
             <span style="font-size:12px; font-weight:800; color:#2d1060;">Activer l'invitation (Premium)</span>
             <div id="martin-premium-switch"
@@ -2521,7 +2584,8 @@
           <line x1="9" y1="9" x2="15" y2="15" />
         </svg>
         <p style="font-size:14px; font-weight:800; color:#2d1060; margin-bottom:8px;">Vue impossible</p>
-        <p style="font-size:12px; color:#8a7ab0; line-height:1.4;">Vous ne pouvez pas être co-aidant(e) d'un proche qui n'a pas été partagé avec vous.</p>
+        <p style="font-size:12px; color:#8a7ab0; line-height:1.4;">Vous ne pouvez pas être co-aidant(e) d'un proche qui
+          n'a pas été partagé avec vous.</p>
       </div>
     </div>
 
@@ -2540,25 +2604,138 @@
           </div>
         </div>
       </div>
-      
+
       <style>
-        .doc-list { display: flex; flex-direction: column; gap: 10px; }
-        .dcard { background: #fff; border-radius: 16px; border: 1.5px solid #e8e0ff; box-shadow: 0 2px 10px rgba(178, 40, 255, 0.06); overflow: hidden; cursor: pointer; transition: box-shadow 130ms; }
-        .dcard-inner { display: flex; align-items: flex-start; gap: 12px; padding: 13px 14px; }
-        .doc-ico { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 9px; font-weight: 800; gap: 2px; flex-direction: column; }
-        .ico-pdf { background: #FEE4E2; color: #E24B4A; }
-        .ico-img { background: #E0F5FF; color: #1e8fa0; }
-        .doc-info { flex: 1; min-width: 0; }
-        .doc-name { font-size: 13.5px; font-weight: 800; color: #2d1060; margin-bottom: 3px; line-height: 1.3; }
-        .doc-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; font-size: 11px; font-weight: 600; color: #8a7ab0; }
-        .share-badges { display: flex; flex-wrap: wrap; gap: 5px; }
-        .sbadge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; border-radius: 7px; padding: 3px 8px; }
-        .sb-only-me { background: #f5f3ff; color: #5e5290; border: 1px solid #ddd5f8; }
-        .sb-shared { background: #e8f5ee; color: #1D9E75; border: 1px solid #9FE1CB; }
-        .sb-with-care { background: #e0f5ff; color: #1e8fa0; border: 1px solid #b8eaf5; }
-        .sb-with-person { background: #f0e8ff; color: #8210cc; border: 1px solid #c9b6f5; }
-        .doc-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
-        .doc-menu { width: 28px; height: 28px; border-radius: 8px; background: #f5f3ff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .doc-list {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .dcard {
+          background: #fff;
+          border-radius: 16px;
+          border: 1.5px solid #e8e0ff;
+          box-shadow: 0 2px 10px rgba(178, 40, 255, 0.06);
+          overflow: hidden;
+          cursor: pointer;
+          transition: box-shadow 130ms;
+        }
+
+        .dcard-inner {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 13px 14px;
+        }
+
+        .doc-ico {
+          width: 46px;
+          height: 46px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          font-size: 9px;
+          font-weight: 800;
+          gap: 2px;
+          flex-direction: column;
+        }
+
+        .ico-pdf {
+          background: #FEE4E2;
+          color: #E24B4A;
+        }
+
+        .ico-img {
+          background: #E0F5FF;
+          color: #1e8fa0;
+        }
+
+        .doc-info {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .doc-name {
+          font-size: 13.5px;
+          font-weight: 800;
+          color: #2d1060;
+          margin-bottom: 3px;
+          line-height: 1.3;
+        }
+
+        .doc-meta {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+          margin-bottom: 6px;
+          font-size: 11px;
+          font-weight: 600;
+          color: #8a7ab0;
+        }
+
+        .share-badges {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 5px;
+        }
+
+        .sbadge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 10px;
+          font-weight: 700;
+          border-radius: 7px;
+          padding: 3px 8px;
+        }
+
+        .sb-only-me {
+          background: #f5f3ff;
+          color: #5e5290;
+          border: 1px solid #ddd5f8;
+        }
+
+        .sb-shared {
+          background: #e8f5ee;
+          color: #1D9E75;
+          border: 1px solid #9FE1CB;
+        }
+
+        .sb-with-care {
+          background: #e0f5ff;
+          color: #1e8fa0;
+          border: 1px solid #b8eaf5;
+        }
+
+        .sb-with-person {
+          background: #f0e8ff;
+          color: #8210cc;
+          border: 1px solid #c9b6f5;
+        }
+
+        .doc-actions {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 6px;
+          flex-shrink: 0;
+        }
+
+        .doc-menu {
+          width: 28px;
+          height: 28px;
+          border-radius: 8px;
+          background: #f5f3ff;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
       </style>
 
       <!-- EMPTY STATE -->
@@ -2587,7 +2764,7 @@
       <!-- FILLED STATE -->
       <div id="martin-doc-filled" style="display:none; margin-top:16px;">
         <div class="doc-list" role="list">
-          
+
           <!-- Doc 1 — Certificat médical -->
           <div class="dcard" role="listitem" tabindex="0">
             <div class="dcard-inner">
@@ -2644,7 +2821,8 @@
               </div>
               <div class="doc-info">
                 <div class="doc-name">Ordonnance — 15 mars 2024</div>
-                <div class="doc-meta"><span class="doc-size">1,2 Mo</span><span class="doc-date">· 15 mars 2024</span></div>
+                <div class="doc-meta"><span class="doc-size">1,2 Mo</span><span class="doc-date">· 15 mars 2024</span>
+                </div>
                 <div class="share-badges">
                   <span class="sbadge sb-only-me">
                     <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -2671,7 +2849,8 @@
 
         </div>
 
-        <button class="btn-add-doc" onclick="openAddSheet()" aria-label="Ajouter un document pour Martin" style="margin-top:16px;">
+        <button class="btn-add-doc" onclick="openAddSheet()" aria-label="Ajouter un document pour Martin"
+          style="margin-top:16px;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <line x1="12" y1="5" x2="12" y2="19" />
@@ -2853,10 +3032,15 @@
           <div id="perms-list" style="display:flex; flex-direction:column;">
             <!-- Injected by JS -->
           </div>
-          <div id="perms-premium-banner" style="display:none; margin-top:16px; background:#fff4e5; border:1.5px solid #ffe0b2; border-radius:12px; padding:12px; text-align:center;">
-             <p style="font-size:12px; font-weight:800; color:#b76a00; margin-bottom:4px;">Modification verrouillée (Premium)</p>
-             <p style="font-size:11px; font-weight:600; color:#cc7a00; margin-bottom:8px; line-height:1.4;">Passez au Premium pour modifier les accès de vos co-aidants.</p>
-             <button style="background:#b76a00; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer;">Mettre à jour</button>
+          <div id="perms-premium-banner"
+            style="display:none; margin-top:16px; background:#fff4e5; border:1.5px solid #ffe0b2; border-radius:12px; padding:12px; text-align:center;">
+            <p style="font-size:12px; font-weight:800; color:#b76a00; margin-bottom:4px;">Modification verrouillée
+              (Premium)</p>
+            <p style="font-size:11px; font-weight:600; color:#cc7a00; margin-bottom:8px; line-height:1.4;">Passez au
+              Premium pour modifier les accès de vos co-aidants.</p>
+            <button
+              style="background:#b76a00; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer;">Mettre
+              à jour</button>
           </div>
         </div>
 
@@ -2997,30 +3181,80 @@
       </button>
       <h2 class="sheet-h" id="invite-email-title" tabindex="-1">Invitation par e-mail</h2>
       <p class="sheet-sub">Configurez les accès du futur co-aidant</p>
-      
+
       <!-- Email input -->
       <div style="margin-top:16px; margin-bottom:20px;">
-        <label for="invite-email-input" style="display:block; font-size:12px; font-weight:800; color:#2d1060; margin-bottom:6px;">Adresse e-mail du co-aidant</label>
-        <input type="email" id="invite-email-input" placeholder="exemple@mail.com" style="width:100%; border:1px solid #ede9f5; background:#fff; border-radius:12px; padding:12px; font-family:'Nunito', sans-serif; font-size:14px; color:#2d1060; outline:none;" />
+        <label for="invite-email-input"
+          style="display:block; font-size:12px; font-weight:800; color:#2d1060; margin-bottom:6px;">Adresse e-mail du
+          co-aidant</label>
+        <input type="email" id="invite-email-input" placeholder="exemple@mail.com"
+          style="width:100%; border:1px solid #ede9f5; background:#fff; border-radius:12px; padding:12px; font-family:'Nunito', sans-serif; font-size:14px; color:#2d1060; outline:none;" />
       </div>
 
       <!-- Permissions list -->
       <div id="invite-perms-list" style="display:flex; flex-direction:column; margin-bottom:24px;">
         <!-- Injected by JS -->
       </div>
-      
+
       <!-- Send Button -->
-      <button style="width:100%; background:#8210cc; border:none; border-radius:14px; padding:14px; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; color:#fff; cursor:pointer;" onclick="closeInviteEmail(); alert('Invitation envoyée !');">Envoyer l'invitation</button>
+      <button
+        style="width:100%; background:#8210cc; border:none; border-radius:14px; padding:14px; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; color:#fff; cursor:pointer;"
+        onclick="closeInviteEmail(); alert('Invitation envoyée !');">Envoyer l'invitation</button>
     </div>
   </div>
 
   <style>
-    .add-actions { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
-    .add-action { background:#faf8ff; border:1px solid #ede9f5; border-radius:16px; padding:16px; display:flex; flex-direction:column; align-items:center; text-align:center; cursor:pointer; transition:all 0.2s cubic-bezier(0.4,0,0.2,1); }
-    .add-action:hover, .add-action:focus-visible { transform:translateY(-2px); box-shadow:0 8px 16px rgba(130,16,204,0.08); border-color:#d4c4f0; outline:none; }
-    .add-action-ico { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:12px; }
-    .add-action-lbl { font-size:14px; font-weight:800; color:#2d1060; margin-bottom:4px; }
-    .add-action-sub { font-size:11px; font-weight:600; color:#8a7ab0; line-height:1.4; }
+    .add-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .add-action {
+      background: #faf8ff;
+      border: 1px solid #ede9f5;
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .add-action:hover,
+    .add-action:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(130, 16, 204, 0.08);
+      border-color: #d4c4f0;
+      outline: none;
+    }
+
+    .add-action-ico {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .add-action-lbl {
+      font-size: 14px;
+      font-weight: 800;
+      color: #2d1060;
+      margin-bottom: 4px;
+    }
+
+    .add-action-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8a7ab0;
+      line-height: 1.4;
+    }
   </style>
 
   <!-- OVERLAY AJOUTER DOCUMENT -->
@@ -3043,7 +3277,8 @@
         <!-- Galerie photo -->
         <div class="add-action" role="listitem" tabindex="0" onclick="addAction('galerie')">
           <div class="add-action-ico" style="background:#e0f5ff;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1e8fa0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1e8fa0" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="3" y="3" width="18" height="18" rx="2" />
               <circle cx="8.5" cy="8.5" r="1.5" />
               <polyline points="21 15 16 10 5 21" />
@@ -3055,7 +3290,8 @@
         <!-- Fichier -->
         <div class="add-action" role="listitem" tabindex="0" onclick="addAction('fichier')">
           <div class="add-action-ico" style="background:#FEE4E2;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E24B4A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E24B4A" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
               <polyline points="14 2 14 8 20 8" />
               <line x1="16" y1="13" x2="8" y2="13" />
@@ -3069,7 +3305,8 @@
         <!-- Scanner -->
         <div class="add-action" role="listitem" tabindex="0" onclick="addAction('scanner')">
           <div class="add-action-ico" style="background:#f0e8ff;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
               <circle cx="12" cy="13" r="4" />
             </svg>
@@ -3080,7 +3317,8 @@
         <!-- Créer un dossier -->
         <div class="add-action" role="listitem" tabindex="0" onclick="addAction('dossier')">
           <div class="add-action-ico" style="background:#fff3e0;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a05a00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a05a00" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
               <line x1="12" y1="11" x2="12" y2="17" />
               <line x1="9" y1="14" x2="15" y2="14" />
@@ -3121,6 +3359,76 @@
     </div>
   </div>
 
+  <div class="menu-sidebar-overlay" id="menu-sidebar-overlay" onclick="closeMenuSidebar()"></div>
+  <div class="menu-sidebar" id="menu-sidebar">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+      <h3 style="margin:0; font-weight:900; color:#2d1060; font-size:18px;">Menu Sawa</h3>
+      <button onclick="closeMenuSidebar()"
+        style="background:none; border:none; font-size:24px; color:#8a7ab0; cursor:pointer;">&times;</button>
+    </div>
+
+    <div class="menu-grid">
+      <!-- Accueil -->
+      <a href="sawa_care_home_v41.html" class="menu-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+        <span>Accueil</span>
+      </a>
+      <!-- Aides -->
+      <a href="sawa_aides_list.html" class="menu-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+        <span>Aides</span>
+      </a>
+      <!-- Agenda -->
+      <div class="menu-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+        <span>Agenda</span>
+      </div>
+      <!-- Profil -->
+      <div class="menu-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        <span>Profil</span>
+      </div>
+      <!-- Documents -->
+      <a href="sawa_documents_v44.html" class="menu-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+          <polyline points="10 9 9 9 8 9" />
+        </svg>
+        <span>Documents</span>
+      </a>
+      <!-- Ressources -->
+      <div class="menu-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+        </svg>
+        <span>Ressources</span>
+      </div>
+    </div>
+  </div>
   <script>
     /* Toggle Vue Propriétaire / Co-aidant */
     let isOwnerView = true;
@@ -3201,15 +3509,16 @@
         const opacity = isPremium ? '1' : '0.5';
 
         html += `
-          <div class="perm-row" style="padding:10px 0; border-bottom:1px solid #ede9f5; display:flex; justify-content:space-between; align-items:center;">
-            <span class="perm-lbl" style="font-size:13px; max-width:80%; color:#2d1060; font-weight:700;">${sec}</span>
-            <button class="tog ${stateClass} perms-tog-btn" role="switch" aria-checked="${isChecked}" 
-                    style="pointer-events:${pointerEvents}; opacity:${opacity}; flex-shrink:0;" 
-                    onclick="togSwitch(this); setTimeout(() => alert('Accès sauvegardé !'), 100);">
-              <div class="tog-k"></div>
-            </button>
-          </div>
-        `;
+  <div class="perm-row"
+    style="padding:10px 0; border-bottom:1px solid #ede9f5; display:flex; justify-content:space-between; align-items:center;">
+    <span class="perm-lbl" style="font-size:13px; max-width:80%; color:#2d1060; font-weight:700;">${sec}</span>
+    <button class="tog ${stateClass} perms-tog-btn" role="switch" aria-checked="${isChecked}"
+      style="pointer-events:${pointerEvents}; opacity:${opacity}; flex-shrink:0;"
+      onclick="togSwitch(this); setTimeout(() => alert('Accès sauvegardé !'), 100);">
+      <div class="tog-k"></div>
+    </button>
+  </div>
+  `;
       });
 
       document.getElementById('perms-list').innerHTML = html;
@@ -3329,7 +3638,7 @@
 
     function openInviteEmail() {
       closeInvite();
-      
+
       const sections = [
         'Informations personnelles et coordonnées',
         'État civil et situation familiale',
@@ -3337,31 +3646,31 @@
         'Informations professionnelles',
         'Perte d\'autonomie et accompagnement'
       ];
-      
+
       let html = '';
       sections.forEach(sec => {
         html += `
-          <div class="perm-row" style="padding:10px 0; border-bottom:1px solid #ede9f5; display:flex; justify-content:space-between; align-items:center;">
-            <span class="perm-lbl" style="font-size:13px; max-width:80%; color:#2d1060; font-weight:700;">${sec}</span>
-            <button class="tog on" role="switch" aria-checked="true" 
-                    style="flex-shrink:0;" onclick="togSwitch(this);">
-              <div class="tog-k"></div>
-            </button>
-          </div>
-        `;
+  <div class="perm-row"
+    style="padding:10px 0; border-bottom:1px solid #ede9f5; display:flex; justify-content:space-between; align-items:center;">
+    <span class="perm-lbl" style="font-size:13px; max-width:80%; color:#2d1060; font-weight:700;">${sec}</span>
+    <button class="tog on" role="switch" aria-checked="true" style="flex-shrink:0;" onclick="togSwitch(this);">
+      <div class="tog-k"></div>
+    </button>
+  </div>
+  `;
       });
       document.getElementById('invite-perms-list').innerHTML = html;
-      
+
       document.getElementById('ov-invite-email').classList.add('open');
       document.addEventListener('keydown', escInviteEmail);
     }
-    
+
     function closeInviteEmail() {
       document.getElementById('ov-invite-email').classList.remove('open');
       document.removeEventListener('keydown', escInviteEmail);
     }
     function escInviteEmail(e) { if (e.key === 'Escape') closeInviteEmail(); }
-    
+
     /* ── Ajouter un document ── */
     function openAddSheet() {
       document.getElementById('ov-add').classList.add('open');
@@ -3372,9 +3681,9 @@
     function addAction(type) {
       closeAddSheet();
       if (type === 'dossier') {
-        setTimeout(function() { alert("Création d'un dossier... (Redirection vers documents)"); }, 300);
+        setTimeout(function () { alert("Création d'un dossier... (Redirection vers documents)"); }, 300);
       } else {
-        setTimeout(function() { alert("Ajout de " + type + "... (Redirection vers documents)"); }, 300);
+        setTimeout(function () { alert("Ajout de " + type + "... (Redirection vers documents)"); }, 300);
       }
     }
     function say(msg) {
@@ -3457,6 +3766,16 @@
         swKnob.style.left = '16px';
         label.innerText = 'Vue remplie';
       }
+    }
+
+    function openMenuSidebar() {
+      document.getElementById('menu-sidebar').classList.add('open');
+      document.getElementById('menu-sidebar-overlay').classList.add('open');
+    }
+
+    function closeMenuSidebar() {
+      document.getElementById('menu-sidebar').classList.remove('open');
+      document.getElementById('menu-sidebar-overlay').classList.remove('open');
     }
   </script>
 </body>
