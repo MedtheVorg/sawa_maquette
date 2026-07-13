@@ -1,0 +1,3464 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Sawa Care — Accueil v40</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(6px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.5
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    html,
+    body {
+      height: 100%;
+      height: 100dvh;
+      font-family: 'Nunito', system-ui, sans-serif;
+      background: #ddd5f8;
+      overflow: hidden;
+    }
+
+    body {
+      position: relative;
+      max-width: 430px;
+      margin: 0 auto;
+    }
+
+    /* ── ÉCRANS ── */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .screen.hidden {
+      display: none !important;
+    }
+
+    /* ════════════════════════════════
+   HOME
+════════════════════════════════ */
+    /* HEADER */
+    .hdr {
+      background: linear-gradient(145deg, #b228FF 0%, #8a2be2 42%, #27b6cc 100%);
+      padding: calc(env(safe-area-inset-top, 44px)+14px) 20px 0;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .hb1 {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      top: -60px;
+      right: -45px;
+      pointer-events: none;
+    }
+
+    .hb2 {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(133, 255, 239, 0.12);
+      bottom: -30px;
+      left: 16px;
+      pointer-events: none;
+    }
+
+    /* Top bar */
+    .htop {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 14px;
+    }
+
+    .hleft {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .av {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #c44dff, #27b6cc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2.5px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 3px 14px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .grt {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .unm {
+      font-size: 23px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .nbtn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .ndot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fcffad;
+      border: 2px solid rgba(130, 0, 190, 0.6);
+      position: absolute;
+      top: 7px;
+      right: 7px;
+    }
+
+    /* Raccourcis */
+    .scuts {
+      display: flex;
+      gap: 8px;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 12px;
+    }
+
+    .sc {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 11px;
+      padding: 10px 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .sc span {
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+
+
+    /* SCROLL */
+    .home-scroll {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      background: #ddd5f8;
+      border-radius: 22px 22px 0 0;
+      margin-top: -2px;
+      padding: 16px 18px 24px;
+      scrollbar-width: none;
+      scroll-behavior: smooth;
+    }
+
+    .home-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sec {
+      font-size: 12px;
+      font-weight: 800;
+      color: #4e4280;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin: 20px 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sec-link {
+      font-size: 12px;
+      font-weight: 700;
+      color: #8210cc;
+      text-transform: none;
+      letter-spacing: 0;
+      cursor: pointer;
+    }
+
+    /* HUMEUR — wording exact v39 */
+    .mood-q {
+      font-size: 13px;
+      font-weight: 800;
+      color: #2d1060;
+      margin: 4px 0 10px;
+      display: block;
+    }
+
+    .mood-row {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      padding-right: 20px;
+      /* affordance scroll */
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .mood-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .mc {
+      flex: 0 0 auto;
+      background: #fff;
+      border-radius: 44px;
+      padding: 9px 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 2px solid #cdc5f0;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 120ms;
+    }
+
+    .mc.a {
+      border-color: #b228FF;
+      background: #f5eeff;
+    }
+
+    .mc .em {
+      font-size: 19px;
+      line-height: 1;
+    }
+
+    .mc .ml {
+      font-size: 12px;
+      font-weight: 700;
+      color: #2d1060;
+    }
+
+    .mc.a .ml {
+      color: #8210cc;
+    }
+
+    .mood-fb {
+      background: #f0e8ff;
+      border: 1.5px solid #c9b6f5;
+      border-left: 4px solid #8210cc;
+      border-radius: 0 14px 14px 0;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 9px;
+      animation: fadeUp 250ms ease-out;
+    }
+
+    .mf-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #8210cc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .mood-fb p {
+      font-size: 13px;
+      font-weight: 700;
+      color: #5e5290;
+      line-height: 1.4;
+    }
+
+    /* PROCHES */
+    .proches-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .proches-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .proche-card {
+      flex: 0 0 calc(100% - 20px);
+      background: #fff;
+      border-radius: 18px;
+      padding: 14px 15px;
+      border: 1.5px solid #cdc5f0;
+      box-shadow: 0 2px 12px rgba(178, 40, 255, 0.08);
+      cursor: pointer;
+      transition: transform 150ms;
+    }
+
+    .proche-card:active {
+      transform: scale(0.98);
+    }
+
+    .pc-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .pc-av {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 2px solid #e8e0ff;
+    }
+
+    .v1 {
+      background: linear-gradient(135deg, #27b6cc, #8a2be2);
+    }
+
+    .v2 {
+      background: linear-gradient(135deg, #b228FF, #1D9E75);
+    }
+
+    .pc-info h4 {
+      font-size: 14px;
+      font-weight: 800;
+      color: #2d1060;
+      line-height: 1.2;
+    }
+
+    .pc-info p {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8a7ab0;
+      margin-top: 1px;
+    }
+
+    .pc-badge {
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 800;
+      border-radius: 8px;
+      padding: 3px 8px;
+      flex-shrink: 0;
+    }
+
+    .ba {
+      background: #f0e8ff;
+      color: #8210cc;
+    }
+
+    .bs {
+      background: #E1F5EE;
+      color: #085041;
+    }
+
+    .prog-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: #8210cc;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .prog-track {
+      height: 5px;
+      background: #ede9fe;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .prog-fill {
+      height: 100%;
+      border-radius: 10px;
+    }
+
+    /* Résumé cercle — avec label prénom */
+    .cercle-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding-top: 10px;
+      border-top: 0.5px solid #ede9f5;
+    }
+
+    .cercle-label-preom {
+      font-size: 10px;
+      font-weight: 800;
+      color: #8210cc;
+      background: #f0e8ff;
+      border-radius: 6px;
+      padding: 2px 7px;
+      flex-shrink: 0;
+    }
+
+    .av-stack {
+      display: flex;
+      align-items: center;
+    }
+
+    .av-mini {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      margin-left: -6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .av-mini:first-child {
+      margin-left: 0;
+    }
+
+    .am1 {
+      background: #b228FF;
+    }
+
+    .am2 {
+      background: #27b6cc;
+    }
+
+    .am3 {
+      background: #8a2be2;
+    }
+
+    .am-ghost {
+      background: #f0e8ff;
+      border-style: dashed;
+      border-color: #cdc5f0;
+    }
+
+    .cercle-txt {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cercle-txt p {
+      font-size: 11px;
+      font-weight: 800;
+      color: #2d1060;
+      line-height: 1.3;
+    }
+
+    .cercle-txt.muted p {
+      color: #8a7ab0;
+    }
+
+    .cercle-txt span {
+      font-size: 10px;
+      font-weight: 600;
+      color: #8a7ab0;
+    }
+
+    .cdot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dg {
+      background: #cdc5f0;
+    }
+
+    .do {
+      background: #EF9F27;
+    }
+
+    .dv {
+      background: #1D9E75;
+    }
+
+    .chev {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #f0e8ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Dots pagination proches — z-index et padding safe */
+    .scroll-dots {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 8px;
+      position: relative;
+      z-index: 10;
+      padding-bottom: 4px;
+    }
+
+    .scroll-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #cdc5f0;
+      transition: all 200ms;
+      cursor: pointer;
+      padding: 9px;
+      margin: -9px;
+      background-clip: content-box;
+      box-sizing: content-box;
+    }
+
+    .scroll-dot.active {
+      background: #b228FF;
+      width: 16px;
+      border-radius: 3px;
+    }
+
+    /* OUTILS */
+    .tool-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 14px 15px;
+      border: 1.5px solid #cdc5f0;
+      margin-bottom: 9px;
+      box-shadow: 0 2px 12px rgba(178, 40, 255, 0.07);
+      cursor: pointer;
+      transition: transform 150ms;
+    }
+
+    .tool-card.vide {
+      background: #faf8ff;
+    }
+
+    .tool-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .tool-card:active {
+      transform: scale(0.98);
+    }
+
+    .tool-top {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-bottom: 6px;
+    }
+
+    .tool-ico {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tip {
+      background: #eeddff;
+    }
+
+    .tic {
+      background: #d8f3f8;
+    }
+
+    .tit {
+      background: #d2faf3;
+    }
+
+    .tiy {
+      background: #fdf8d8;
+    }
+
+    .tool-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #2d1060;
+    }
+
+    .tool-arr {
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .tool-empty {
+      font-size: 13px;
+      font-weight: 600;
+      color: #8a7ab0;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .tool-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #cdc5f0;
+      flex-shrink: 0;
+    }
+
+    .tool-desc {
+      font-size: 13px;
+      font-weight: 600;
+      color: #6a6a9a;
+      padding-left: 53px;
+      line-height: 1.4;
+    }
+
+    .badge-new {
+      font-size: 10px;
+      font-weight: 800;
+      color: #8210cc;
+      background: #f0e0ff;
+      border-radius: 9px;
+      padding: 3px 8px;
+      margin-left: 6px;
+      flex-shrink: 0;
+    }
+
+    /* ACCOMPAGNEMENT — responsive */
+    .care-row {
+      display: flex;
+      gap: 9px;
+    }
+
+    /* Sur < 360px : empilement vertical */
+    @media (max-width:360px) {
+      .care-row {
+        flex-direction: column;
+      }
+    }
+
+    .cmini {
+      flex: 1;
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px;
+      border: 1.5px solid #cdc5f0;
+      box-shadow: 0 2px 12px rgba(178, 40, 255, 0.07);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 120px;
+    }
+
+    .ctop {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bav {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #27b6cc, #6e1eb8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #e8e0ff;
+      flex-shrink: 0;
+    }
+
+    .care-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: #2d1060;
+      line-height: 1.25;
+    }
+
+    .rdv-btn {
+      width: 100%;
+      background: #fff;
+      border: 1.5px solid #14233A;
+      border-radius: 20px;
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      margin-top: auto;
+    }
+
+    .rdv-btn span {
+      font-size: 12px;
+      font-weight: 800;
+      color: #14233A;
+    }
+
+    .notif-e {
+      flex: 1;
+      background: #faf8ff;
+      border-radius: 16px;
+      padding: 14px;
+      border: 1.5px solid #cdc5f0;
+      box-shadow: 0 2px 12px rgba(178, 40, 255, 0.07);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 120px;
+      text-align: center;
+    }
+
+    @media (max-width:360px) {
+      .notif-e {
+        min-height: 80px;
+      }
+    }
+
+    .notif-e p {
+      font-size: 12px;
+      font-weight: 700;
+      color: #8a7ab0;
+      line-height: 1.4;
+    }
+
+    /* ENQUÊTE — avec "Plus tard" */
+    .svy-wrap {
+      position: relative;
+    }
+
+    .svy {
+      background: #14233A;
+      border-radius: 16px;
+      padding: 16px 18px 14px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sb1 {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(178, 40, 255, 0.22);
+      left: -22px;
+      bottom: -28px;
+      pointer-events: none;
+    }
+
+    .sb2 {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(39, 182, 204, 0.15);
+      left: 44px;
+      top: -14px;
+      pointer-events: none;
+    }
+
+    .svy-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+
+    .svy-l {}
+
+    .svy-lbl {
+      font-size: 11px;
+      font-weight: 800;
+      color: #85ffef;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .svy-sub {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.88);
+      display: block;
+    }
+
+    .svy-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn-svy {
+      background: #fcffad;
+      color: #14233A;
+      border: none;
+      border-radius: 20px;
+      padding: 11px 20px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .btn-later {
+      background: none;
+      border: none;
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-decoration-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ── BARRE BAS — identique v39 ── */
+    .bottom-bar {
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 1.5px solid #cdc5f0;
+      z-index: 100;
+      flex-shrink: 0;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .ai-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 9px 20px 5px;
+      gap: 10px;
+    }
+
+    .ai-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: #14233A;
+      background: #fcffad;
+      border-radius: 8px;
+      padding: 5px 11px;
+    }
+
+    .ai-fab {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #b228FF, #7b2fff 45%, #27b6cc);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 5px 18px rgba(178, 40, 255, 0.42);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ais {
+      position: absolute;
+      top: 5px;
+      left: 9px;
+      width: 36px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: rotate(-8deg);
+    }
+
+    .bnav {
+      display: flex;
+      align-items: center;
+      padding: 4px 0 8px;
+    }
+
+    .ni {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 3px 0;
+      min-height: 48px;
+      justify-content: center;
+    }
+
+    .nl {
+      font-size: 11px;
+      font-weight: 700;
+      color: #9080c0;
+    }
+
+    .ni.act .nl {
+      color: #b228FF;
+    }
+
+    .nc {
+      flex: 0 0 72px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .nfab {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #b228FF, #27b6cc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -26px;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 14px rgba(178, 40, 255, 0.32);
+      cursor: pointer;
+    }
+
+    .nfl {
+      font-size: 11px;
+      font-weight: 700;
+      color: #b228FF;
+      margin-top: 2px;
+    }
+
+    /* ── OVERLAY / BOTTOM SHEETS GÉNÉRIQUES ── */
+    .ov {
+      position: fixed;
+      inset: 0;
+      background: rgba(14, 22, 38, 0.6);
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms;
+      backdrop-filter: blur(3px);
+    }
+
+    .ov.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .ov-bg {
+      position: absolute;
+      inset: 0;
+    }
+
+    .sheet-g {
+      background: #fff;
+      border-radius: 26px 26px 0 0;
+      width: 100%;
+      padding: 0 20px calc(env(safe-area-inset-bottom, 0px)+24px);
+      transform: translateY(100%);
+      transition: transform 320ms cubic-bezier(.32, .72, 0, 1);
+      position: relative;
+      z-index: 1;
+      max-height: 80vh;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    .sheet-g::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ov.open .sheet-g {
+      transform: translateY(0);
+    }
+
+    .sheet-drag {
+      width: 38px;
+      height: 4px;
+      border-radius: 2px;
+      background: #e4ddf7;
+      margin: 12px auto 0;
+    }
+
+    .sheet-x {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #f5f3ff;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sheet-x:focus-visible {
+      outline: 2px solid #b228FF;
+    }
+
+    .sheet-h {
+      font-size: 18px;
+      font-weight: 900;
+      color: #2d1060;
+      margin: 16px 0 4px;
+    }
+
+    .sheet-sub {
+      font-size: 13px;
+      font-weight: 600;
+      color: #8a7ab0;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .share-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f9f7ff;
+      border: 1.5px solid #e8e0ff;
+      border-radius: 14px;
+      padding: 14px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .share-ico {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .share-txt h5 {
+      font-size: 14px;
+      font-weight: 800;
+      color: #2d1060;
+    }
+
+    .share-txt p {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8a7ab0;
+      margin-top: 1px;
+    }
+
+    .invite-link-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f5f3ff;
+      border: 1.5px dashed #cdc5f0;
+      border-radius: 12px;
+      padding: 11px 14px;
+      margin-bottom: 16px;
+    }
+
+    .invite-link-box span {
+      font-size: 12px;
+      font-weight: 700;
+      color: #5e5290;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .btn-copy {
+      background: linear-gradient(135deg, #b228FF, #8a2be2);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 7px 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* Notifications */
+    .notif-item {
+      display: flex;
+      gap: 12px;
+      padding: 13px 0;
+      border-top: 1px solid #f0ecff;
+      text-align: left;
+    }
+
+    .notif-item:first-of-type {
+      border-top: none;
+    }
+
+    .notif-item.unread {
+      background: #f9f5ff;
+      margin: 0 -20px;
+      padding: 13px 20px;
+    }
+
+    .notif-ico {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #f0e8ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+
+    .notif-txt p {
+      font-size: 13px;
+      font-weight: 700;
+      color: #2d1060;
+      line-height: 1.45;
+    }
+
+    .notif-txt span {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8a7ab0;
+    }
+
+    /* ════════════════════════════════
+   FICHE PROCHE
+════════════════════════════════ */
+    .fiche-screen {
+      animation: slideUp 280ms cubic-bezier(.32, .72, 0, 1);
+    }
+
+    .fiche-nav {
+      background: linear-gradient(145deg, #b228FF 0%, #8a2be2 42%, #27b6cc 100%);
+      padding: calc(env(safe-area-inset-top, 44px)+10px) 20px 0;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .fiche-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 14px;
+    }
+
+    .back-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .fiche-tit {
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+      flex: 1;
+    }
+
+    .fiche-edit {
+      font-size: 13px;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+    }
+
+    .fiche-hero {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 14px;
+    }
+
+    .fiche-av {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 3px 14px rgba(0, 0, 0, 0.2);
+      flex-shrink: 0;
+    }
+
+    .fav1 {
+      background: linear-gradient(135deg, #27b6cc, #8a2be2);
+    }
+
+    .fav2 {
+      background: linear-gradient(135deg, #b228FF, #1D9E75);
+    }
+
+    .fiche-name {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 3px;
+    }
+
+    .fiche-subtext {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* ── ONGLETS FONCTIONNELS ── */
+    .tabs-wrap {
+      display: flex;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 3px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px 0;
+      font-size: 11px;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.55);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 150ms;
+    }
+
+    .tab.active {
+      background: #fff;
+      color: #5a1e99;
+    }
+
+    /* Contenu onglets */
+    .tab-content {
+      display: none;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      background: #ddd5f8;
+      padding: 16px 18px calc(env(safe-area-inset-bottom, 0px)+24px);
+      scrollbar-width: none;
+    }
+
+    .tab-content::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .fsec {
+      font-size: 12px;
+      font-weight: 800;
+      color: #4e4280;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin: 18px 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .fsec:first-child {
+      margin-top: 4px;
+    }
+
+    .fsec-link {
+      font-size: 12px;
+      font-weight: 700;
+      color: #8210cc;
+      text-transform: none;
+      letter-spacing: 0;
+      cursor: pointer;
+    }
+
+    /* Suivi */
+    /* Carte Fiche Aidé (infos détaillées) */
+    .fiche-aide-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 16px;
+      border: 1.5px solid #cdc5f0;
+      box-shadow: 0 2px 10px rgba(178, 40, 255, 0.07);
+      margin-bottom: 10px;
+    }
+
+    .fa-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 0.5px solid #ede9f5;
+    }
+
+    .fa-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .fa-ico {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: #f5f3ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 15px;
+    }
+
+    .fa-lbl {
+      font-size: 10px;
+      font-weight: 800;
+      color: #8a7ab0;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .fa-val {
+      font-size: 13px;
+      font-weight: 800;
+      color: #2d1060;
+      margin-top: 1px;
+    }
+
+    .btn-fiche-complete {
+      width: 100%;
+      background: #f5f3ff;
+      border: 1.5px solid #e0d0ff;
+      border-radius: 13px;
+      padding: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: #8210cc;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-fiche-complete:focus-visible {
+      outline: 2px solid #b228FF;
+    }
+
+    .plan-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 16px;
+      border: 1.5px solid #cdc5f0;
+      box-shadow: 0 2px 10px rgba(178, 40, 255, 0.07);
+      margin-bottom: 10px;
+    }
+
+    .suivi-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 0.5px solid #ede9f5;
+    }
+
+    .suivi-step:last-child {
+      border-bottom: none;
+    }
+
+    .ss-ico {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: #f5f3ff;
+      border: 0.5px solid #ddd5f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+
+    .ss-info {
+      flex: 1;
+    }
+
+    .ss-info h5 {
+      font-size: 13px;
+      font-weight: 800;
+      color: #2d1060;
+      margin-bottom: 2px;
+    }
+
+    .ss-info p {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8a7ab0;
+    }
+
+    .ss-status {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 7px;
+      flex-shrink: 0;
+    }
+
+    .ss-ok {
+      background: #E1F5EE;
+      color: #085041;
+    }
+
+    .ss-soon {
+      background: #FAEEDA;
+      color: #633806;
+    }
+
+    .ss-todo {
+      background: #EEEDFE;
+      color: #3C3489;
+    }
+
+    /* Cercle */
+    .cercle-fiche {
+      background: #fff;
+      border-radius: 18px;
+      padding: 15px 16px;
+      border: 1.5px solid #cdc5f0;
+      box-shadow: 0 2px 12px rgba(178, 40, 255, 0.08);
+    }
+
+    .cf-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 13px;
+      padding-bottom: 12px;
+      border-bottom: 0.5px solid #ede9f5;
+    }
+
+    .cf-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      flex-shrink: 0;
+      background: linear-gradient(145deg, #b228FF, #27b6cc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cf-h {
+      font-size: 14px;
+      font-weight: 800;
+      color: #2d1060;
+    }
+
+    .cf-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8a7ab0;
+      margin-top: 1px;
+    }
+
+    .cf-count {
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 800;
+      background: #f0e8ff;
+      color: #8210cc;
+      border-radius: 8px;
+      padding: 3px 8px;
+      flex-shrink: 0;
+    }
+
+    .m-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 0.5px solid #ede9f5;
+    }
+
+    .m-row:last-of-type {
+      border-bottom: none;
+      margin-bottom: 2px;
+    }
+
+    .m-av {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .m-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .m-info h5 {
+      font-size: 13px;
+      font-weight: 800;
+      color: #2d1060;
+      line-height: 1.2;
+    }
+
+    .m-info p {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8a7ab0;
+      margin-top: 1px;
+    }
+
+    .m-status {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 7px;
+      flex-shrink: 0;
+    }
+
+    .stp {
+      background: #EEEDFE;
+      color: #3C3489;
+    }
+
+    .sta {
+      background: #E1F5EE;
+      color: #085041;
+    }
+
+    .perms-box {
+      background: #f9f7ff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 10px 0;
+      border: 0.5px solid #e8e0ff;
+    }
+
+    .perms-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #5320a0;
+      margin-bottom: 9px;
+    }
+
+    .perm-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .perm-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .perm-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      color: #2d1060;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .tog {
+      width: 40px;
+      height: 23px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      transition: background 200ms;
+    }
+
+    .tog.on {
+      background: linear-gradient(135deg, #b228FF, #8a2be2);
+    }
+
+    .tog.off {
+      background: #ddd5f8;
+    }
+
+    .tog-k {
+      position: absolute;
+      top: 3px;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: #fff;
+      transition: left 200ms;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .tog.on .tog-k {
+      left: 20px;
+    }
+
+    .tog.off .tog-k {
+      left: 3px;
+    }
+
+    .invite-empty {
+      background: #f5f3ff;
+      border-radius: 12px;
+      padding: 14px;
+      margin: 12px 0;
+      text-align: center;
+      border: 1.5px dashed #cdc5f0;
+    }
+
+    .btn-inv {
+      width: 100%;
+      background: linear-gradient(135deg, #b228FF 0%, #8a2be2 50%, #27b6cc 100%);
+      border: none;
+      border-radius: 17px;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(178, 40, 255, 0.38);
+      position: relative;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .btn-inv::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 17px 17px 0 0;
+    }
+
+    .btn-inv span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Documents */
+    .doc-empty {
+      background: #fff;
+      border-radius: 18px;
+      padding: 32px 20px;
+      border: 1.5px solid #cdc5f0;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(178, 40, 255, 0.07);
+    }
+
+    .btn-add-doc {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #b228FF, #8a2be2);
+      color: #fff;
+      border: none;
+      border-radius: 15px;
+      padding: 12px 22px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 16px;
+      box-shadow: 0 4px 14px rgba(178, 40, 255, 0.35);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ════════════════════════════════
+     ÉCRAN HOME
+════════════════════════════════ -->
+  <div class="screen" id="screen-home">
+
+    <!-- HEADER + ANCRES -->
+    <div class="hdr">
+      <div class="hb1"></div>
+      <div class="hb2"></div>
+
+      <div class="htop">
+        <div class="hleft">
+          <div class="av" role="img" aria-label="Avatar Antoinette Thomas">
+            <svg width="30" height="30" viewBox="0 0 56 56" aria-hidden="true">
+              <defs>
+                <linearGradient id="avG" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#c44dff" />
+                  <stop offset="100%" stop-color="#27b6cc" />
+                </linearGradient>
+              </defs>
+              <rect width="56" height="56" fill="url(#avG)" />
+              <ellipse cx="28" cy="50" rx="19" ry="12" fill="rgba(255,255,255,0.22)" />
+              <circle cx="28" cy="22" r="12" fill="rgba(255,255,255,0.92)" />
+              <path d="M16 22 Q16 10 28 10 Q40 10 40 22 Q39 14 28 13 Q18 13 16 22Z" fill="#b228FF" />
+              <circle cx="23" cy="22" r="1.8" fill="#2d1060" />
+              <circle cx="33" cy="22" r="1.8" fill="#2d1060" />
+              <path d="M24 27 Q28 30 32 27" stroke="#2d1060" stroke-width="1.6" fill="none" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div>
+            <p class="grt">Bonjour 👋</p>
+            <p class="unm">Antoinette</p>
+          </div>
+        </div>
+        <button class="nbtn" id="notif-btn" onclick="openNotif()" aria-label="Notifications — 2 non lues"
+          aria-haspopup="dialog">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <div class="ndot" id="ndot" aria-hidden="true"></div>
+        </button>
+      </div>
+
+      <nav class="scuts" aria-label="Raccourcis">
+        <div class="sc" role="button" tabindex="0" onclick="scrollToSec('sec-proches')"
+          onkeydown="if(event.key==='Enter')scrollToSec('sec-proches')"><svg width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+          </svg><span>Mes proches</span></div>
+        <div class="sc" role="button" tabindex="0" onclick="scrollToSec('sec-outils')"
+          onkeydown="if(event.key==='Enter')scrollToSec('sec-outils')"><svg width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            aria-hidden="true">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg><span>Mon suivi</span></div>
+        <div class="sc" role="button" tabindex="0" onclick="scrollToSec('sec-doc-tool')"
+          onkeydown="if(event.key==='Enter')scrollToSec('sec-doc-tool')"><svg width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg><span>Documents</span></div>
+      </nav>
+
+
+    </div>
+
+    <!-- SCROLL -->
+    <div class="home-scroll" id="home-scroll">
+
+      <!-- HUMEUR -->
+      <span id="sec-humeur"></span>
+      <span class="mood-q" role="heading" aria-level="2">Comment vous sentez-vous aujourd'hui ?</span>
+      <div class="mood-row" role="radiogroup" aria-label="Sélectionner votre humeur">
+        <button class="mc a" role="radio" aria-checked="true"
+          onclick="window.location.href='sawa_humeur_4_etats_v2.html'"><span class="em"
+            aria-hidden="true">😤</span><span class="ml">En colère</span></button>
+        <button class="mc" role="radio" aria-checked="false"
+          onclick="window.location.href='sawa_humeur_4_etats_v2.html'"><span class="em"
+            aria-hidden="true">😢</span><span class="ml">Triste</span></button>
+        <button class="mc" role="radio" aria-checked="false"
+          onclick="window.location.href='sawa_humeur_4_etats_v2.html'"><span class="em"
+            aria-hidden="true">😊</span><span class="ml">Joyeux·se</span></button>
+        <button class="mc" role="radio" aria-checked="false"
+          onclick="window.location.href='sawa_humeur_4_etats_v2.html'"><span class="em"
+            aria-hidden="true">😰</span><span class="ml">Anxieux·se</span></button>
+        <button class="mc" role="radio" aria-checked="false"
+          onclick="window.location.href='sawa_humeur_4_etats_v2.html'"><span class="em"
+            aria-hidden="true">😔</span><span class="ml">Déprimé·e</span></button>
+        <button class="mc" role="radio" aria-checked="false"
+          onclick="window.location.href='sawa_humeur_4_etats_v2.html'"><span class="em"
+            aria-hidden="true">😌</span><span class="ml">Relaxé·e</span></button>
+      </div>
+      <div class="mood-fb" role="status" aria-live="polite">
+        <div class="mf-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg></div>
+        <p><strong>Humeur enregistrée.</strong> Merci de nous l'avoir partagé 💜</p>
+      </div>
+
+      <!-- PROCHES -->
+      <span id="sec-proches"></span>
+      <div class="sec" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>Mes proches aidés</span>
+        <button
+          style="background:none;border:none;color:#b228FF;font-weight:700;font-size:12px;font-family:'Nunito',sans-serif;cursor:pointer;"
+          onclick="window.location.href='sawa_aides_list.html'" aria-label="Voir tous les proches aidés">Voir
+          tout</button>
+      </div>
+
+      <!-- Barre de recherche statique -->
+      <div style="margin: 0 20px 16px 20px; position: relative;">
+        <svg style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;"
+          width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="text" placeholder="Rechercher un proche..." aria-label="Rechercher un proche"
+          style="width: 100%; border: none; background: #fff; border-radius: 14px; padding: 14px 14px 14px 42px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; color: #2d1060; box-shadow: 0 2px 8px rgba(178, 40, 255, 0.05); outline: none;" />
+      </div>
+      <div class="proches-scroll" id="proches-scroll">
+
+        <!-- Martin — état 1 : seul·e -->
+        <div class="proche-card" onclick="showFiche('martin')" role="button" tabindex="0"
+          aria-label="Fiche de Martin Dupont">
+          <div class="pc-top">
+            <div class="pc-av v1" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg></div>
+            <div class="pc-info">
+              <h4>Martin Dupont</h4>
+              <p>Père · 78 ans · Alzheimer modéré</p>
+            </div>
+            <span class="pc-badge ba">Suivi actif</span>
+          </div>
+          <div class="prog-lbl"><span>Plan d'accompagnement</span><span>72 %</span></div>
+          <div class="prog-track">
+            <div class="prog-fill" style="width:72%;background:linear-gradient(90deg,#b228FF,#8a2be2);"></div>
+          </div>
+          <!-- Cercle avec label prénom -->
+          <div class="cercle-row">
+            <span class="cercle-label-preom" aria-hidden="true">Martin</span>
+            <div class="av-stack" aria-label="Cercle de Martin : vous êtes seul·e aidant·e">
+              <div class="av-mini am1" title="Antoinette — vous">AT</div>
+            </div>
+            <div class="cercle-txt muted">
+              <p>Seul·e aidant·e</p><span>Invitez depuis la fiche →</span>
+            </div>
+            <div class="cdot dg" aria-label="Aucun co-aidant"></div>
+            <div class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                stroke="#8210cc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg></div>
+          </div>
+        </div>
+
+        <!-- Madeleine — état 3 : 2 co-aidants actifs -->
+        <div class="proche-card" onclick="showFiche('madeleine')" role="button" tabindex="0"
+          aria-label="Fiche de Madeleine Thomas">
+          <div class="pc-top">
+            <div class="pc-av v2" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg></div>
+            <div class="pc-info">
+              <h4>Madeleine Thomas</h4>
+              <p>Mère · 74 ans · Diabète type 2</p>
+            </div>
+            <span class="pc-badge bs">Stable</span>
+          </div>
+          <div class="prog-lbl"><span>Plan d'accompagnement</span><span>45 %</span></div>
+          <div class="prog-track">
+            <div class="prog-fill" style="width:45%;background:linear-gradient(90deg,#27b6cc,#1D9E75);"></div>
+          </div>
+          <!-- Cercle Madeleine — différent de Martin -->
+          <div class="cercle-row">
+            <span class="cercle-label-preom" aria-hidden="true">Madeleine</span>
+            <div class="av-stack" aria-label="Cercle de Madeleine : 2 co-aidants actifs — Antoinette et Pierre">
+              <div class="av-mini am1" title="Antoinette">AT</div>
+              <div class="av-mini am2" title="Pierre Dupont">PD</div>
+            </div>
+            <div class="cercle-txt">
+              <p>2 co-aidants actifs</p><span>Antoinette · Pierre</span>
+            </div>
+            <div class="cdot dv" aria-label="Co-aidants actifs"></div>
+            <div class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                stroke="#8210cc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="scroll-dots" role="tablist" aria-label="Proche affiché">
+        <div class="scroll-dot active" id="dot-0" role="tab" tabindex="0" aria-selected="true"
+          aria-label="Voir la fiche de Martin" onclick="goToProcheCard(0)"
+          onkeydown="if(event.key==='Enter')goToProcheCard(0)"></div>
+        <div class="scroll-dot" id="dot-1" role="tab" tabindex="0" aria-selected="false"
+          aria-label="Voir la fiche de Madeleine" onclick="goToProcheCard(1)"
+          onkeydown="if(event.key==='Enter')goToProcheCard(1)"></div>
+      </div>
+
+      <!-- ── MIEUX ME CONNAÎTRE — remonté avant Outils ── -->
+      <span id="sec-connaitre"></span>
+      <div class="sec" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>Mieux me connaître &amp; m'informer</span>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:10px; color:#8a7ab0; font-weight:700;">Simuler état</span>
+          <div id="charge-switch"
+            style="width:32px; height:18px; background:#cdc5f0; border-radius:18px; position:relative; cursor:pointer; transition:0.3s;"
+            onclick="toggleChargeState()">
+            <div id="charge-switch-knob"
+              style="width:14px; height:14px; background:#fff; border-radius:50%; position:absolute; top:2px; left:2px; transition:0.3s; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- État vide (défaut) -->
+      <div class="tool-card vide" id="charge-card-empty">
+        <div class="tool-top">
+          <div class="tool-ico tip" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="#8210cc" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9" />
+              <line x1="8" y1="12" x2="10" y2="10" />
+              <line x1="10" y1="10" x2="12" y2="15" />
+              <line x1="12" y1="15" x2="14" y2="9" />
+              <line x1="14" y1="9" x2="16" y2="12" />
+            </svg></div>
+          <span class="tool-title">Ma charge d'aidant</span>
+          <div class="tool-arr" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+              stroke="#a094d0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg></div>
+        </div>
+        <div class="tool-empty">
+          <div class="tool-dot" aria-hidden="true"></div>Aucune évaluation — <strong
+            style="color:#8210cc;margin-left:4px;">Commencer</strong>
+        </div>
+      </div>
+
+      <!-- État rempli (masqué) -->
+      <div class="tool-card" id="charge-card-done" style="display:none;">
+        <div class="tool-top">
+          <div class="tool-ico tip" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="#8210cc" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9" />
+              <line x1="8" y1="12" x2="10" y2="10" />
+              <line x1="10" y1="10" x2="12" y2="15" />
+              <line x1="12" y1="15" x2="14" y2="9" />
+              <line x1="14" y1="9" x2="16" y2="12" />
+            </svg></div>
+          <span class="tool-title">Ma charge d'aidant</span>
+          <div class="tool-arr" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+              stroke="#a094d0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg></div>
+        </div>
+        <div
+          style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:8px; padding-top:10px; border-top:0.5px solid #ede9f5;">
+          <div>
+            <p style="font-size:13px; font-weight:800; color:#2d1060; margin-bottom:2px;">Charge modérée</p>
+            <p style="font-size:11px; font-weight:600; color:#8a7ab0;">Dernière éval. il y a 2 jours</p>
+          </div>
+          <div style="font-size:24px; font-weight:900; color:#8210cc; line-height:1;">54<span
+              style="font-size:12px; font-weight:700; color:#a094d0;">/80</span></div>
+        </div>
+      </div>
+      <div class="tool-card vide" onclick="window.location.href='sawa_quiz_v43.html'">
+        <div class="tool-top">
+          <div class="tool-ico tiy" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="#7a6000" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg></div>
+          <span class="tool-title">Quiz</span>
+          <span class="badge-new">Nouveau</span>
+          <div class="tool-arr" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+              stroke="#a094d0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg></div>
+        </div>
+        <div class="tool-empty">
+          <div class="tool-dot" aria-hidden="true"></div>Aucun quiz fait — <strong
+            style="color:#8210cc;margin-left:4px;">Découvrir</strong>
+        </div>
+      </div>
+      <div class="tool-card" onclick="window.location.href='sawa_ressources_v43.html'">
+        <div class="tool-top">
+          <div class="tool-ico tit" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" fill="none" stroke="#0a7a6e" stroke-width="1.75" />
+              <polygon points="10 8 16 12 10 16 10 8" fill="#0a7a6e" />
+            </svg></div>
+          <span class="tool-title">Ressources</span>
+          <span class="badge-new">Nouveau</span>
+          <div class="tool-arr" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+              stroke="#a094d0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg></div>
+        </div>
+        <div class="tool-desc">Contenus vidéo adaptés à mon parcours</div>
+      </div>
+
+      <!-- OUTILS -->
+      <span id="sec-outils"></span>
+      <div class="sec" style="display:block;">Mes outils</div>
+      <div class="tool-card" role="button" tabindex="0"
+        onclick="window.location.href='sawa_PAP_FINAL_DEV_reviseted.html'"
+        onkeydown="if(event.key==='Enter')window.location.href='sawa_PAP_FINAL_DEV_reviseted.html'"
+        aria-label="Accéder au suivi personnalisé">
+        <div class="tool-top">
+          <div class="tool-ico tip" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="#8210cc" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="6" height="6" rx="1" />
+              <path d="m3 17 2 2 4-4" />
+              <rect x="13" y="5" width="8" height="2" rx="1" />
+              <rect x="13" y="11" width="8" height="2" rx="1" />
+              <rect x="13" y="17" width="8" height="2" rx="1" />
+            </svg></div>
+          <span class="tool-title">Mon suivi</span>
+          <div class="tool-arr" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+              stroke="#a094d0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg></div>
+        </div>
+        <div class="tool-desc">Suivi personnalisé pour Martin et Madeleine</div>
+      </div>
+      <div class="tool-card vide" id="sec-doc-tool" onclick="window.location.href='sawa_documents_v44.html'">
+        <div class="tool-top">
+          <div class="tool-ico tic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="#1a9ab0" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+            </svg></div>
+          <span class="tool-title">Mes documents</span>
+          <div class="tool-arr" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+              stroke="#a094d0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg></div>
+        </div>
+        <div class="tool-empty">
+          <div class="tool-dot" aria-hidden="true"></div>Aucun document — <strong
+            style="color:#8210cc;margin-left:4px;">Ajouter</strong>
+        </div>
+      </div>
+
+
+      <!-- ANNUAIRE -->
+      <div class="tool-card" role="button" tabindex="0" aria-label="Accéder à l'annuaire de services"
+        onclick="window.location.href='sawa_annuaire_v40.html'"
+        onkeydown="if(event.key==='Enter')window.location.href='sawa_annuaire_v40.html'">
+        <div class="tool-top">
+          <div class="tool-ico" style="background:linear-gradient(135deg,#b228FF,#8a2be2);" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
+          <span class="tool-title">Annuaire des services</span>
+          <div class="tool-arr" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+              stroke="#a094d0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg></div>
+        </div>
+        <div class="tool-desc">Trouvez des professionnels près de chez vous</div>
+      </div>
+
+      <!-- ACCOMPAGNEMENT -->
+      <span id="sec-accomp"></span>
+      <div class="sec" style="display:block;">Mon accompagnement</div>
+      <div class="care-row">
+        <div class="cmini">
+          <div class="ctop">
+            <div class="bav" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg></div>
+            <p class="care-name">Basma<br>Frangieh</p>
+          </div>
+          <button class="rdv-btn" aria-label="Planifier un rendez-vous avec Basma Frangieh"
+            onclick="window.location.href='sawa_rdv_v41.html'">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#14233A" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="12" y1="14" x2="12" y2="18" />
+              <line x1="10" y1="16" x2="14" y2="16" />
+            </svg>
+            <span>Planifier un RDV</span>
+          </button>
+        </div>
+        <div class="notif-e" role="region" aria-label="Aucune notification">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9b6f5" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <p>Tout est calme pour le moment 🌿</p>
+        </div>
+      </div>
+
+      <!-- ENQUÊTE — avec "Rappeler plus tard" -->
+      <div class="sec" style="display:block;margin-top:20px;">Enquête de satisfaction</div>
+      <div class="svy" id="svy-card" role="region" aria-label="Enquête de satisfaction">
+        <div class="sb1" aria-hidden="true"></div>
+        <div class="sb2" aria-hidden="true"></div>
+        <div class="svy-top">
+          <div class="svy-l">
+            <span class="svy-lbl">Votre avis compte</span>
+            <span class="svy-sub">Aidez-nous à améliorer l'application</span>
+          </div>
+        </div>
+        <div class="svy-actions">
+          <button class="btn-svy" aria-label="Commencer l'enquête de satisfaction"
+            onclick="window.open('sawa_enquete_satisfaction_v1.html','_blank')">Commencer</button>
+          <button class="btn-later" aria-label="Rappeler l'enquête plus tard"
+            onclick="document.getElementById('svy-card').style.display='none'">Rappeler plus tard</button>
+        </div>
+      </div>
+      <!-- Spacer bas pour garantir la visibilité de l'enquête au-dessus de la barre nav -->
+      <div style="height:20px;flex-shrink:0;"></div>
+
+    </div>
+
+    <!-- BARRE BAS — identique v39 -->
+    <div class="bottom-bar">
+      <div class="ai-row">
+        <span class="ai-lbl" aria-hidden="true">Assistant IA</span>
+        <button class="ai-fab" aria-label="Ouvrir l'assistant IA Sawa">
+          <div class="ais" aria-hidden="true"></div>
+          <svg width="28" height="28" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+            <circle cx="15" cy="11" r="5.5" stroke="#14233A" stroke-width="2" />
+            <circle cx="15" cy="11" r="2" fill="#14233A" />
+            <rect x="8" y="18" width="14" height="9" rx="3.5" stroke="#14233A" stroke-width="2" />
+            <circle cx="11.5" cy="22" r="1.5" fill="#14233A" />
+            <circle cx="18.5" cy="22" r="1.5" fill="#14233A" />
+            <line x1="15" y1="5.5" x2="15" y2="3" stroke="#14233A" stroke-width="2" stroke-linecap="round" />
+            <circle cx="15" cy="2.5" r="1.5" fill="#14233A" />
+            <line x1="8" y1="21" x2="5.5" y2="21" stroke="#14233A" stroke-width="2" stroke-linecap="round" />
+            <line x1="22" y1="21" x2="24.5" y2="21" stroke="#14233A" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+      <nav class="bnav" aria-label="Navigation principale">
+        <div class="ni act" role="button" tabindex="0" aria-current="page" aria-label="Accueil">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+          <span class="nl" style="color:#b228FF;">Accueil</span>
+        </div>
+        <div class="ni" role="button" tabindex="0" aria-label="Messages">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+          <span class="nl">Messages</span>
+        </div>
+        <div class="nc">
+          <button class="nfab" aria-label="Appel vidéo avec Basma Frangieh">
+            <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="1" y="6" width="13" height="12" rx="2" fill="white" />
+              <path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white" />
+            </svg>
+          </button>
+          <span class="nfl">Appel</span>
+        </div>
+        <div class="ni" role="button" tabindex="0" aria-label="Agenda">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          <span class="nl">Agenda</span>
+        </div>
+        <div class="ni" role="button" tabindex="0" aria-label="Mon profil">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <span class="nl">Profil</span>
+        </div>
+      </nav>
+    </div>
+
+  </div>
+
+  <!-- ════════════════════════════════
+     FICHE MARTIN
+════════════════════════════════ -->
+  <div class="screen fiche-screen hidden" id="screen-martin">
+    <div class="fiche-nav">
+      <div class="hb1"></div>
+      <div class="hb2"></div>
+      <div class="fiche-top">
+        <button class="back-btn" onclick="goHome()" aria-label="Retour à l'accueil"><svg width="18" height="18"
+            viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6" />
+          </svg></button>
+        <span class="fiche-tit">Fiche proche</span>
+        <span class="fiche-edit">Modifier</span>
+      </div>
+      <div class="fiche-hero">
+        <div class="fiche-av fav1" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+            stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg></div>
+        <div>
+          <p class="fiche-name">Martin Dupont</p>
+          <p class="fiche-subtext">Père · 78 ans · Alzheimer modéré</p>
+        </div>
+      </div>
+      <!-- Onglets fonctionnels -->
+      <div class="tabs-wrap" role="tablist" aria-label="Sections de la fiche de Martin">
+        <div class="tab" role="tab" aria-selected="false" onclick="switchTab('martin','suivi')" id="tab-martin-suivi">
+          Suivi</div>
+        <div class="tab active" role="tab" aria-selected="true" onclick="switchTab('martin','cercle')"
+          id="tab-martin-cercle">Cercle</div>
+        <div class="tab" role="tab" aria-selected="false" onclick="switchTab('martin','docs')" id="tab-martin-docs">
+          Documents</div>
+      </div>
+    </div>
+
+    <!-- Onglet Suivi -->
+    <div class="tab-content" id="martin-suivi" role="tabpanel" aria-labelledby="tab-martin-suivi">
+      <div class="fsec" style="display:block;">Informations de Martin</div>
+      <div class="fiche-aide-card">
+        <div class="fa-row">
+          <div class="fa-ico" aria-hidden="true">🩺</div>
+          <div>
+            <div class="fa-lbl">Pathologie</div>
+            <div class="fa-val">Alzheimer modéré</div>
+          </div>
+        </div>
+        <div class="fa-row">
+          <div class="fa-ico" aria-hidden="true">🏠</div>
+          <div>
+            <div class="fa-lbl">Lieu de vie</div>
+            <div class="fa-val">Domicile, avec Antoinette</div>
+          </div>
+        </div>
+        <div class="fa-row">
+          <div class="fa-ico" aria-hidden="true">📞</div>
+          <div>
+            <div class="fa-lbl">Contact d'urgence</div>
+            <div class="fa-val">Antoinette Thomas — fille</div>
+          </div>
+        </div>
+        <button class="btn-fiche-complete" onclick="window.open('sawa_nouveau_proche_v41.html','_blank')"
+          aria-label="Voir ou modifier la fiche complète de Martin">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+          Voir / modifier la fiche complète
+        </button>
+      </div>
+      <div class="fsec" style="display:block;">Plan d'accompagnement</div>
+      <div class="plan-card">
+        <div
+          style="font-size:12px;font-weight:700;color:#8210cc;margin-bottom:5px;display:flex;justify-content:space-between;">
+          <span>Progression globale</span><span>72 %</span>
+        </div>
+        <div style="height:7px;background:#ede9fe;border-radius:10px;overflow:hidden;margin-bottom:4px;">
+          <div style="width:72%;height:100%;background:linear-gradient(90deg,#b228FF,#8a2be2);border-radius:10px;">
+          </div>
+        </div>
+      </div>
+      <div class="fsec" style="display:block;">Étapes du suivi</div>
+      <!-- <div class="plan-card">
+        <div class="suivi-step">
+          <div class="ss-ico">💊</div>
+          <div class="ss-info">
+            <h5>Médicaments</h5>
+            <p>Traitement Alzheimer quotidien</p>
+          </div><span class="ss-status ss-ok">À jour</span>
+        </div>
+        <div class="suivi-step">
+          <div class="ss-ico">🏥</div>
+          <div class="ss-info">
+            <h5>Rendez-vous médicaux</h5>
+            <p>Prochain RDV : 14 juin</p>
+          </div><span class="ss-status ss-soon">Bientôt</span>
+        </div>
+        <div class="suivi-step">
+          <div class="ss-ico">🧠</div>
+          <div class="ss-info">
+            <h5>Stimulation cognitive</h5>
+            <p>3 séances par semaine</p>
+          </div><span class="ss-status ss-ok">En cours</span>
+        </div>
+        <div class="suivi-step">
+          <div class="ss-ico">🍽️</div>
+          <div class="ss-info">
+            <h5>Alimentation & hydratation</h5>
+            <p>Suivi nutritionnel</p>
+          </div><span class="ss-status ss-todo">À configurer</span>
+        </div>
+        <div class="suivi-step">
+          <div class="ss-ico">🚶</div>
+          <div class="ss-info">
+            <h5>Activité physique</h5>
+            <p>Marche quotidienne 20 min</p>
+          </div><span class="ss-status ss-todo">À démarrer</span>
+        </div>
+      </div> -->
+    </div>
+
+    <!-- Onglet Cercle -->
+    <div class="tab-content active" id="martin-cercle" role="tabpanel" aria-labelledby="tab-martin-cercle">
+      <div class="fsec" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>Cercle d'aidants de Martin</span>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:10px; color:#8a7ab0; font-weight:700;" id="martin-cercle-view-label">Vue Propriétaire</span>
+          <div id="martin-cercle-view-switch"
+            style="width:32px; height:18px; background:#8210cc; border-radius:18px; position:relative; cursor:pointer; transition:0.3s;"
+            onclick="toggleMartinCercleView()">
+            <div id="martin-cercle-view-knob"
+              style="width:14px; height:14px; background:#fff; border-radius:50%; position:absolute; top:2px; left:16px; transition:0.3s; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Container for Owner View -->
+      <div class="cercle-fiche" id="martin-owner-view">
+        <div class="cf-header">
+          <div class="cf-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg></div>
+          <div>
+            <p class="cf-h">Aidante seule pour l'instant</p>
+            <p class="cf-sub">Invitez un proche pour co-gérer</p>
+          </div>
+          <span class="cf-count" style="background:#f5f3ff;color:#8a7ab0;">0 actif</span>
+        </div>
+        <div class="m-row" style="border-bottom:none;">
+          <div class="m-av am1" aria-hidden="true">AT</div>
+          <div class="m-info">
+            <h5>Antoinette Thomas</h5>
+            <p>Vous · Aidante principale · Tous les accès</p>
+          </div><span class="m-status stp">Principal</span>
+        </div>
+        <div class="invite-empty">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;margin:0 auto 8px;">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          <p style="font-size:13px;font-weight:800;color:#2d1060;margin-bottom:4px;">Invitez un co-aidant</p>
+          <p style="font-size:12px;font-weight:600;color:#8a7ab0;line-height:1.5;">Un frère, une sœur, un conjoint…
+            Partagez le suivi de Martin avec votre entourage.</p>
+        </div>
+        
+        <div id="martin-cercle-invite-container" style="margin-top:20px; border-top:1px solid #ede9f5; padding-top:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <span style="font-size:12px; font-weight:800; color:#2d1060;">Activer l'invitation (Premium)</span>
+            <div id="martin-premium-switch"
+              style="width:32px; height:18px; background:#8210cc; border-radius:18px; position:relative; cursor:pointer; transition:0.3s;"
+              onclick="toggleMartinPremiumState()">
+              <div id="martin-premium-switch-knob"
+                style="width:14px; height:14px; background:#fff; border-radius:50%; position:absolute; top:2px; left:16px; transition:0.3s; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-inv" id="martin-cercle-btn-inv" onclick="openInvite('Martin')"
+            aria-label="Inviter un co-aidant pour Martin">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <line x1="19" y1="8" x2="19" y2="14" />
+              <line x1="22" y1="11" x2="16" y2="11" />
+            </svg>
+            <span>Inviter un co-aidant pour Martin</span>
+          </button>
+
+          <div id="martin-cercle-premium-banner"
+            style="display:none; background:#fff4e5; border:1.5px solid #ffe0b2; border-radius:12px; padding:12px; text-align:center;">
+            <p style="font-size:13px; font-weight:800; color:#b76a00; margin-bottom:4px;">Fonctionnalité Premium</p>
+            <p style="font-size:12px; font-weight:600; color:#cc7a00; margin-bottom:12px; line-height:1.4;">Veuillez
+              mettre à jour votre abonnement pour inviter des co-aidants et élargir votre cercle.</p>
+            <button
+              style="background:#b76a00; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer;">Passer
+              au Premium</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Container for Co-aidant View (Impossible state) -->
+      <div class="cercle-fiche" id="martin-coaidant-view" style="display:none; text-align:center; padding:40px 20px;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;margin:0 auto 16px;">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="15" y1="9" x2="9" y2="15" />
+          <line x1="9" y1="9" x2="15" y2="15" />
+        </svg>
+        <p style="font-size:14px; font-weight:800; color:#2d1060; margin-bottom:8px;">Vue impossible</p>
+        <p style="font-size:12px; color:#8a7ab0; line-height:1.4;">Vous ne pouvez pas être co-aidant(e) d'un proche qui n'a pas été partagé avec vous.</p>
+      </div>
+    </div>
+
+    <!-- Onglet Documents -->
+    <div class="tab-content" id="martin-docs" role="tabpanel" aria-labelledby="tab-martin-docs">
+      <div class="fsec" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>Documents de Martin</span>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:10px; color:#8a7ab0; font-weight:700;" id="martin-doc-view-label">Vue vide</span>
+          <div id="martin-doc-view-switch"
+            style="width:32px; height:18px; background:#cdc5f0; border-radius:18px; position:relative; cursor:pointer; transition:0.3s;"
+            onclick="toggleMartinDocView()">
+            <div id="martin-doc-view-knob"
+              style="width:14px; height:14px; background:#fff; border-radius:50%; position:absolute; top:2px; left:2px; transition:0.3s; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <style>
+        .doc-list { display: flex; flex-direction: column; gap: 10px; }
+        .dcard { background: #fff; border-radius: 16px; border: 1.5px solid #e8e0ff; box-shadow: 0 2px 10px rgba(178, 40, 255, 0.06); overflow: hidden; cursor: pointer; transition: box-shadow 130ms; }
+        .dcard-inner { display: flex; align-items: flex-start; gap: 12px; padding: 13px 14px; }
+        .doc-ico { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 9px; font-weight: 800; gap: 2px; flex-direction: column; }
+        .ico-pdf { background: #FEE4E2; color: #E24B4A; }
+        .ico-img { background: #E0F5FF; color: #1e8fa0; }
+        .doc-info { flex: 1; min-width: 0; }
+        .doc-name { font-size: 13.5px; font-weight: 800; color: #2d1060; margin-bottom: 3px; line-height: 1.3; }
+        .doc-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; font-size: 11px; font-weight: 600; color: #8a7ab0; }
+        .share-badges { display: flex; flex-wrap: wrap; gap: 5px; }
+        .sbadge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; border-radius: 7px; padding: 3px 8px; }
+        .sb-only-me { background: #f5f3ff; color: #5e5290; border: 1px solid #ddd5f8; }
+        .sb-shared { background: #e8f5ee; color: #1D9E75; border: 1px solid #9FE1CB; }
+        .sb-with-care { background: #e0f5ff; color: #1e8fa0; border: 1px solid #b8eaf5; }
+        .sb-with-person { background: #f0e8ff; color: #8210cc; border: 1px solid #c9b6f5; }
+        .doc-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+        .doc-menu { width: 28px; height: 28px; border-radius: 8px; background: #f5f3ff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+      </style>
+
+      <!-- EMPTY STATE -->
+      <div class="doc-empty" id="martin-doc-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;margin:0 auto 12px;">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+          <polyline points="10 9 9 9 8 9" />
+        </svg>
+        <p style="font-size:14px;font-weight:800;color:#2d1060;margin-bottom:6px;">Aucun document ajouté</p>
+        <p style="font-size:12px;font-weight:600;color:#8a7ab0;line-height:1.5;">Ordonnances, comptes-rendus médicaux,
+          directives anticipées…<br>Centralisez les documents de Martin ici.</p>
+        <button class="btn-add-doc" onclick="openAddSheet()" aria-label="Ajouter un document pour Martin">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Ajouter un document
+        </button>
+      </div>
+
+      <!-- FILLED STATE -->
+      <div id="martin-doc-filled" style="display:none; margin-top:16px;">
+        <div class="doc-list" role="list">
+          
+          <!-- Doc 1 — Certificat médical -->
+          <div class="dcard" role="listitem" tabindex="0">
+            <div class="dcard-inner">
+              <div class="doc-ico ico-pdf" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                </svg>
+                <span>PDF</span>
+              </div>
+              <div class="doc-info">
+                <div class="doc-name">Certificat médical</div>
+                <div class="doc-meta">
+                  <span class="doc-size">446 Ko</span>
+                  <span class="doc-date">· 12 jan. 2024</span>
+                </div>
+                <div class="share-badges">
+                  <span class="sbadge sb-shared">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    Partagé
+                  </span>
+                  <span class="sbadge sb-with-care">+ Basma F.</span>
+                  <span class="sbadge sb-with-person">+ Pierre D.</span>
+                </div>
+              </div>
+              <div class="doc-actions">
+                <button class="doc-menu">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="5" r="1" />
+                    <circle cx="12" cy="12" r="1" />
+                    <circle cx="12" cy="19" r="1" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doc 2 — Ordonnance -->
+          <div class="dcard" role="listitem" tabindex="0">
+            <div class="dcard-inner">
+              <div class="doc-ico ico-pdf" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                </svg>
+                <span>PDF</span>
+              </div>
+              <div class="doc-info">
+                <div class="doc-name">Ordonnance — 15 mars 2024</div>
+                <div class="doc-meta"><span class="doc-size">1,2 Mo</span><span class="doc-date">· 15 mars 2024</span></div>
+                <div class="share-badges">
+                  <span class="sbadge sb-only-me">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect x="3" y="11" width="18" height="11" rx="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    Que moi
+                  </span>
+                </div>
+              </div>
+              <div class="doc-actions">
+                <button class="doc-menu">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="5" r="1" />
+                    <circle cx="12" cy="12" r="1" />
+                    <circle cx="12" cy="19" r="1" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="btn-add-doc" onclick="openAddSheet()" aria-label="Ajouter un document pour Martin" style="margin-top:16px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Ajouter un document
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════
+     FICHE MADELEINE
+════════════════════════════════ -->
+  <div class="screen fiche-screen hidden" id="screen-madeleine">
+    <div class="fiche-nav">
+      <div class="hb1"></div>
+      <div class="hb2"></div>
+      <div class="fiche-top">
+        <button class="back-btn" onclick="goHome()" aria-label="Retour à l'accueil"><svg width="18" height="18"
+            viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6" />
+          </svg></button>
+        <span class="fiche-tit">Fiche proche</span>
+        <span class="fiche-edit">Modifier</span>
+      </div>
+      <div class="fiche-hero">
+        <div class="fiche-av fav2" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+            stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg></div>
+        <div>
+          <p class="fiche-name">Madeleine Thomas</p>
+          <p class="fiche-subtext">Mère · 74 ans · Diabète type 2</p>
+        </div>
+      </div>
+      <div class="tabs-wrap" role="tablist" aria-label="Sections de la fiche de Madeleine">
+        <div class="tab" role="tab" aria-selected="false" onclick="switchTab('madeleine','suivi')"
+          id="tab-madeleine-suivi">Suivi</div>
+        <div class="tab active" role="tab" aria-selected="true" onclick="switchTab('madeleine','cercle')"
+          id="tab-madeleine-cercle">Cercle</div>
+        <div class="tab" role="tab" aria-selected="false" onclick="switchTab('madeleine','docs')"
+          id="tab-madeleine-docs">Documents</div>
+      </div>
+    </div>
+
+    <!-- Suivi Madeleine -->
+    <div class="tab-content" id="madeleine-suivi" role="tabpanel" aria-labelledby="tab-madeleine-suivi">
+      <div class="fsec" style="display:block;">Informations de Madeleine</div>
+      <div class="fiche-aide-card">
+        <div class="fa-row">
+          <div class="fa-ico" aria-hidden="true">🩺</div>
+          <div>
+            <div class="fa-lbl">Pathologie</div>
+            <div class="fa-val">Diabète type 2</div>
+          </div>
+        </div>
+        <div class="fa-row">
+          <div class="fa-ico" aria-hidden="true">🏠</div>
+          <div>
+            <div class="fa-lbl">Lieu de vie</div>
+            <div class="fa-val">Domicile, à proximité d'Antoinette</div>
+          </div>
+        </div>
+        <div class="fa-row">
+          <div class="fa-ico" aria-hidden="true">📞</div>
+          <div>
+            <div class="fa-lbl">Contact d'urgence</div>
+            <div class="fa-val">Pierre Dupont — fils</div>
+          </div>
+        </div>
+        <button class="btn-fiche-complete" onclick="window.open('sawa_nouveau_proche_v41.html','_blank')"
+          aria-label="Voir ou modifier la fiche complète de Madeleine">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+          Voir / modifier la fiche complète
+        </button>
+      </div>
+      <div class="fsec" style="display:block;">Plan d'accompagnement</div>
+      <div class="plan-card">
+        <div
+          style="font-size:12px;font-weight:700;color:#8210cc;margin-bottom:5px;display:flex;justify-content:space-between;">
+          <span>Progression globale</span><span>45 %</span>
+        </div>
+        <div style="height:7px;background:#ede9fe;border-radius:10px;overflow:hidden;">
+          <div style="width:45%;height:100%;background:linear-gradient(90deg,#27b6cc,#1D9E75);border-radius:10px;">
+          </div>
+        </div>
+      </div>
+      <!-- <div class="fsec" style="display:block;">Étapes du suivi</div>
+      <div class="plan-card">
+        <div class="suivi-step">
+          <div class="ss-ico">💉</div>
+          <div class="ss-info">
+            <h5>Glycémie & insuline</h5>
+            <p>Contrôle quotidien</p>
+          </div><span class="ss-status ss-ok">Suivi</span>
+        </div>
+        <div class="suivi-step">
+          <div class="ss-ico">🍽️</div>
+          <div class="ss-info">
+            <h5>Régime alimentaire</h5>
+            <p>Plan nutritionnel diabète</p>
+          </div><span class="ss-status ss-soon">À réviser</span>
+        </div>
+        <div class="suivi-step">
+          <div class="ss-ico">🏥</div>
+          <div class="ss-info">
+            <h5>Rendez-vous médecin</h5>
+            <p>Prochain RDV : 28 juin</p>
+          </div><span class="ss-status ss-soon">Bientôt</span>
+        </div>
+      </div> -->
+    </div>
+
+    <!-- Cercle Madeleine — différent de Martin -->
+    <div class="tab-content active" id="madeleine-cercle" role="tabpanel" aria-labelledby="tab-madeleine-cercle">
+      <div class="fsec" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>Cercle d'aidants de Madeleine</span>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:10px; color:#8a7ab0; font-weight:700;" id="cercle-view-label">Vue Propriétaire</span>
+          <div id="cercle-view-switch"
+            style="width:32px; height:18px; background:#8210cc; border-radius:18px; position:relative; cursor:pointer; transition:0.3s;"
+            onclick="toggleCercleView()">
+            <div id="cercle-view-knob"
+              style="width:14px; height:14px; background:#fff; border-radius:50%; position:absolute; top:2px; left:16px; transition:0.3s; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cercle-fiche">
+        <div class="cf-header">
+          <div class="cf-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg></div>
+          <div>
+            <p class="cf-h">3 co-aidants actifs</p>
+            <p class="cf-sub">Accès personnalisés par membre</p>
+          </div>
+          <span class="cf-count">Madeleine</span>
+        </div>
+        <div class="m-row">
+          <div class="m-av am1" aria-hidden="true">AT</div>
+          <div class="m-info">
+            <h5>Antoinette Thomas</h5>
+            <p>Vous · Principale · Tous les accès</p>
+          </div><span class="m-status stp">Principal</span>
+        </div>
+        <div class="m-row" onclick="showCoaidantPerms('Pierre Dupont')" style="cursor:pointer;">
+          <div class="m-av am2" aria-hidden="true">PD</div>
+          <div class="m-info">
+            <h5>Pierre Dupont</h5>
+            <p>Frère · Suivi partagé</p>
+          </div><span class="m-status sta" style="background:#E1F5EE;color:#085041;">Co-aidant</span>
+        </div>
+        <div class="m-row" onclick="showCoaidantPerms('Marie Dupont')" style="cursor:pointer; border-bottom:none;">
+          <div class="m-av am3" aria-hidden="true" style="background:#27b6cc;">MD</div>
+          <div class="m-info">
+            <h5>Marie Dupont</h5>
+            <p>Sœur · Suivi partagé</p>
+          </div><span class="m-status sta" style="background:#E1F5EE;color:#085041;">Co-aidant</span>
+        </div>
+
+        <!-- Shared Sections Box (Read-only) -->
+        <div class="perms-box" id="cercle-perms-box" style="display:none; margin-top:0;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <p class="perms-title" id="perms-coaidant-name" style="margin-bottom:0;">Accès de ...</p>
+          </div>
+          <div id="perms-list" style="display:flex; flex-direction:column;">
+            <!-- Injected by JS -->
+          </div>
+          <div id="perms-premium-banner" style="display:none; margin-top:16px; background:#fff4e5; border:1.5px solid #ffe0b2; border-radius:12px; padding:12px; text-align:center;">
+             <p style="font-size:12px; font-weight:800; color:#b76a00; margin-bottom:4px;">Modification verrouillée (Premium)</p>
+             <p style="font-size:11px; font-weight:600; color:#cc7a00; margin-bottom:8px; line-height:1.4;">Passez au Premium pour modifier les accès de vos co-aidants.</p>
+             <button style="background:#b76a00; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer;">Mettre à jour</button>
+          </div>
+        </div>
+
+        <div id="cercle-invite-container" style="margin-top:20px; border-top:1px solid #ede9f5; padding-top:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <span style="font-size:12px; font-weight:800; color:#2d1060;">Activer l'invitation (Premium)</span>
+            <div id="premium-switch"
+              style="width:32px; height:18px; background:#8210cc; border-radius:18px; position:relative; cursor:pointer; transition:0.3s;"
+              onclick="togglePremiumState()">
+              <div id="premium-switch-knob"
+                style="width:14px; height:14px; background:#fff; border-radius:50%; position:absolute; top:2px; left:16px; transition:0.3s; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-inv" id="cercle-btn-inv" onclick="openInvite('Madeleine')"
+            aria-label="Inviter un co-aidant pour Madeleine">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <line x1="19" y1="8" x2="19" y2="14" />
+              <line x1="22" y1="11" x2="16" y2="11" />
+            </svg>
+            <span>Inviter un co-aidant pour Madeleine</span>
+          </button>
+
+          <div id="cercle-premium-banner"
+            style="display:none; background:#fff4e5; border:1.5px solid #ffe0b2; border-radius:12px; padding:12px; text-align:center;">
+            <p style="font-size:13px; font-weight:800; color:#b76a00; margin-bottom:4px;">Fonctionnalité Premium</p>
+            <p style="font-size:12px; font-weight:600; color:#cc7a00; margin-bottom:12px; line-height:1.4;">Veuillez
+              mettre à jour votre abonnement pour inviter d'autres co-aidants et élargir votre cercle.</p>
+            <button
+              style="background:#b76a00; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer;">Passer
+              au Premium</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Documents Madeleine -->
+    <div class="tab-content" id="madeleine-docs" role="tabpanel" aria-labelledby="tab-madeleine-docs">
+      <div class="fsec" style="display:block;">Documents de Madeleine</div>
+      <div class="doc-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;margin:0 auto 12px;">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+        </svg>
+        <p style="font-size:14px;font-weight:800;color:#2d1060;margin-bottom:6px;">Aucun document ajouté</p>
+        <p style="font-size:12px;font-weight:600;color:#8a7ab0;line-height:1.5;">Ordonnances, bilans de glycémie,
+          comptes-rendus…<br>Centralisez les documents de Madeleine ici.</p>
+        <button class="btn-add-doc" aria-label="Ajouter un document pour Madeleine">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Ajouter un document
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BOTTOM SHEET NOTIFICATIONS ── -->
+  <div class="ov" id="ov-notif" role="dialog" aria-modal="true" aria-labelledby="notif-title">
+    <div class="ov-bg" onclick="closeNotif()" aria-hidden="true"></div>
+    <div class="sheet-g">
+      <div class="sheet-drag" aria-hidden="true"></div>
+      <button class="sheet-x" onclick="closeNotif()" aria-label="Fermer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <h2 class="sheet-h" id="notif-title" tabindex="-1">Notifications</h2>
+      <p class="sheet-sub">Vos dernières mises à jour</p>
+      <div class="notif-item unread">
+        <div class="notif-ico" aria-hidden="true">📅</div>
+        <div class="notif-txt">
+          <p>Votre RDV avec Basma Frangieh est confirmé pour le 14 juin à 10h00.</p><span>Il y a 2 heures</span>
+        </div>
+      </div>
+      <div class="notif-item unread">
+        <div class="notif-ico" aria-hidden="true">💜</div>
+        <div class="notif-txt">
+          <p>Merci d'avoir partagé votre humeur aujourd'hui. Prenez soin de vous.</p><span>Aujourd'hui à 08h12</span>
+        </div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-ico" aria-hidden="true">🧠</div>
+        <div class="notif-txt">
+          <p>Un nouveau quiz est disponible : "Reconnaître les signes d'épuisement".</p><span>Hier à 17h40</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BOTTOM SHEET INVITER UN CO-AIDANT ── -->
+  <div class="ov" id="ov-invite" role="dialog" aria-modal="true" aria-labelledby="invite-title">
+    <div class="ov-bg" onclick="closeInvite()" aria-hidden="true"></div>
+    <div class="sheet-g">
+      <div class="sheet-drag" aria-hidden="true"></div>
+      <button class="sheet-x" onclick="closeInvite()" aria-label="Fermer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <h2 class="sheet-h" id="invite-title" tabindex="-1">Inviter un co-aidant</h2>
+      <p class="sheet-sub" id="invite-sub">Partagez le suivi de Martin avec un proche.</p>
+      <div class="share-row" onclick="openInviteEmail()" role="button" tabindex="0"
+        onkeydown="if(event.key==='Enter')openInviteEmail()">
+        <div class="share-ico" style="background:#e0f0ff;" aria-hidden="true">✉️</div>
+        <div class="share-txt">
+          <h5>Envoyer par e-mail</h5>
+          <p>Partager le lien d'invitation par e-mail</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY INVITE EMAIL -->
+  <div class="ov" id="ov-invite-email" role="dialog" aria-modal="true" aria-labelledby="invite-email-title">
+    <div class="ov-bg" onclick="closeInviteEmail()" aria-hidden="true"></div>
+    <div class="sheet-g">
+      <div class="sheet-drag" aria-hidden="true"></div>
+      <button class="sheet-x" onclick="closeInviteEmail()" aria-label="Fermer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <h2 class="sheet-h" id="invite-email-title" tabindex="-1">Invitation par e-mail</h2>
+      <p class="sheet-sub">Configurez les accès du futur co-aidant</p>
+      
+      <!-- Email input -->
+      <div style="margin-top:16px; margin-bottom:20px;">
+        <label for="invite-email-input" style="display:block; font-size:12px; font-weight:800; color:#2d1060; margin-bottom:6px;">Adresse e-mail du co-aidant</label>
+        <input type="email" id="invite-email-input" placeholder="exemple@mail.com" style="width:100%; border:1px solid #ede9f5; background:#fff; border-radius:12px; padding:12px; font-family:'Nunito', sans-serif; font-size:14px; color:#2d1060; outline:none;" />
+      </div>
+
+      <!-- Permissions list -->
+      <div id="invite-perms-list" style="display:flex; flex-direction:column; margin-bottom:24px;">
+        <!-- Injected by JS -->
+      </div>
+      
+      <!-- Send Button -->
+      <button style="width:100%; background:#8210cc; border:none; border-radius:14px; padding:14px; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; color:#fff; cursor:pointer;" onclick="closeInviteEmail(); alert('Invitation envoyée !');">Envoyer l'invitation</button>
+    </div>
+  </div>
+
+  <style>
+    .add-actions { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+    .add-action { background:#faf8ff; border:1px solid #ede9f5; border-radius:16px; padding:16px; display:flex; flex-direction:column; align-items:center; text-align:center; cursor:pointer; transition:all 0.2s cubic-bezier(0.4,0,0.2,1); }
+    .add-action:hover, .add-action:focus-visible { transform:translateY(-2px); box-shadow:0 8px 16px rgba(130,16,204,0.08); border-color:#d4c4f0; outline:none; }
+    .add-action-ico { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:12px; }
+    .add-action-lbl { font-size:14px; font-weight:800; color:#2d1060; margin-bottom:4px; }
+    .add-action-sub { font-size:11px; font-weight:600; color:#8a7ab0; line-height:1.4; }
+  </style>
+
+  <!-- OVERLAY AJOUTER DOCUMENT -->
+  <div class="ov" id="ov-add" role="dialog" aria-modal="true" aria-labelledby="add-title">
+    <div class="ov-bg" onclick="closeAddSheet()"></div>
+    <div class="sheet-g">
+      <div class="sheet-drag" aria-hidden="true"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h2 class="sheet-h" id="add-title" style="margin-bottom:0;">Ajouter un document</h2>
+        <button class="sheet-x" onclick="closeAddSheet()" aria-label="Fermer" style="position:static;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="add-actions" role="list">
+        <!-- Galerie photo -->
+        <div class="add-action" role="listitem" tabindex="0" onclick="addAction('galerie')">
+          <div class="add-action-ico" style="background:#e0f5ff;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1e8fa0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+          </div>
+          <span class="add-action-lbl">Galerie photo</span>
+          <span class="add-action-sub">Photos et images du téléphone</span>
+        </div>
+        <!-- Fichier -->
+        <div class="add-action" role="listitem" tabindex="0" onclick="addAction('fichier')">
+          <div class="add-action-ico" style="background:#FEE4E2;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E24B4A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
+          </div>
+          <span class="add-action-lbl">Fichier</span>
+          <span class="add-action-sub">PDF, Word, Excel…</span>
+        </div>
+        <!-- Scanner -->
+        <div class="add-action" role="listitem" tabindex="0" onclick="addAction('scanner')">
+          <div class="add-action-ico" style="background:#f0e8ff;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+              <circle cx="12" cy="13" r="4" />
+            </svg>
+          </div>
+          <span class="add-action-lbl">Scanner</span>
+          <span class="add-action-sub">Capturer avec l'appareil photo</span>
+        </div>
+        <!-- Créer un dossier -->
+        <div class="add-action" role="listitem" tabindex="0" onclick="addAction('dossier')">
+          <div class="add-action-ico" style="background:#fff3e0;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a05a00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+              <line x1="12" y1="11" x2="12" y2="17" />
+              <line x1="9" y1="14" x2="15" y2="14" />
+            </svg>
+          </div>
+          <span class="add-action-lbl">Nouveau dossier</span>
+          <span class="add-action-sub">Organiser vos documents</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY MODIFIER ACCÈS -->
+  <div class="ov" id="ov-modifier-acces" role="dialog" aria-modal="true" aria-labelledby="modifier-title">
+    <div class="ov-bg" onclick="document.getElementById('ov-modifier-acces').classList.remove('open')"
+      aria-hidden="true"></div>
+    <div class="sheet-g">
+      <div class="sheet-drag" aria-hidden="true"></div>
+      <button class="sheet-x" onclick="document.getElementById('ov-modifier-acces').classList.remove('open')"
+        aria-label="Fermer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <h2 class="sheet-h" id="modifier-title" tabindex="-1">Modifier les accès</h2>
+      <p class="sheet-sub">Êtes-vous sûr(e) de vouloir modifier les sections partagées avec ce co-aidant ?</p>
+
+      <div style="display:flex;gap:12px;margin-top:24px;">
+        <button
+          style="flex:1;background:#f5f3ff;border:none;border-radius:14px;padding:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#5e5290;cursor:pointer;"
+          onclick="document.getElementById('ov-modifier-acces').classList.remove('open')">Annuler</button>
+        <button
+          style="flex:1;background:#8210cc;border:none;border-radius:14px;padding:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#fff;cursor:pointer;"
+          onclick="document.getElementById('ov-modifier-acces').classList.remove('open'); alert('Les accès ont été modifiés.');">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Toggle Vue Propriétaire / Co-aidant */
+    let isOwnerView = true;
+    function toggleCercleView() {
+      isOwnerView = !isOwnerView;
+      const swBg = document.getElementById('cercle-view-switch');
+      const swKnob = document.getElementById('cercle-view-knob');
+      const label = document.getElementById('cercle-view-label');
+
+      const permsBox = document.getElementById('cercle-perms-box');
+      const inviteContainer = document.getElementById('cercle-invite-container');
+
+      if (isOwnerView) {
+        swBg.style.background = '#8210cc';
+        swKnob.style.left = '16px';
+        label.innerText = 'Vue Propriétaire';
+        inviteContainer.style.display = 'block';
+      } else {
+        swBg.style.background = '#cdc5f0';
+        swKnob.style.left = '2px';
+        label.innerText = 'Vue Co-aidant';
+        permsBox.style.display = 'none'; // hide if open
+        inviteContainer.style.display = 'none';
+      }
+    }
+
+    /* Toggle Premium Feature (Invite button vs Banner) */
+    let isPremium = true;
+    function togglePremiumState() {
+      isPremium = !isPremium;
+      const swBg = document.getElementById('premium-switch');
+      const swKnob = document.getElementById('premium-switch-knob');
+
+      const btn = document.getElementById('cercle-btn-inv');
+      const banner = document.getElementById('cercle-premium-banner');
+
+      const modBanner = document.getElementById('perms-premium-banner');
+      const togBtns = document.querySelectorAll('.perms-tog-btn');
+
+      if (isPremium) {
+        swBg.style.background = '#8210cc';
+        swKnob.style.left = '16px';
+        btn.style.display = 'flex';
+        banner.style.display = 'none';
+        if (modBanner) modBanner.style.display = 'none';
+        togBtns.forEach(b => { b.style.pointerEvents = 'auto'; b.style.opacity = '1'; });
+      } else {
+        swBg.style.background = '#cdc5f0';
+        swKnob.style.left = '2px';
+        btn.style.display = 'none';
+        banner.style.display = 'block';
+        if (modBanner) modBanner.style.display = 'block';
+        togBtns.forEach(b => { b.style.pointerEvents = 'none'; b.style.opacity = '0.5'; });
+      }
+    }
+
+    /* Show Co-aidant Perms */
+    function showCoaidantPerms(name) {
+      if (!isOwnerView) return; // Do nothing if in co-aidant view
+
+      const permsBox = document.getElementById('cercle-perms-box');
+      document.getElementById('perms-coaidant-name').innerText = 'Accès de ' + name;
+
+      const sections = [
+        'Informations personnelles et coordonnées',
+        'État civil et situation familiale',
+        'Protection sociale',
+        'Informations professionnelles',
+        'Perte d\'autonomie et accompagnement'
+      ];
+
+      let html = '';
+      sections.forEach(sec => {
+        // Randomly check some sections
+        const isChecked = Math.random() > 0.3;
+        const stateClass = isChecked ? 'on' : 'off';
+        const pointerEvents = isPremium ? 'auto' : 'none';
+        const opacity = isPremium ? '1' : '0.5';
+
+        html += `
+          <div class="perm-row" style="padding:10px 0; border-bottom:1px solid #ede9f5; display:flex; justify-content:space-between; align-items:center;">
+            <span class="perm-lbl" style="font-size:13px; max-width:80%; color:#2d1060; font-weight:700;">${sec}</span>
+            <button class="tog ${stateClass} perms-tog-btn" role="switch" aria-checked="${isChecked}" 
+                    style="pointer-events:${pointerEvents}; opacity:${opacity}; flex-shrink:0;" 
+                    onclick="togSwitch(this); setTimeout(() => alert('Accès sauvegardé !'), 100);">
+              <div class="tog-k"></div>
+            </button>
+          </div>
+        `;
+      });
+
+      document.getElementById('perms-list').innerHTML = html;
+      permsBox.style.display = 'block';
+    }
+
+    /* Toggle switch Ma charge d'aidant */
+    function toggleChargeState() {
+      const empty = document.getElementById('charge-card-empty');
+      const done = document.getElementById('charge-card-done');
+      const swBg = document.getElementById('charge-switch');
+      const swKnob = document.getElementById('charge-switch-knob');
+
+      if (empty.style.display !== 'none') {
+        empty.style.display = 'none';
+        done.style.display = 'block';
+        swBg.style.background = '#8210cc';
+        swKnob.style.left = '16px';
+      } else {
+        empty.style.display = 'block';
+        done.style.display = 'none';
+        swBg.style.background = '#cdc5f0';
+        swKnob.style.left = '2px';
+      }
+    }
+
+    /* ── Navigation écrans ── */
+    function showFiche(proche) {
+      document.getElementById('screen-home').classList.add('hidden');
+      document.getElementById('screen-' + proche).classList.remove('hidden');
+    }
+    function goHome() {
+      document.querySelectorAll('.screen').forEach(function (s) { s.classList.add('hidden'); });
+      document.getElementById('screen-home').classList.remove('hidden');
+    }
+
+    /* ── Onglets fonctionnels ── */
+    function switchTab(proche, tab) {
+      ['suivi', 'cercle', 'docs'].forEach(function (t) {
+        var tc = document.getElementById(proche + '-' + t);
+        var tBtn = document.getElementById('tab-' + proche + '-' + t);
+        if (tc) tc.classList.toggle('active', t === tab);
+        if (tBtn) {
+          tBtn.classList.toggle('active', t === tab);
+          tBtn.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+        }
+      });
+    }
+
+    /* ── Humeur interactive ── */
+    function selectMood(btn) {
+      document.querySelectorAll('.mood-row .mc').forEach(function (b) {
+        b.classList.remove('a'); b.setAttribute('aria-checked', 'false');
+      });
+      btn.classList.add('a'); btn.setAttribute('aria-checked', 'true');
+    }
+
+    /* ── Toggles permissions ── */
+    function togSwitch(btn) {
+      var on = btn.classList.contains('on');
+      btn.classList.toggle('on', !on); btn.classList.toggle('off', on);
+      btn.setAttribute('aria-checked', String(!on));
+    }
+
+
+
+    /* ── Scroll dots proches ── */
+    var ps = document.getElementById('proches-scroll');
+    if (ps) {
+      ps.addEventListener('scroll', function () {
+        var idx = Math.round(ps.scrollLeft / (ps.offsetWidth || 1));
+        [0, 1].forEach(function (i) {
+          var d = document.getElementById('dot-' + i);
+          if (d) { d.classList.toggle('active', i === idx); d.setAttribute('aria-selected', i === idx ? 'true' : 'false'); }
+        });
+      });
+    }
+
+    function goToProcheCard(idx) {
+      if (!ps) return;
+      ps.scrollTo({ left: idx * ps.offsetWidth, behavior: 'smooth' });
+    }
+
+    /* ── Raccourcis bandeau : scroll vers section ── */
+    function scrollToSec(id) {
+      var el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ── Notifications ── */
+    function openNotif() {
+      var dot = document.getElementById('ndot');
+      if (dot) dot.style.display = 'none';
+      document.getElementById('notif-btn').setAttribute('aria-label', 'Notifications');
+      document.getElementById('ov-notif').classList.add('open');
+      setTimeout(function () { document.getElementById('notif-title').focus(); }, 350);
+      document.addEventListener('keydown', escNotif);
+    }
+    function closeNotif() {
+      document.getElementById('ov-notif').classList.remove('open');
+      document.removeEventListener('keydown', escNotif);
+    }
+    function escNotif(e) { if (e.key === 'Escape') closeNotif(); }
+
+    /* ── Inviter un co-aidant ── */
+    function openInvite(prenom) {
+      document.getElementById('invite-sub').textContent = 'Partagez le suivi de ' + prenom + ' avec un proche.';
+      document.getElementById('ov-invite').classList.add('open');
+      setTimeout(function () { document.getElementById('invite-title').focus(); }, 350);
+      document.addEventListener('keydown', escInvite);
+    }
+    function closeInvite() {
+      document.getElementById('ov-invite').classList.remove('open');
+      document.removeEventListener('keydown', escInvite);
+    }
+    function escInvite(e) { if (e.key === 'Escape') closeInvite(); }
+
+    function openInviteEmail() {
+      closeInvite();
+      
+      const sections = [
+        'Informations personnelles et coordonnées',
+        'État civil et situation familiale',
+        'Protection sociale',
+        'Informations professionnelles',
+        'Perte d\'autonomie et accompagnement'
+      ];
+      
+      let html = '';
+      sections.forEach(sec => {
+        html += `
+          <div class="perm-row" style="padding:10px 0; border-bottom:1px solid #ede9f5; display:flex; justify-content:space-between; align-items:center;">
+            <span class="perm-lbl" style="font-size:13px; max-width:80%; color:#2d1060; font-weight:700;">${sec}</span>
+            <button class="tog on" role="switch" aria-checked="true" 
+                    style="flex-shrink:0;" onclick="togSwitch(this);">
+              <div class="tog-k"></div>
+            </button>
+          </div>
+        `;
+      });
+      document.getElementById('invite-perms-list').innerHTML = html;
+      
+      document.getElementById('ov-invite-email').classList.add('open');
+      document.addEventListener('keydown', escInviteEmail);
+    }
+    
+    function closeInviteEmail() {
+      document.getElementById('ov-invite-email').classList.remove('open');
+      document.removeEventListener('keydown', escInviteEmail);
+    }
+    function escInviteEmail(e) { if (e.key === 'Escape') closeInviteEmail(); }
+    
+    /* ── Ajouter un document ── */
+    function openAddSheet() {
+      document.getElementById('ov-add').classList.add('open');
+    }
+    function closeAddSheet() {
+      document.getElementById('ov-add').classList.remove('open');
+    }
+    function addAction(type) {
+      closeAddSheet();
+      if (type === 'dossier') {
+        setTimeout(function() { alert("Création d'un dossier... (Redirection vers documents)"); }, 300);
+      } else {
+        setTimeout(function() { alert("Ajout de " + type + "... (Redirection vers documents)"); }, 300);
+      }
+    }
+    function say(msg) {
+      var el = document.createElement('div');
+      el.setAttribute('aria-live', 'polite');
+      el.className = 'sr';
+      el.textContent = msg;
+      document.body.appendChild(el);
+      setTimeout(function () { document.body.removeChild(el); }, 1000);
+    }
+
+    /* Toggle Martin Cercle View (Proprio / Co-aidant) */
+    let isMartinOwnerView = true;
+    function toggleMartinCercleView() {
+      isMartinOwnerView = !isMartinOwnerView;
+      const ownerView = document.getElementById('martin-owner-view');
+      const coView = document.getElementById('martin-coaidant-view');
+      const swBg = document.getElementById('martin-cercle-view-switch');
+      const swKnob = document.getElementById('martin-cercle-view-knob');
+      const label = document.getElementById('martin-cercle-view-label');
+
+      if (isMartinOwnerView) {
+        ownerView.style.display = 'block';
+        coView.style.display = 'none';
+        swBg.style.background = '#8210cc';
+        swKnob.style.left = '16px';
+        label.innerText = 'Vue Propriétaire';
+      } else {
+        ownerView.style.display = 'none';
+        coView.style.display = 'block';
+        swBg.style.background = '#cdc5f0';
+        swKnob.style.left = '2px';
+        label.innerText = 'Vue Co-aidant';
+      }
+    }
+
+    /* Toggle Martin Premium Status */
+    let isMartinPremium = true;
+    function toggleMartinPremiumState() {
+      isMartinPremium = !isMartinPremium;
+      const swBg = document.getElementById('martin-premium-switch');
+      const swKnob = document.getElementById('martin-premium-switch-knob');
+
+      const btn = document.getElementById('martin-cercle-btn-inv');
+      const banner = document.getElementById('martin-cercle-premium-banner');
+
+      if (isMartinPremium) {
+        swBg.style.background = '#8210cc';
+        swKnob.style.left = '16px';
+        btn.style.display = 'flex';
+        banner.style.display = 'none';
+      } else {
+        swBg.style.background = '#cdc5f0';
+        swKnob.style.left = '2px';
+        btn.style.display = 'none';
+        banner.style.display = 'block';
+      }
+    }
+
+    /* Toggle Martin Doc View (Empty / Filled) */
+    let isMartinDocEmpty = true;
+    function toggleMartinDocView() {
+      isMartinDocEmpty = !isMartinDocEmpty;
+      const emptyView = document.getElementById('martin-doc-empty');
+      const filledView = document.getElementById('martin-doc-filled');
+      const swBg = document.getElementById('martin-doc-view-switch');
+      const swKnob = document.getElementById('martin-doc-view-knob');
+      const label = document.getElementById('martin-doc-view-label');
+
+      if (isMartinDocEmpty) {
+        emptyView.style.display = 'block';
+        filledView.style.display = 'none';
+        swBg.style.background = '#cdc5f0';
+        swKnob.style.left = '2px';
+        label.innerText = 'Vue vide';
+      } else {
+        emptyView.style.display = 'none';
+        filledView.style.display = 'block';
+        swBg.style.background = '#8210cc';
+        swKnob.style.left = '16px';
+        label.innerText = 'Vue remplie';
+      }
+    }
+  </script>
+</body>
+
+</html>

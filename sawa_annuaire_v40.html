@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Sawa Care - Annuaire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { height: 100%; -webkit-text-size-adjust: 100%; }
+body { height: 100%; font-family: 'Nunito', sans-serif; background: #ddd5f8; display: flex; flex-direction: column; overflow: hidden; max-width: 430px; margin: 0 auto; }
+
+.hdr { background: linear-gradient(145deg,#b228FF 0%,#8a2be2 45%,#1e3a6e 80%,#0f5060 100%); padding: calc(env(safe-area-inset-top,44px) + 10px) 18px 20px; flex-shrink: 0; position: relative; overflow: hidden; }
+.hb1 { position: absolute; width: 160px; height: 160px; border-radius: 50%; background: rgba(255,255,255,0.07); top: -55px; right: -40px; pointer-events: none; }
+.hb2 { position: absolute; width: 90px; height: 90px; border-radius: 50%; background: rgba(133,255,239,0.1); bottom: -25px; left: 10px; pointer-events: none; }
+.hdr-bar { display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 2; margin-bottom: 14px; }
+.hdr-title { font-size: 18px; font-weight: 900; color: #fff; text-align: center; flex: 1; }
+.icon-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.18); border: 1.5px solid rgba(255,255,255,0.28); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.icon-btn:focus-visible { outline: 2px solid #fff; }
+
+.geo-bar { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 30px; padding: 7px 14px; position: relative; z-index: 2; cursor: pointer; }
+.geo-dot { width: 8px; height: 8px; border-radius: 50%; background: #85ffef; flex-shrink: 0; }
+.geo-text { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.9); flex: 1; }
+.geo-change { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.6); }
+
+.sticky { background: #ddd5f8; border-radius: 22px 22px 0 0; margin-top: -2px; padding: 14px 16px 0; flex-shrink: 0; }
+
+.search-bar { display: flex; align-items: center; gap: 9px; background: #fff; border-radius: 14px; border: 1.5px solid #e8e0ff; padding: 11px 13px; box-shadow: 0 2px 8px rgba(178,40,255,0.06); margin-bottom: 10px; transition: border-color 150ms; }
+.search-bar:focus-within { border-color: #b228FF; }
+.search-bar input { flex: 1; border: none; outline: none; background: transparent; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600; color: #2d1060; }
+.search-bar input::placeholder { color: #9b91c8; }
+.search-clear { display: none; width: 20px; height: 20px; border-radius: 50%; background: #ede9fe; border: none; cursor: pointer; align-items: center; justify-content: center; flex-shrink: 0; }
+.search-clear.show { display: flex; }
+
+.cats-row { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 10px; padding-right: 4px; scrollbar-width: none; }
+.cats-row::-webkit-scrollbar { display: none; }
+.cat-chip { flex: 0 0 auto; display: flex; align-items: center; gap: 5px; background: #fff; border-radius: 20px; padding: 7px 12px; font-family: 'Nunito', sans-serif; font-size: 11.5px; font-weight: 800; color: #5e5290; border: 1.5px solid #e8e0ff; cursor: pointer; white-space: nowrap; min-height: 36px; transition: all 130ms; }
+.cat-chip.active { background: #f0e8ff; border-color: #b228FF; color: #8210cc; }
+.cat-chip:focus-visible { outline: 2px solid #b228FF; }
+.cat-ico { font-size: 14px; }
+
+.scroll { flex: 1; overflow-y: auto; padding: 0 16px calc(env(safe-area-inset-bottom,0px) + 90px); scrollbar-width: none; }
+.scroll::-webkit-scrollbar { display: none; }
+
+.meta-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0 10px; }
+.meta-count { font-size: 11px; font-weight: 800; color: #8a7ab0; }
+.meta-sort { display: flex; align-items: center; gap: 5px; font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 800; color: #5e5290; background: #fff; border: 1.5px solid #e8e0ff; border-radius: 9px; padding: 5px 10px; cursor: pointer; }
+
+.sug-banner { background: linear-gradient(135deg,#f5eeff,#eef5ff); border: 1.5px solid rgba(178,40,255,0.2); border-radius: 16px; padding: 13px 14px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 11px; }
+.sug-ico { width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(135deg,#b228FF,#7b2fff 45%,#27b6cc); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sug-text h4 { font-size: 13px; font-weight: 900; color: #2d1060; margin-bottom: 3px; }
+.sug-text p { font-size: 11.5px; font-weight: 600; color: #5e5290; line-height: 1.5; }
+.sug-link { font-size: 11px; font-weight: 800; color: #b228FF; cursor: pointer; margin-top: 4px; display: inline-block; }
+
+.sep-lbl { font-size: 11px; font-weight: 800; color: #4e4280; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 0 8px; display: flex; align-items: center; gap: 8px; }
+.sep-line { flex: 1; height: 0.5px; background: #cdc5f0; }
+
+.rcard { background: #fff; border-radius: 16px; border: 1.5px solid #e8e0ff; box-shadow: 0 2px 10px rgba(178,40,255,0.06); margin-bottom: 10px; overflow: hidden; cursor: pointer; transition: box-shadow 130ms; }
+.rcard:hover { box-shadow: 0 4px 16px rgba(178,40,255,0.12); }
+.rcard:active { transform: scale(0.99); }
+.rcard:focus-visible { outline: 2px solid #b228FF; }
+.rcard-inner { display: flex; align-items: flex-start; gap: 12px; padding: 13px 14px; }
+.rcard-ico { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.rcard-info { flex: 1; min-width: 0; }
+.rcard-name { font-size: 14px; font-weight: 900; color: #2d1060; margin-bottom: 2px; line-height: 1.2; }
+.rcard-type { font-size: 11px; font-weight: 700; color: #8a7ab0; margin-bottom: 5px; }
+.rcard-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 5px; }
+.rcard-dist { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; color: #5e5290; background: #f5f3ff; border-radius: 6px; padding: 2px 7px; }
+.rcard-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 800; border-radius: 6px; padding: 2px 7px; }
+.b-dispo { background: #e8f5ee; color: #1D9E75; }
+.b-attente { background: #FFF8E1; color: #9A6500; }
+.b-conv { background: #e0f5ff; color: #1e8fa0; }
+.rcard-addr { font-size: 11.5px; font-weight: 600; color: #8a7ab0; }
+.stars { display: flex; align-items: center; gap: 2px; }
+.star { font-size: 11px; }
+.rcard-actions { display: flex; gap: 8px; padding: 0 14px 12px; }
+.btn-action { flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 9px; border-radius: 11px; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800; cursor: pointer; border: none; transition: opacity 150ms; }
+.btn-action:hover { opacity: 0.85; }
+.btn-action:focus-visible { outline: 2px solid #b228FF; }
+.btn-tel { background: linear-gradient(135deg,#b228FF,#8a2be2); color: #fff; }
+.btn-msg { background: #f0e8ff; color: #8210cc; border: 1.5px solid #c9b6f5 !important; }
+.btn-save { background: #f0e8ff; color: #8210cc; border: 1.5px solid #c9b6f5 !important; width: auto; flex: 0 0 auto; padding: 9px 12px; }
+
+.empty { text-align: center; padding: 40px 20px; display: none; }
+.empty.show { display: block; }
+.empty-ico { font-size: 40px; margin-bottom: 12px; }
+.empty-t { font-size: 16px; font-weight: 900; color: #2d1060; margin-bottom: 6px; }
+.empty-s { font-size: 13px; font-weight: 600; color: #8a7ab0; line-height: 1.6; }
+
+.ov { position: fixed; inset: 0; background: rgba(14,22,38,0.6); z-index: 200; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 200ms; backdrop-filter: blur(3px); }
+.ov.open { opacity: 1; pointer-events: all; }
+.ov-bg { position: absolute; inset: 0; }
+.sheet { background: #fff; border-radius: 26px 26px 0 0; width: 100%; padding: 0 20px calc(env(safe-area-inset-bottom,0px) + 24px); transform: translateY(100%); transition: transform 320ms cubic-bezier(.32,.72,0,1); position: relative; z-index: 1; max-height: 88vh; overflow-y: auto; }
+.ov.open .sheet { transform: translateY(0); }
+.drag { width: 38px; height: 4px; border-radius: 2px; background: #e4ddf7; margin: 12px auto 0; }
+.sheet-x { position: absolute; top: 12px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: #f5f3ff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+.det-header { display: flex; align-items: flex-start; gap: 14px; margin: 16px 0 16px; }
+.det-ico { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+.det-name { font-size: 19px; font-weight: 900; color: #2d1060; line-height: 1.2; margin-bottom: 3px; }
+.det-type { font-size: 12px; font-weight: 700; color: #8a7ab0; }
+.det-section { margin-bottom: 16px; }
+.det-sec-title { font-size: 10px; font-weight: 800; color: #4e4280; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 9px; }
+.det-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid #ede9f5; }
+.det-row:last-child { border-bottom: none; }
+.det-row-ico { width: 30px; height: 30px; border-radius: 8px; background: #f5f3ff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.det-row-txt { flex: 1; }
+.det-row-lbl { font-size: 10px; font-weight: 700; color: #8a7ab0; }
+.det-row-val { font-size: 13px; font-weight: 700; color: #2d1060; margin-top: 1px; }
+.det-row-val.link { color: #b228FF; cursor: pointer; }
+.det-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.det-tag { font-size: 11px; font-weight: 700; color: #8210cc; background: #f0e8ff; border-radius: 7px; padding: 3px 9px; }
+.det-actions { display: flex; gap: 10px; margin-top: 8px; }
+.det-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 14px; border-radius: 14px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; border: none; }
+.det-btn.prim { background: linear-gradient(135deg,#b228FF,#8a2be2); color: #fff; }
+.det-btn.sec { background: #f0e8ff; color: #8210cc; border: 1.5px solid #b228FF !important; }
+.save-fiche-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 13px; border-radius: 14px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; color: #1D9E75; background: #e8f5ee; border: 1.5px solid #9FE1CB; cursor: pointer; margin-top: 10px; }
+
+.nav-bar { flex-shrink: 0; background: #fff; border-top: 1.5px solid #cdc5f0; padding-bottom: env(safe-area-inset-bottom,0px); }
+.ai-r { display: flex; align-items: center; justify-content: flex-end; padding: 7px 18px 4px; gap: 8px; }
+.ai-lbl { font-size: 10px; font-weight: 700; color: #14233A; background: #fcffad; border-radius: 7px; padding: 4px 9px; }
+.ai-fab { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg,#b228FF,#7b2fff 45%,#27b6cc); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 14px rgba(178,40,255,0.4); overflow: hidden; position: relative; }
+.ai-fab::before { content: ''; position: absolute; top: 4px; left: 8px; width: 30px; height: 12px; background: rgba(255,255,255,0.18); border-radius: 50%; transform: rotate(-8deg); }
+.bnav { display: flex; align-items: center; padding: 3px 0 7px; }
+.ni { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; min-height: 44px; justify-content: center; }
+.nl { font-size: 10px; font-weight: 700; color: #9080c0; }
+.ni.act .nl { color: #b228FF; }
+.nc { flex: 0 0 66px; display: flex; flex-direction: column; align-items: center; }
+.nfab { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg,#b228FF,#27b6cc); display: flex; align-items: center; justify-content: center; margin-top: -22px; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(178,40,255,0.3); cursor: pointer; }
+.nfl { font-size: 10px; font-weight: 700; color: #b228FF; margin-top: 1px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="sr" aria-live="polite" id="announce"></div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hb1"></div><div class="hb2"></div>
+  <div class="hdr-bar">
+    <button class="icon-btn" onclick="history.back()" aria-label="Retour">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="hdr-title">Annuaire</span>
+    <button class="icon-btn" onclick="alert('Filtres avances')" aria-label="Filtres">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+    </button>
+  </div>
+  <!-- Geolocalisation -->
+  <div class="geo-bar" role="button" tabindex="0" aria-label="Localisation : Rennes, Bretagne" onclick="alert('Changer la localisation')">
+    <div class="geo-dot" aria-hidden="true"></div>
+    <span class="geo-text">Rennes, Bretagne</span>
+    <span class="geo-change">Modifier</span>
+  </div>
+</div>
+
+<!-- STICKY : Recherche + Categories -->
+<div class="sticky">
+  <div class="search-bar" role="search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9b91c8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="q" placeholder="Rechercher un service, un etablissement..." aria-label="Rechercher dans l'annuaire" oninput="onSearch()">
+    <button class="search-clear" id="qclear" onclick="clearQ()" aria-label="Effacer">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#5e5290" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="cats-row" role="group" aria-label="Categories">
+    <button class="cat-chip active" onclick="setCat(this,'tous')" aria-pressed="true"><span class="cat-ico">&#x1F4CB;</span>Tous</button>
+    <button class="cat-chip" onclick="setCat(this,'domicile')" aria-pressed="false"><span class="cat-ico">&#x1F3E0;</span>Aide a domicile</button>
+    <button class="cat-chip" onclick="setCat(this,'etablissement')" aria-pressed="false"><span class="cat-ico">&#x1F3E5;</span>Etablissements</button>
+    <button class="cat-chip" onclick="setCat(this,'sante')" aria-pressed="false"><span class="cat-ico">&#x1FA7A;</span>Soins & sante</button>
+    <button class="cat-chip" onclick="setCat(this,'admin')" aria-pressed="false"><span class="cat-ico">&#x1F4CB;</span>Demarches admin.</button>
+    <button class="cat-chip" onclick="setCat(this,'repit')" aria-pressed="false"><span class="cat-ico">&#x1F33F;</span>Repit aidant</button>
+    <button class="cat-chip" onclick="setCat(this,'financier')" aria-pressed="false"><span class="cat-ico">&#x1F4B0;</span>Aides financieres</button>
+  </div>
+</div>
+
+<!-- SCROLL PRINCIPAL -->
+<div class="scroll" id="scroll">
+
+  <!-- Suggestion IA -->
+  <div class="sug-banner" id="sug-banner" role="note" aria-label="Suggestion de l'assistant IA">
+    <div class="sug-ico" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 30 30" fill="none"><circle cx="15" cy="11" r="5.5" stroke="white" stroke-width="2"/><circle cx="15" cy="11" r="2" fill="white"/><rect x="8" y="18" width="14" height="9" rx="3.5" stroke="white" stroke-width="2"/><circle cx="11.5" cy="22" r="1.5" fill="white"/><circle cx="18.5" cy="22" r="1.5" fill="white"/></svg>
+    </div>
+    <div class="sug-text">
+      <h4>Suggestion pour Martin Dupont</h4>
+      <p>Martin a Alzheimer moderee. Voici 4 accueils de jour proches de chez vous pouvant prendre en charge cette pathologie.</p>
+      <span class="sug-link" role="button" tabindex="0" onclick="setCatBtn('etablissement')">Voir les etablissements recommandes</span>
+    </div>
+  </div>
+
+  <!-- Meta -->
+  <div class="meta-row">
+    <span class="meta-count" id="meta-count" aria-live="polite">12 services trouves</span>
+    <button class="meta-sort" onclick="alert('Trier par...')" aria-label="Trier les resultats">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/></svg>
+      Distance
+    </button>
+  </div>
+
+  <!-- Liste resultats -->
+  <div id="results-list" role="list" aria-label="Resultats de l'annuaire"></div>
+
+  <!-- Etat vide -->
+  <div class="empty" id="empty">
+    <div class="empty-ico" aria-hidden="true">&#x1F50D;</div>
+    <p class="empty-t">Aucun resultat</p>
+    <p class="empty-s">Essayez une autre recherche ou une categorie differente.</p>
+  </div>
+
+</div>
+
+<!-- OVERLAY DETAIL -->
+<div class="ov" id="ov-detail" role="dialog" aria-modal="true" aria-labelledby="det-title">
+  <div class="ov-bg" onclick="closeDetail()"></div>
+  <div class="sheet">
+    <div class="drag" aria-hidden="true"></div>
+    <button class="sheet-x" onclick="closeDetail()" aria-label="Fermer">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div id="det-content"></div>
+  </div>
+</div>
+
+<!-- NAV BAS -->
+<div class="nav-bar">
+  <div class="ai-r">
+    <span class="ai-lbl" aria-hidden="true">Assistant IA</span>
+    <button class="ai-fab" aria-label="Assistant IA">
+      <svg width="24" height="24" viewBox="0 0 30 30" fill="none" aria-hidden="true"><circle cx="15" cy="11" r="5.5" stroke="#14233A" stroke-width="2"/><circle cx="15" cy="11" r="2" fill="#14233A"/><rect x="8" y="18" width="14" height="9" rx="3.5" stroke="#14233A" stroke-width="2"/><circle cx="11.5" cy="22" r="1.5" fill="#14233A"/><circle cx="18.5" cy="22" r="1.5" fill="#14233A"/></svg>
+    </button>
+  </div>
+  <nav class="bnav" aria-label="Navigation principale">
+    <div class="ni" role="button" tabindex="0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl">Accueil</span></div>
+    <div class="ni" role="button" tabindex="0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="nl">Messages</span></div>
+    <div class="nc"><button class="nfab" aria-label="Appel"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="1" y="6" width="13" height="12" rx="2" fill="white"/><path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white"/></svg></button><span class="nfl">Appel</span></div>
+    <div class="ni" role="button" tabindex="0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">Agenda</span></div>
+    <div class="ni" role="button" tabindex="0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">Profil</span></div>
+  </nav>
+</div>
+
+<script>
+var selCat = 'tous';
+var selQ = '';
+
+var DATA = [
+  {
+    id: 1, cat: 'etablissement',
+    name: 'EHPAD Les Jardins de Bretagne',
+    type: 'EHPAD - Maison de retraite',
+    ico: '&#x1F3E5;', icoBg: '#e0f5ff',
+    dist: '1,2 km', stars: 4.5, avis: 38,
+    dispo: 'dispo', dispotxt: 'Places disponibles',
+    addr: '12 rue des Chenes, 35000 Rennes',
+    tel: '02 99 45 12 34',
+    horaires: 'Accueil lun-ven 9h-18h',
+    tags: ['Alzheimer', 'Dependance lourde', 'UHR'],
+    desc: 'Etablissement specialise dans la prise en charge des personnes agees dependantes, avec une unite Alzheimer. Conventionnement Aide Sociale.',
+    conv: true
+  },
+  {
+    id: 2, cat: 'domicile',
+    name: 'Aide & Vie Services',
+    type: 'Service d\'aide a domicile agreee',
+    ico: '&#x1F3E0;', icoBg: '#f0e8ff',
+    dist: '0,8 km', stars: 4.8, avis: 127,
+    dispo: 'dispo', dispotxt: 'Disponible',
+    addr: '8 place de la Republique, 35000 Rennes',
+    tel: '02 99 87 65 43',
+    horaires: '7j/7 - 7h-22h',
+    tags: ['Toilette', 'Repas', 'Compagnie', 'Nuit'],
+    desc: 'Service d\'aide a domicile agreee proposant des prestations d\'assistance aux actes essentiels de la vie. Interventions de 1h minimum. Remboursement partiel possible.',
+    conv: false
+  },
+  {
+    id: 3, cat: 'sante',
+    name: 'Cabinet de soins infirmiers',
+    type: 'Infirmiers liberaux',
+    ico: '&#x1FA7A;', icoBg: '#e8f5ee',
+    dist: '0,3 km', stars: 4.9, avis: 89,
+    dispo: 'dispo', dispotxt: 'Disponible',
+    addr: '3 rue Nationale, 35000 Rennes',
+    tel: '02 99 23 45 67',
+    horaires: '7j/7 - 7h30-19h30',
+    tags: ['Pansements', 'Injections', 'Medicaments', 'Toilette'],
+    desc: 'Cabinet d\'infirmiers liberaux proposant des soins infirmiers a domicile. Prise en charge 100% Secu pour les soins prescrits.',
+    conv: false
+  },
+  {
+    id: 4, cat: 'repit',
+    name: 'Accueil de jour La Passerelle',
+    type: 'Accueil de jour - Alzheimer',
+    ico: '&#x1F33F;', icoBg: '#fffbe0',
+    dist: '2,1 km', stars: 4.7, avis: 52,
+    dispo: 'attente', dispotxt: 'Liste d\'attente',
+    addr: '45 avenue de la Liberte, 35200 Rennes',
+    tel: '02 99 34 56 78',
+    horaires: 'Lun-Ven 9h-17h',
+    tags: ['Alzheimer', 'Stimulation cognitive', 'Transport inclus'],
+    desc: 'Structure specialisee dans l\'accueil de jour des personnes atteintes de la maladie d\'Alzheimer ou troubles apparentes. Transport domicile-structure inclus. Prise en charge APA possible.',
+    conv: true
+  },
+  {
+    id: 5, cat: 'admin',
+    name: 'MDPH d\'Ille-et-Vilaine',
+    type: 'Maison Departementale des Personnes Handicapees',
+    ico: '&#x1F4CB;', icoBg: '#f5f3ff',
+    dist: '3,4 km', stars: 3.8, avis: 203,
+    dispo: 'conv', dispotxt: 'Sur rendez-vous',
+    addr: '1 avenue de la Prevalaye, 35044 Rennes',
+    tel: '02 99 02 25 55',
+    horaires: 'Lun-Ven 8h30-17h',
+    tags: ['AAH', 'PCH', 'RQTH', 'Carte mobilite'],
+    desc: 'La MDPH accompagne les personnes handicapees dans leurs demarches administratives et l\'acces aux droits. Dossiers PCH, AAH, carte mobilite inclusion.',
+    conv: false
+  },
+  {
+    id: 6, cat: 'financier',
+    name: 'CCAS de Rennes',
+    type: 'Centre Communal d\'Action Sociale',
+    ico: '&#x1F4B0;', icoBg: '#fff3e0',
+    dist: '1,8 km', stars: 4.1, avis: 76,
+    dispo: 'dispo', dispotxt: 'Disponible',
+    addr: '4 avenue Henri Freville, 35000 Rennes',
+    tel: '02 23 62 23 62',
+    horaires: 'Lun-Ven 8h30-17h',
+    tags: ['APA', 'Aide sociale', 'Portage repas', 'Teleassistance'],
+    desc: 'Le CCAS de Rennes accompagne les seniors et les familles dans l\'acces aux aides sociales, l\'APA, le portage de repas et la teleassistance.',
+    conv: false
+  },
+  {
+    id: 7, cat: 'sante',
+    name: 'Dr. Marie Leclerc - Geriatre',
+    type: 'Medecin geriatre',
+    ico: '&#x1FA7A;', icoBg: '#e8f5ee',
+    dist: '1,5 km', stars: 4.6, avis: 44,
+    dispo: 'conv', dispotxt: 'Sur rendez-vous',
+    addr: '22 boulevard de la Tour d\'Auvergne, 35000 Rennes',
+    tel: '02 99 56 78 90',
+    horaires: 'Lun Mar Jeu Ven - 9h-18h',
+    tags: ['Alzheimer', 'Geriatrie', 'Bilan memoire'],
+    desc: 'Medecin geriatre specialisee dans le suivi des personnes agees dependantes. Consultations memoire, bilans geriatriques. Secteur 2.',
+    conv: false
+  },
+  {
+    id: 8, cat: 'domicile',
+    name: 'Association Familles Rurales',
+    type: 'Service d\'aide et d\'accompagnement',
+    ico: '&#x1F3E0;', icoBg: '#f0e8ff',
+    dist: '2,8 km', stars: 4.4, avis: 61,
+    dispo: 'dispo', dispotxt: 'Disponible',
+    addr: '18 rue Jean Mace, 35700 Rennes',
+    tel: '02 99 12 34 56',
+    horaires: 'Lun-Sam 7h-20h',
+    tags: ['Aide menagere', 'Courses', 'Administratif', 'Compagnie'],
+    desc: 'Association loi 1901 proposant des services d\'aide a domicile pour les personnes agees et handicapees. Eligible CESU et credit d\'impot.',
+    conv: false
+  }
+];
+
+function getFiltered() {
+  return DATA.filter(function(d) {
+    var matchCat = selCat === 'tous' || d.cat === selCat;
+    var matchQ = selQ === '' || d.name.toLowerCase().indexOf(selQ) !== -1 || d.type.toLowerCase().indexOf(selQ) !== -1 || d.tags.join(' ').toLowerCase().indexOf(selQ) !== -1;
+    return matchCat && matchQ;
+  });
+}
+
+function stars(n) {
+  var s = '';
+  for (var i = 1; i <= 5; i++) {
+    s += '<span class="star" aria-hidden="true">' + (i <= Math.floor(n) ? '&#x2B50;' : (i - n < 1 ? '&#x2B50;' : '&#x2606;')) + '</span>';
+  }
+  return s;
+}
+
+function badgeHtml(d) {
+  if (d.dispo === 'dispo') return '<span class="rcard-badge b-dispo">' + d.dispotxt + '</span>';
+  if (d.dispo === 'attente') return '<span class="rcard-badge b-attente">' + d.dispotxt + '</span>';
+  return '<span class="rcard-badge b-conv">' + d.dispotxt + '</span>';
+}
+
+function renderList() {
+  var items = getFiltered();
+  var list = document.getElementById('results-list');
+  var empty = document.getElementById('empty');
+  var mc = document.getElementById('meta-count');
+  mc.textContent = items.length + ' service' + (items.length > 1 ? 's' : '') + ' trouve' + (items.length > 1 ? 's' : '');
+
+  if (!items.length) { list.innerHTML = ''; empty.classList.add('show'); return; }
+  empty.classList.remove('show');
+  list.innerHTML = '';
+
+  var lastCat = null;
+  items.forEach(function(d, i) {
+    if (selCat === 'tous' && d.cat !== lastCat) {
+      lastCat = d.cat;
+      var catNames = {domicile:'Aide a domicile', etablissement:'Etablissements', sante:'Soins & sante', admin:'Demarches administratives', repit:'Repit aidant', financier:'Aides financieres'};
+      var sep = document.createElement('div');
+      sep.className = 'sep-lbl';
+      sep.innerHTML = '<span>' + (catNames[d.cat] || d.cat) + '</span><div class="sep-line"></div>';
+      list.appendChild(sep);
+    }
+
+    var card = document.createElement('div');
+    card.className = 'rcard';
+    card.setAttribute('role', 'listitem');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', d.name + ' - ' + d.dist);
+
+    card.innerHTML =
+      '<div class="rcard-inner">' +
+        '<div class="rcard-ico" style="background:' + d.icoBg + ';" aria-hidden="true">' + d.ico + '</div>' +
+        '<div class="rcard-info">' +
+          '<div class="rcard-name">' + d.name + '</div>' +
+          '<div class="rcard-type">' + d.type + '</div>' +
+          '<div class="rcard-meta">' +
+            '<span class="rcard-dist"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + d.dist + '</span>' +
+            badgeHtml(d) +
+            (d.conv ? '<span class="rcard-badge b-conv">Convention</span>' : '') +
+          '</div>' +
+          '<div class="stars" aria-label="Note ' + d.stars + ' sur 5 - ' + d.avis + ' avis">' + stars(d.stars) + '<span style="font-size:11px;font-weight:700;color:#8a7ab0;margin-left:4px;">' + d.stars + ' (' + d.avis + ')</span></div>' +
+          '<div class="rcard-addr">' + d.addr + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="rcard-actions">' +
+        '<button class="btn-action btn-tel" onclick="event.stopPropagation();callNumber(\'' + d.tel + '\')" aria-label="Appeler ' + d.name + '">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.29 6.29l.97-.88a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.03z"/></svg>' +
+          d.tel +
+        '</button>' +
+        '<button class="btn-action btn-save" onclick="event.stopPropagation();saveToFiche(\'' + d.name + '\')" aria-label="Sauvegarder dans la fiche de Martin">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
+        '</button>' +
+      '</div>';
+
+    (function(item) {
+      card.addEventListener('click', function() { openDetail(item); });
+      card.addEventListener('keydown', function(e) { if (e.key === 'Enter') openDetail(item); });
+    })(d);
+
+    list.appendChild(card);
+  });
+}
+
+function setCat(el, cat) {
+  selCat = cat;
+  document.querySelectorAll('.cat-chip').forEach(function(c) {
+    c.classList.remove('active');
+    c.setAttribute('aria-pressed', 'false');
+  });
+  el.classList.add('active');
+  el.setAttribute('aria-pressed', 'true');
+  document.getElementById('sug-banner').style.display = cat === 'tous' || cat === 'etablissement' ? 'flex' : 'none';
+  renderList();
+}
+
+function setCatBtn(cat) {
+  var chips = document.querySelectorAll('.cat-chip');
+  var catMap = {tous:0, domicile:1, etablissement:2, sante:3, admin:4, repit:5, financier:6};
+  var idx = catMap[cat];
+  if (chips[idx]) setCat(chips[idx], cat);
+}
+
+function onSearch() {
+  selQ = document.getElementById('q').value.trim().toLowerCase();
+  document.getElementById('qclear').classList.toggle('show', selQ.length > 0);
+  renderList();
+}
+function clearQ() {
+  document.getElementById('q').value = '';
+  selQ = '';
+  document.getElementById('qclear').classList.remove('show');
+  renderList();
+  document.getElementById('q').focus();
+}
+
+function callNumber(tel) {
+  say('Appel vers ' + tel);
+  alert('Appel vers le ' + tel + '\n(A connecter en production)');
+}
+function saveToFiche(name) {
+  say(name + ' sauvegarde dans la fiche de Martin');
+  alert(name + ' sauvegarde dans la fiche de Martin Dupont.');
+}
+
+function openDetail(d) {
+  var det = document.getElementById('det-content');
+  det.innerHTML =
+    '<div class="det-header">' +
+      '<div class="det-ico" style="background:' + d.icoBg + ';">' + d.ico + '</div>' +
+      '<div>' +
+        '<div class="det-name" id="det-title" tabindex="-1">' + d.name + '</div>' +
+        '<div class="det-type">' + d.type + '</div>' +
+        '<div style="display:flex;align-items:center;gap:6px;margin-top:5px;">' +
+          '<div class="stars" aria-label="Note ' + d.stars + '">' + stars(d.stars) + '</div>' +
+          '<span style="font-size:11px;font-weight:700;color:#8a7ab0;">' + d.stars + ' (' + d.avis + ' avis)</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="det-section">' +
+      '<p class="det-sec-title">Informations pratiques</p>' +
+      '<div class="det-row"><div class="det-row-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="det-row-txt"><div class="det-row-lbl">Adresse</div><div class="det-row-val">' + d.addr + '</div></div></div>' +
+      '<div class="det-row"><div class="det-row-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6.57-6.57A19.79 19.79 0 0 1 1.63 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.29 6.29l.97-.88a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.79 18z"/></svg></div><div class="det-row-txt"><div class="det-row-lbl">Telephone</div><div class="det-row-val link" onclick="callNumber(\'' + d.tel + '\')">' + d.tel + '</div></div></div>' +
+      '<div class="det-row"><div class="det-row-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="det-row-txt"><div class="det-row-lbl">Horaires</div><div class="det-row-val">' + d.horaires + '</div></div></div>' +
+      '<div class="det-row"><div class="det-row-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="det-row-txt"><div class="det-row-lbl">Distance</div><div class="det-row-val">' + d.dist + ' de votre domicile</div></div></div>' +
+    '</div>' +
+    '<div class="det-section">' +
+      '<p class="det-sec-title">Specialites & services</p>' +
+      '<div class="det-tags">' + d.tags.map(function(t){return '<span class="det-tag">'+t+'</span>';}).join('') + '</div>' +
+    '</div>' +
+    '<div class="det-section">' +
+      '<p class="det-sec-title">Presentation</p>' +
+      '<p style="font-size:13px;font-weight:600;color:#5e5290;line-height:1.65;">' + d.desc + '</p>' +
+    '</div>' +
+    '<div class="det-actions">' +
+      '<button class="det-btn prim" onclick="callNumber(\'' + d.tel + '\')" aria-label="Appeler ' + d.name + '">' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6.57-6.57A19.79 19.79 0 0 1 1.63 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.29 6.29l.97-.88a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.79 18z"/></svg>' +
+        'Appeler' +
+      '</button>' +
+      '<button class="det-btn sec" onclick="alert(\'Itineraire vers ' + d.name + '\')" aria-label="Itineraire vers ' + d.name + '">' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>' +
+        'Itineraire' +
+      '</button>' +
+    '</div>' +
+    '<button class="save-fiche-btn" onclick="saveToFiche(\'' + d.name + '\');closeDetail();" aria-label="Sauvegarder dans la fiche de Martin Dupont">' +
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
+      'Sauvegarder dans la fiche de Martin' +
+    '</button>';
+
+  document.getElementById('ov-detail').classList.add('open');
+  setTimeout(function() {
+    var t = document.getElementById('det-title');
+    if (t) t.focus();
+  }, 320);
+  document.addEventListener('keydown', escDetail);
+}
+
+function closeDetail() {
+  document.getElementById('ov-detail').classList.remove('open');
+  document.removeEventListener('keydown', escDetail);
+}
+function escDetail(e) { if (e.key === 'Escape') closeDetail(); }
+
+function say(msg) {
+  var z = document.getElementById('announce');
+  z.textContent = '';
+  setTimeout(function() { z.textContent = msg; }, 50);
+}
+
+renderList();
+</script>
+</body>
+</html>

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Sawa Care — Conversations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{height:100%;-webkit-text-size-adjust:100%;}
+body{height:100%;font-family:'Nunito',sans-serif;background:#ddd5f8;display:flex;flex-direction:column;overflow:hidden;max-width:430px;margin:0 auto;}
+
+/* ── HEADER ── */
+.hdr{
+  background:linear-gradient(145deg,#b228FF 0%,#8a2be2 45%,#1e3a6e 80%,#0f5060 100%);
+  padding:calc(env(safe-area-inset-top,44px)+10px) 18px 18px;
+  flex-shrink:0;position:relative;overflow:hidden;
+}
+.hb1{position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.07);top:-55px;right:-40px;pointer-events:none;}
+.hb2{position:absolute;width:90px;height:90px;border-radius:50%;background:rgba(133,255,239,0.1);bottom:-25px;left:10px;pointer-events:none;}
+.hdr-bar{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;margin-bottom:14px;}
+.hdr-title{font-size:18px;font-weight:900;color:#fff;}
+.icon-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;position:relative;}
+.icon-btn:focus-visible{outline:2px solid #fff;}
+.hdr-badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#fcffad;border:2px solid rgba(130,0,190,0.6);font-size:9px;font-weight:900;color:#3d2e00;display:flex;align-items:center;justify-content:center;}
+
+/* ── ONGLETS ── */
+.tabs-wrap{
+  display:flex;gap:4px;
+  background:#c8bff0;
+  border-radius:14px;
+  padding:4px;
+}
+.tab{
+  flex:1;padding:9px 6px;text-align:center;
+  font-size:12px;font-weight:800;cursor:pointer;
+  color:#5e5290;
+  border-radius:10px;
+  border:none;background:transparent;
+  transition:all 180ms;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  white-space:nowrap;font-family:'Nunito',sans-serif;
+}
+.tab.active{
+  background:#fff;
+  color:#8210cc;
+  box-shadow:0 2px 8px rgba(178,40,255,0.14);
+}
+.tab:hover:not(.active){background:rgba(255,255,255,0.4);color:#4e4280;}
+.tab:focus-visible{outline:2px solid #b228FF;outline-offset:2px;}
+.tab-badge{
+  min-width:18px;height:18px;border-radius:9px;padding:0 5px;
+  background:#b228FF;font-size:9px;font-weight:900;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  animation:pulse 2s ease-in-out infinite;
+}
+.tab.active .tab-badge{background:#b228FF;color:#fff;animation:none;}
+@media(prefers-reduced-motion:reduce){.tab-badge{animation:none;}}
+
+/* ── ZONE RECHERCHE ── */
+.search-zone{background:#ddd5f8;border-radius:22px 22px 0 0;margin-top:-2px;padding:14px 16px 10px;flex-shrink:0;}
+.search-bar{display:flex;align-items:center;gap:9px;background:#fff;border-radius:14px;border:1.5px solid #e8e0ff;padding:11px 13px;box-shadow:0 2px 8px rgba(178,40,255,0.06);transition:border-color 150ms;}
+.search-bar:focus-within{border-color:#b228FF;}
+.search-bar input{flex:1;border:none;outline:none;background:transparent;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;color:#2d1060;}
+.search-bar input::placeholder{color:#9b91c8;}
+.search-clear{display:none;width:20px;height:20px;border-radius:50%;background:#ede9fe;border:none;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;}
+.search-clear.show{display:flex;}
+
+/* ── SCROLL CONVERSATIONS ── */
+.scroll-body{flex:1;overflow-y:auto;padding:0 16px calc(env(safe-area-inset-bottom,0px)+90px);scrollbar-width:none;}
+.scroll-body::-webkit-scrollbar{display:none;}
+
+/* Séparateur section */
+.section-lbl{font-size:10px;font-weight:800;color:#4e4280;text-transform:uppercase;letter-spacing:0.09em;padding:14px 0 7px;display:flex;align-items:center;gap:8px;}
+.sep-line{flex:1;height:0.5px;background:#cdc5f0;}
+
+/* ── CARTE CONVERSATION ── */
+.conv{
+  display:flex;align-items:flex-start;gap:13px;
+  padding:14px 16px;background:#fff;
+  border-radius:16px;
+  border:1px solid #ede9f5;
+  margin-bottom:8px;
+  box-shadow:0 2px 8px rgba(178,40,255,0.05);
+  cursor:pointer;transition:box-shadow 130ms;
+  position:relative;
+  animation:fadeUp 250ms ease-out both;
+}
+.conv:hover{box-shadow:0 4px 14px rgba(178,40,255,0.1);}
+.conv:active{background:#faf8ff;}
+.conv:focus-visible{outline:2px solid #b228FF;outline-offset:2px;}
+
+/* Indicateur non-lu */
+.unread-dot{
+  position:absolute;left:6px;top:50%;transform:translateY(-50%);
+  width:7px;height:7px;border-radius:50%;background:#b228FF;
+  display:none;
+}
+.conv.unread .unread-dot{display:block;}
+.conv.unread .conv-name{font-weight:900;}
+.conv.unread .conv-preview{font-weight:700;color:#4e4280;}
+
+/* Avatar */
+.av-wrap{position:relative;flex-shrink:0;}
+.av{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;overflow:hidden;flex-shrink:0;}
+.av-online{position:absolute;bottom:1px;right:1px;width:13px;height:13px;border-radius:50%;background:#1D9E75;border:2px solid #fff;}
+.av-offline{position:absolute;bottom:1px;right:1px;width:13px;height:13px;border-radius:50%;background:#cdc5f0;border:2px solid #fff;}
+
+/* Infos conversation */
+.conv-info{flex:1;min-width:0;}
+.conv-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;}
+.conv-name{font-size:14px;font-weight:800;color:#2d1060;line-height:1.2;}
+.conv-time{font-size:11px;font-weight:600;color:#9b91c8;white-space:nowrap;flex-shrink:0;margin-left:8px;}
+.conv-preview{font-size:12.5px;font-weight:600;color:#8a7ab0;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px;}
+.conv-meta{display:flex;align-items:center;gap:6px;}
+
+/* Badges rôle */
+.role-badge{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:800;border-radius:7px;padding:2px 8px;}
+.rb-care{color:#1e8fa0;background:#e0f5ff;}
+.rb-admin{color:#8210cc;background:#f0e8ff;}
+.rb-coaid{color:#5e5290;background:#ede9fe;}
+.rb-ia{color:#a05a00;background:#fff3e0;}
+
+/* Compteur non-lus */
+.unread-count{width:20px;height:20px;border-radius:50%;background:#b228FF;font-size:10px;font-weight:900;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:auto;}
+
+/* Chevron */
+.conv-chev{color:#cdc5f0;flex-shrink:0;margin-top:2px;}
+
+/* ── IA ASSISTANT CARD ── */
+.ia-card{
+  margin:12px 0 4px;background:linear-gradient(135deg,#fff9ed,#fffbe8);
+  border:1.5px solid rgba(178,40,255,0.15);border-radius:18px;
+  padding:16px;cursor:pointer;display:flex;align-items:flex-start;gap:13px;
+  box-shadow:0 2px 12px rgba(178,40,255,0.08);transition:box-shadow 150ms;
+  animation:fadeUp 200ms ease-out;
+}
+.ia-card:hover{box-shadow:0 4px 18px rgba(178,40,255,0.14);}
+.ia-card:focus-visible{outline:2px solid #b228FF;outline-offset:2px;}
+.ia-illo{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#b228FF,#7b2fff 45%,#27b6cc);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 12px rgba(178,40,255,0.35);}
+.ia-text h4{font-size:14px;font-weight:900;color:#2d1060;margin-bottom:4px;}
+.ia-text p{font-size:12px;font-weight:600;color:#5e5290;line-height:1.55;}
+.ia-badge{display:inline-flex;align-items:center;gap:4px;background:#fcffad;border-radius:7px;padding:2px 8px;font-size:10px;font-weight:800;color:#3d2e00;margin-top:6px;}
+
+/* ── ÉTAT VIDE ── */
+.empty-state{text-align:center;padding:48px 28px;display:none;}
+.empty-state.show{display:block;animation:fadeUp 200ms ease-out;}
+.empty-ico{font-size:44px;margin-bottom:14px;}
+.empty-t{font-size:17px;font-weight:900;color:#2d1060;margin-bottom:8px;}
+.empty-s{font-size:13px;font-weight:600;color:#8a7ab0;line-height:1.65;}
+
+/* ── PANEL CONVERSATION OUVERTE ── */
+.chat-panel{
+  position:fixed;inset:0;background:#fff;z-index:100;
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform 320ms cubic-bezier(.32,.72,0,1);
+}
+.chat-panel.open{transform:translateX(0);}
+@media(prefers-reduced-motion:reduce){.chat-panel{transition:none;}}
+.chat-hdr{
+  background:linear-gradient(145deg,#b228FF 0%,#8a2be2 45%,#27b6cc 100%);
+  padding:calc(env(safe-area-inset-top,44px)+8px) 16px 14px;
+  flex-shrink:0;position:relative;overflow:hidden;
+}
+.chat-hdr-bar{display:flex;align-items:center;gap:12px;position:relative;z-index:2;}
+.chat-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,0.8);flex-shrink:0;}
+.chat-name{font-size:15px;font-weight:900;color:#fff;flex:1;line-height:1.2;}
+.chat-status{font-size:10px;font-weight:600;color:rgba(255,255,255,0.75);}
+.chat-actions{display:flex;gap:8px;}
+
+/* Messages */
+.chat-messages{flex:1;overflow-y:auto;padding:16px;background:#f5f3ff;display:flex;flex-direction:column;gap:10px;scrollbar-width:none;}
+.chat-messages::-webkit-scrollbar{display:none;}
+.msg{display:flex;flex-direction:column;max-width:78%;}
+.msg.me{align-items:flex-end;align-self:flex-end;}
+.msg.them{align-items:flex-start;align-self:flex-start;}
+.msg-bubble{padding:10px 14px;border-radius:18px;font-size:13.5px;font-weight:600;line-height:1.5;}
+.msg.me .msg-bubble{background:linear-gradient(135deg,#b228FF,#8a2be2);color:#fff;border-bottom-right-radius:4px;}
+.msg.them .msg-bubble{background:#fff;color:#2d1060;border-bottom-left-radius:4px;box-shadow:0 1px 6px rgba(178,40,255,0.1);}
+.msg-time{font-size:10px;font-weight:600;color:#9b91c8;margin-top:3px;padding:0 4px;}
+.msg-status{font-size:10px;font-weight:700;color:#9b91c8;margin-top:2px;text-align:right;}
+.date-sep{text-align:center;font-size:11px;font-weight:700;color:#8a7ab0;padding:6px 0;}
+
+/* Zone saisie */
+.chat-input-zone{
+  background:#fff;border-top:0.5px solid #ede9f5;
+  padding:10px 14px calc(env(safe-area-inset-bottom,0px)+10px);
+  flex-shrink:0;display:flex;align-items:flex-end;gap:8px;
+}
+.chat-attach{width:38px;height:38px;border-radius:11px;background:#f0e8ff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-attach:focus-visible{outline:2px solid #b228FF;}
+.chat-input-wrap{flex:1;background:#f5f3ff;border-radius:20px;border:1.5px solid #e8e0ff;padding:9px 14px;display:flex;align-items:flex-end;gap:8px;transition:border-color 150ms;}
+.chat-input-wrap:focus-within{border-color:#b228FF;}
+.chat-input{flex:1;border:none;outline:none;background:transparent;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;color:#2d1060;resize:none;max-height:100px;line-height:1.5;}
+.chat-input::placeholder{color:#9b91c8;}
+.chat-send{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#8a2be2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(178,40,255,0.3);transition:opacity 150ms;}
+.chat-send:hover{opacity:0.9;}
+.chat-send:focus-visible{outline:2px solid #8210cc;outline-offset:2px;}
+
+/* ── NAV BAS ── */
+.nav-bar{flex-shrink:0;background:#fff;border-top:1.5px solid #cdc5f0;padding-bottom:env(safe-area-inset-bottom,0px);}
+.ai-r{display:flex;align-items:center;justify-content:flex-end;padding:7px 18px 4px;gap:8px;}
+.ai-lbl{font-size:10px;font-weight:700;color:#14233A;background:#fcffad;border-radius:7px;padding:4px 9px;}
+.ai-fab{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#7b2fff 45%,#27b6cc);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(178,40,255,0.4);overflow:hidden;position:relative;}
+.ai-fab::before{content:'';position:absolute;top:4px;left:8px;width:30px;height:12px;background:rgba(255,255,255,0.18);border-radius:50%;transform:rotate(-8deg);}
+.bnav{display:flex;align-items:center;padding:3px 0 7px;}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;min-height:44px;justify-content:center;position:relative;}
+.nl{font-size:10px;font-weight:700;color:#9080c0;}
+.ni.act .nl{color:#b228FF;}
+.ni-badge{position:absolute;top:2px;right:calc(50% - 14px);width:14px;height:14px;border-radius:50%;background:#b228FF;font-size:8px;font-weight:900;color:#fff;display:flex;align-items:center;justify-content:center;border:1.5px solid #fff;}
+.nc{flex:0 0 66px;display:flex;flex-direction:column;align-items:center;}
+.nfab{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#27b6cc);display:flex;align-items:center;justify-content:center;margin-top:-22px;border:3px solid #fff;box-shadow:0 4px 12px rgba(178,40,255,0.3);cursor:pointer;}
+.nfl{font-size:10px;font-weight:700;color:#b228FF;margin-top:1px;}
+
+/* ── MENU OPTIONS CONVERSATION ── */
+.menu-action{display:flex;align-items:center;gap:14px;padding:15px 20px;cursor:pointer;transition:background 120ms;border-bottom:0.5px solid #f0ecff;}
+.menu-action:last-child{border-bottom:none;}
+.menu-action:hover{background:#faf8ff;}
+.menu-action:active{background:#f5eeff;}
+.menu-action:focus-visible{outline:2px solid #b228FF;outline-offset:-2px;}
+.ma-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ma-txt h5{font-size:14px;font-weight:800;color:#2d1060;}
+.ma-txt p{font-size:11.5px;font-weight:600;color:#8a7ab0;margin-top:2px;}
+.ma-danger .ma-txt h5{color:#E24B4A;}
+.menu-sep{height:8px;background:#f5f3ff;}
+.ov{position:fixed;inset:0;background:rgba(14,22,38,0.55);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 220ms;backdrop-filter:blur(3px);}
+.ov.open{opacity:1;pointer-events:all;}
+.ov-bg{position:absolute;inset:0;}
+.sheet{background:#fff;border-radius:26px 26px 0 0;width:100%;padding:0 0 calc(env(safe-area-inset-bottom,0px)+24px);transform:translateY(100%);transition:transform 340ms cubic-bezier(.32,.72,0,1);position:relative;z-index:1;max-height:88vh;display:flex;flex-direction:column;}
+.ov.open .sheet{transform:translateY(0);}
+.drag{width:38px;height:4px;border-radius:2px;background:#e4ddf7;margin:12px auto 0;flex-shrink:0;}
+.sheet-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 0;flex-shrink:0;}
+.sheet-title{font-size:17px;font-weight:900;color:#2d1060;}
+.sheet-x{width:32px;height:32px;border-radius:50%;background:#f5f3ff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sheet-x:focus-visible{outline:2px solid #b228FF;}
+
+/* Recherche dans le sheet */
+.sheet-search{margin:12px 16px 0;display:flex;align-items:center;gap:9px;background:#f5f3ff;border-radius:13px;border:1.5px solid #e8e0ff;padding:10px 13px;transition:border-color 150ms;flex-shrink:0;}
+.sheet-search:focus-within{border-color:#b228FF;}
+.sheet-search input{flex:1;border:none;outline:none;background:transparent;font-family:'Nunito',sans-serif;font-size:13.5px;font-weight:600;color:#2d1060;}
+.sheet-search input::placeholder{color:#9b91c8;}
+
+/* Scroll du sheet */
+.sheet-scroll{flex:1;overflow-y:auto;padding:8px 0 0;scrollbar-width:none;}
+.sheet-scroll::-webkit-scrollbar{display:none;}
+
+/* Séparateur de section */
+.sheet-lbl{font-size:10px;font-weight:800;color:#4e4280;text-transform:uppercase;letter-spacing:0.09em;padding:12px 20px 6px;display:flex;align-items:center;gap:8px;}
+.sheet-sep{flex:1;height:0.5px;background:#e8e0ff;}
+
+/* Ligne contact */
+.contact-row{display:flex;align-items:center;gap:13px;padding:11px 20px;cursor:pointer;transition:background 120ms;}
+.contact-row:hover{background:#faf8ff;}
+.contact-row:active{background:#f0e8ff;}
+.contact-row:focus-visible{outline:2px solid #b228FF;outline-offset:-2px;}
+.cr-av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;flex-shrink:0;position:relative;}
+.cr-online{position:absolute;bottom:1px;right:1px;width:12px;height:12px;border-radius:50%;background:#1D9E75;border:2px solid #fff;}
+.cr-offline{position:absolute;bottom:1px;right:1px;width:12px;height:12px;border-radius:50%;background:#cdc5f0;border:2px solid #fff;}
+.cr-info{flex:1;min-width:0;}
+.cr-name{font-size:14px;font-weight:800;color:#2d1060;margin-bottom:2px;}
+.cr-role{font-size:11px;font-weight:600;color:#8a7ab0;}
+.cr-arrow{color:#cdc5f0;flex-shrink:0;}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="sr" aria-live="polite" id="announce"></div>
+
+<!-- ════════════════════════════
+     ÉCRAN LISTE DES CONVERSATIONS
+════════════════════════════ -->
+<div id="screen-list" style="display:flex;flex-direction:column;height:100%;">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="hb1"></div><div class="hb2"></div>
+    <div class="hdr-bar">
+      <div style="width:40px;flex-shrink:0;"></div>
+      <span class="hdr-title" style="position:absolute;left:50%;transform:translateX(-50%);">Conversations</span>
+      <button class="icon-btn" onclick="openNewConv()" aria-label="Nouvelle conversation">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Onglets sur fond lavande -->
+  <div style="background:#ddd5f8;border-radius:22px 22px 0 0;margin-top:-2px;padding:14px 16px 0;flex-shrink:0;">
+    <div class="tabs-wrap" role="tablist" aria-label="Filtrer les conversations">
+      <button class="tab active" role="tab" aria-selected="true" tabindex="0" id="tab-toutes" onclick="setTab('toutes')" onkeydown="if(event.key==='Enter')setTab('toutes')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Toutes
+      </button>
+      <button class="tab" role="tab" aria-selected="false" tabindex="-1" id="tab-nonlues" onclick="setTab('nonlues')" onkeydown="if(event.key==='Enter')setTab('nonlues')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+        Non lues
+        <span class="tab-badge" aria-label="5 messages non lus" id="badge-nonlues">5</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Recherche -->
+  <div class="search-zone" style="border-radius:0;margin-top:0;padding-top:10px;">
+    <div class="search-bar" role="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9b91c8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="q" placeholder="Rechercher dans les messages…" aria-label="Rechercher une conversation" oninput="onSearch()">
+      <button class="search-clear" id="qclear" onclick="clearQ()" aria-label="Effacer">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#5e5290" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Scroll conversations -->
+  <div class="scroll-body" id="scroll-body">
+
+    <!-- ═══ IA ÉPINGLÉE (toujours visible en tête) ═══ -->
+    <div id="ia-pinned">
+      <div class="ia-card" role="button" tabindex="0" aria-label="Ouvrir l'assistant IA Sawa Care — Disponible 24h/24" onclick="openChat('ia')" onkeydown="if(event.key==='Enter')openChat('ia')">
+        <div class="ia-illo" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 30 30" fill="none" aria-hidden="true"><circle cx="15" cy="11" r="5.5" stroke="white" stroke-width="2"/><circle cx="15" cy="11" r="2" fill="white"/><rect x="8" y="18" width="14" height="9" rx="3.5" stroke="white" stroke-width="2"/><circle cx="11.5" cy="22" r="1.5" fill="white"/><circle cx="18.5" cy="22" r="1.5" fill="white"/><line x1="15" y1="5.5" x2="15" y2="3" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="2.5" r="1.5" fill="white"/></svg>
+        </div>
+        <div class="ia-text">
+          <h4>Assistant IA Sawa Care</h4>
+          <p>Posez vos questions sur l'aidance, les démarches administratives, la gestion du quotidien…</p>
+          <span class="ia-badge" aria-label="Disponible 24h/24 7j/7">⚡ Disponible 24h/24</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SUPPORT SAWA CARE ═══ -->
+    <div id="support-section" class="conv-section">
+      <div class="section-lbl">
+        <span>Support Sawa Care</span>
+        <div class="sep-line" aria-hidden="true"></div>
+      </div>
+      <div class="conv" role="button" tabindex="0" data-unread="false" aria-label="Support Sawa Care — Hier — Merci pour les explications…" onclick="openChat('support')" onkeydown="if(event.key==='Enter')openChat('support')">
+        <div class="unread-dot" aria-hidden="true"></div>
+        <div class="av-wrap">
+          <div class="av" style="background:linear-gradient(135deg,#b228FF,#8a2be2);" aria-label="Support Sawa Care">SC</div>
+          <div class="av-online" aria-label="En ligne"></div>
+        </div>
+        <div class="conv-info">
+          <div class="conv-top">
+            <span class="conv-name">Support Sawa Care</span>
+            <span class="conv-time">Hier</span>
+          </div>
+          <div class="conv-preview">Merci pour les explications, votre demande est...</div>
+          <div class="conv-meta">
+            <span class="role-badge rb-admin">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+              Support Admin
+            </span>
+          </div>
+        </div>
+        <svg class="conv-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <!-- ═══ CONVERSATIONS HUMAINES ═══ -->
+    <div id="convs-section" class="conv-section">
+
+      <!-- Care Manager -->
+      <div class="section-lbl">
+        <span>Care Manager</span>
+        <div class="sep-line" aria-hidden="true"></div>
+      </div>
+
+      <div class="conv unread" role="button" tabindex="0" data-unread="true" aria-label="Conversation avec Basma Frangieh — Care Manager — 2 messages non lus — Bonjour Antoinette, j'ai bien…" onclick="openChat('basma')" onkeydown="if(event.key==='Enter')openChat('basma')">
+        <div class="unread-dot" aria-hidden="true"></div>
+        <div class="av-wrap">
+          <div class="av" style="background:linear-gradient(135deg,#27b6cc,#1e8fa0);" aria-label="Basma Frangieh">BF</div>
+          <div class="av-online" aria-label="En ligne" title="En ligne"></div>
+        </div>
+        <div class="conv-info">
+          <div class="conv-top">
+            <span class="conv-name">Basma Frangieh</span>
+            <span class="conv-time">09:42</span>
+          </div>
+          <div class="conv-preview">Bonjour Antoinette, j'ai bien reçu le document et...</div>
+          <div class="conv-meta">
+            <span class="role-badge rb-care">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+              Care Manager
+            </span>
+            <span class="unread-count" aria-label="2 messages non lus">2</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Co-aidants -->
+      <div class="section-lbl" style="margin-top:4px;">
+        <span>Co-aidants</span>
+        <div class="sep-line" aria-hidden="true"></div>
+      </div>
+
+      <div class="conv unread" role="button" tabindex="0" data-unread="true" aria-label="Conversation avec Rabhot Frahot — Co-aidant — 1 message non lu" onclick="openChat('rabhot')" onkeydown="if(event.key==='Enter')openChat('rabhot')">
+        <div class="unread-dot" aria-hidden="true"></div>
+        <div class="av-wrap">
+          <div class="av" style="background:linear-gradient(135deg,#8a2be2,#b228FF);" aria-label="Rabhot Frahot">RF</div>
+          <div class="av-online" aria-label="En ligne"></div>
+        </div>
+        <div class="conv-info">
+          <div class="conv-top">
+            <span class="conv-name">Rabhot Frahot</span>
+            <span class="conv-time">10:15</span>
+          </div>
+          <div class="conv-preview">Merci pour le partage de JB, je vais regarder ça</div>
+          <div class="conv-meta">
+            <span class="role-badge rb-coaid">Co-aidant · Martin</span>
+            <span class="unread-count" aria-label="1 message non lu">1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="conv unread" role="button" tabindex="0" data-unread="true" aria-label="Conversation avec Charbel Frangieh — Co-aidant — 2 messages non lus" onclick="openChat('charbel')" onkeydown="if(event.key==='Enter')openChat('charbel')">
+        <div class="unread-dot" aria-hidden="true"></div>
+        <div class="av-wrap">
+          <div class="av" style="background:linear-gradient(135deg,#27b6cc,#b228FF);" aria-label="Charbel Frangieh">CF</div>
+          <div class="av-offline" aria-label="Hors ligne"></div>
+        </div>
+        <div class="conv-info">
+          <div class="conv-top">
+            <span class="conv-name">Charbel Frangieh</span>
+            <span class="conv-time">09:30</span>
+          </div>
+          <div class="conv-preview">Coucou Charbel, est-ce que tu peux passer demain ?</div>
+          <div class="conv-meta">
+            <span class="role-badge rb-coaid">Co-aidant · Martin</span>
+            <span class="unread-count" aria-label="2 messages non lus">2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="conv" role="button" tabindex="0" data-unread="false" aria-label="Conversation avec Antoinette Nakad — Co-aidante" onclick="openChat('nakad')" onkeydown="if(event.key==='Enter')openChat('nakad')">
+        <div class="unread-dot" aria-hidden="true"></div>
+        <div class="av-wrap">
+          <div class="av" style="background:linear-gradient(135deg,#1e3a6e,#27b6cc);" aria-label="Antoinette Nakad">AN</div>
+          <div class="av-offline" aria-label="Hors ligne"></div>
+        </div>
+        <div class="conv-info">
+          <div class="conv-top">
+            <span class="conv-name">Antoinette Nakad</span>
+            <span class="conv-time">Lundi</span>
+          </div>
+          <div class="conv-preview">D'accord, je m'en occupe ce week-end 👍</div>
+          <div class="conv-meta">
+            <span class="role-badge rb-coaid">Co-aidante · Madeleine</span>
+          </div>
+        </div>
+        <svg class="conv-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+
+    </div>
+
+    <!-- État vide (non lues) -->
+    <div class="empty-state" id="empty-nonlues">
+      <div class="empty-ico" aria-hidden="true">✅</div>
+      <p class="empty-t">Tout est lu !</p>
+      <p class="empty-s">Vous n'avez aucun message non lu pour le moment.</p>
+    </div>
+
+  </div><!-- /scroll-body -->
+
+  <!-- Nav bas -->
+  <div class="nav-bar">
+    <div class="ai-r">
+      <span class="ai-lbl" aria-hidden="true">Assistant IA</span>
+      <button class="ai-fab" onclick="openChat('ia')" aria-label="Assistant IA">
+        <svg width="24" height="24" viewBox="0 0 30 30" fill="none" aria-hidden="true"><circle cx="15" cy="11" r="5.5" stroke="#14233A" stroke-width="2"/><circle cx="15" cy="11" r="2" fill="#14233A"/><rect x="8" y="18" width="14" height="9" rx="3.5" stroke="#14233A" stroke-width="2"/><circle cx="11.5" cy="22" r="1.5" fill="#14233A"/><circle cx="18.5" cy="22" r="1.5" fill="#14233A"/></svg>
+      </button>
+    </div>
+    <nav class="bnav" aria-label="Navigation principale">
+      <div class="ni" role="button" tabindex="0" aria-label="Accueil"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl">Accueil</span></div>
+      <div class="ni act" role="button" tabindex="0" aria-current="page" aria-label="Conversations — 5 messages non lus">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <div class="ni-badge" aria-hidden="true">5</div>
+        <span class="nl" style="color:#b228FF;">Messages</span>
+      </div>
+      <div class="nc"><button class="nfab" aria-label="Appel"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="6" width="13" height="12" rx="2" fill="white"/><path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white"/></svg></button><span class="nfl">Appel</span></div>
+      <div class="ni" role="button" tabindex="0" aria-label="Agenda"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">Agenda</span></div>
+      <div class="ni" role="button" tabindex="0" aria-label="Profil"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">Profil</span></div>
+    </nav>
+  </div>
+
+</div><!-- /screen-list -->
+
+<!-- ════════════════════════════
+     PANEL CONVERSATION OUVERTE
+════════════════════════════ -->
+<div class="chat-panel" id="chat-panel" role="dialog" aria-modal="true" aria-labelledby="chat-contact-name">
+  <div class="chat-hdr">
+    <div class="hb1"></div>
+    <div class="chat-hdr-bar">
+      <button class="icon-btn" onclick="closeChat()" aria-label="Retour aux conversations">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="chat-av" id="chat-av" style="background:linear-gradient(135deg,#27b6cc,#1e8fa0);" aria-hidden="true">BF</div>
+      <div style="flex:1;min-width:0;">
+        <div class="chat-name" id="chat-contact-name" tabindex="-1">Basma Frangieh</div>
+        <div class="chat-status" id="chat-status">En ligne · Care Manager</div>
+      </div>
+      <div class="chat-actions">
+        <button class="icon-btn" onclick="openOptionsMenu()" aria-label="Plus d'options">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div class="chat-messages" id="chat-messages" aria-live="polite" aria-label="Messages de la conversation">
+    <div class="date-sep">Aujourd'hui</div>
+    <div class="msg them" style="animation-delay:0ms;">
+      <div class="msg-bubble">Bonjour Antoinette 👋 J'ai bien reçu le certificat médical de Martin. Je l'ai intégré à son dossier.</div>
+      <div class="msg-time">09:38</div>
+    </div>
+    <div class="msg them" style="animation-delay:50ms;">
+      <div class="msg-bubble">Est-ce que vous avez des nouvelles de son médecin traitant concernant le renouvellement de l'APA ?</div>
+      <div class="msg-time">09:39</div>
+    </div>
+    <div class="msg me" style="animation-delay:100ms;">
+      <div class="msg-bubble">Oui ! Le Dr Moreau a confirmé le renouvellement. Je vous envoie l'ordonnance dans la journée.</div>
+      <div class="msg-time">09:41</div>
+      <div class="msg-status">✓✓ Lu</div>
+    </div>
+    <div class="msg them" style="animation-delay:150ms;">
+      <div class="msg-bubble">Parfait merci beaucoup 🙏 Je prépare le dossier pour la MDPH ce week-end.</div>
+      <div class="msg-time">09:42</div>
+    </div>
+  </div>
+
+  <!-- Zone saisie -->
+  <div class="chat-input-zone">
+    <button class="chat-attach" onclick="alert('Joindre un document')" aria-label="Joindre un document">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+    </button>
+    <div class="chat-input-wrap">
+      <textarea class="chat-input" id="chat-input" rows="1" placeholder="Votre message…" aria-label="Saisir un message" oninput="autoResize(this)"></textarea>
+    </div>
+    <button class="chat-send" onclick="sendMsg()" aria-label="Envoyer le message">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     BOTTOM SHEET — OPTIONS CONVERSATION
+════════════════════════════ -->
+<div class="ov" id="ov-options" role="dialog" aria-modal="true" aria-labelledby="options-title">
+  <div class="ov-bg" onclick="closeOptionsMenu()"></div>
+  <div class="sheet" style="max-height:auto;">
+    <div class="drag" aria-hidden="true"></div>
+
+    <div class="sheet-hdr" style="padding-bottom:14px;">
+      <h2 class="sheet-title" id="options-title" style="font-size:15px;color:#8a7ab0;font-weight:700;"></h2>
+      <button class="sheet-x" onclick="closeOptionsMenu()" aria-label="Fermer le menu">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div role="menu">
+
+      <!-- Prendre rendez-vous -->
+      <div class="menu-action" role="menuitem" tabindex="0"
+           onclick="optionRdv()"
+           onkeydown="if(event.key==='Enter')optionRdv()"
+           aria-label="Prendre rendez-vous avec ce contact">
+        <div class="ma-ico" style="background:#e0f5ff;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e8fa0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+        </div>
+        <div class="ma-txt">
+          <h5>Prendre rendez-vous</h5>
+          <p>Planifier un RDV dans l'agenda</p>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+
+      <!-- Notifications -->
+      <div class="menu-action" role="menuitem" tabindex="0" id="menu-notif"
+           onclick="optionNotif()"
+           onkeydown="if(event.key==='Enter')optionNotif()"
+           aria-label="Gérer les notifications de cette conversation">
+        <div class="ma-ico" style="background:#f0e8ff;">
+          <svg id="notif-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div class="ma-txt">
+          <h5 id="notif-label">Couper les notifications</h5>
+          <p id="notif-sub">Ne plus recevoir d'alertes pour cette conversation</p>
+        </div>
+      </div>
+
+      <!-- Séparateur visuel avant action destructive -->
+      <div class="menu-sep" aria-hidden="true"></div>
+
+      <!-- Supprimer -->
+      <div class="menu-action ma-danger" role="menuitem" tabindex="0"
+           onclick="optionSupprimer()"
+           onkeydown="if(event.key==='Enter')optionSupprimer()"
+           aria-label="Supprimer cette conversation — action irréversible">
+        <div class="ma-ico" style="background:#fff0f0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E24B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        </div>
+        <div class="ma-txt">
+          <h5>Supprimer la conversation</h5>
+          <p>Cette action est irréversible</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     BOTTOM SHEET — NOUVELLE CONVERSATION
+════════════════════════════ -->
+<div class="ov" id="ov-newconv" role="dialog" aria-modal="true" aria-labelledby="newconv-title">
+  <div class="ov-bg" onclick="closeNewConv()"></div>
+  <div class="sheet">
+    <div class="drag" aria-hidden="true"></div>
+
+    <!-- En-tête -->
+    <div class="sheet-hdr">
+      <h2 class="sheet-title" id="newconv-title">Nouvelle conversation</h2>
+      <button class="sheet-x" onclick="closeNewConv()" aria-label="Fermer">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Recherche -->
+    <div class="sheet-search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9b91c8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="nc-search" placeholder="Rechercher dans mon réseau…" aria-label="Rechercher un contact" oninput="filterContacts()">
+    </div>
+
+    <!-- Liste contacts -->
+    <div class="sheet-scroll" id="nc-list" role="list" aria-label="Contacts disponibles">
+
+      <!-- Care Manager -->
+      <div class="sheet-lbl" data-section="care-manager">
+        <span>Care Manager</span>
+        <div class="sheet-sep" aria-hidden="true"></div>
+      </div>
+
+      <div class="contact-row" role="listitem" tabindex="0"
+           data-name="Basma Frangieh" data-role="Care Manager"
+           onclick="startConv('basma','Basma Frangieh')"
+           onkeydown="if(event.key==='Enter')startConv('basma','Basma Frangieh')"
+           aria-label="Démarrer une conversation avec Basma Frangieh — Care Manager">
+        <div class="cr-av" style="background:linear-gradient(135deg,#27b6cc,#1e8fa0);">
+          BF
+          <div class="cr-online" aria-label="En ligne"></div>
+        </div>
+        <div class="cr-info">
+          <div class="cr-name">Basma Frangieh</div>
+          <div class="cr-role">Care Manager · En ligne</div>
+        </div>
+        <svg class="cr-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+
+      <!-- Co-aidants -->
+      <div class="sheet-lbl" data-section="co-aidants">
+        <span>Co-aidants</span>
+        <div class="sheet-sep" aria-hidden="true"></div>
+      </div>
+
+      <div class="contact-row" role="listitem" tabindex="0"
+           data-name="Rabhot Frahot" data-role="Co-aidant"
+           onclick="startConv('rabhot','Rabhot Frahot')"
+           onkeydown="if(event.key==='Enter')startConv('rabhot','Rabhot Frahot')"
+           aria-label="Démarrer une conversation avec Rabhot Frahot — Co-aidant de Martin">
+        <div class="cr-av" style="background:linear-gradient(135deg,#8a2be2,#b228FF);">
+          RF
+          <div class="cr-online" aria-label="En ligne"></div>
+        </div>
+        <div class="cr-info">
+          <div class="cr-name">Rabhot Frahot</div>
+          <div class="cr-role">Co-aidant · Martin</div>
+        </div>
+        <svg class="cr-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+
+      <div class="contact-row" role="listitem" tabindex="0"
+           data-name="Charbel Frangieh" data-role="Co-aidant"
+           onclick="startConv('charbel','Charbel Frangieh')"
+           onkeydown="if(event.key==='Enter')startConv('charbel','Charbel Frangieh')"
+           aria-label="Démarrer une conversation avec Charbel Frangieh — Co-aidant de Martin">
+        <div class="cr-av" style="background:linear-gradient(135deg,#27b6cc,#b228FF);">
+          CF
+          <div class="cr-offline" aria-label="Hors ligne"></div>
+        </div>
+        <div class="cr-info">
+          <div class="cr-name">Charbel Frangieh</div>
+          <div class="cr-role">Co-aidant · Martin · Hors ligne</div>
+        </div>
+        <svg class="cr-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+
+      <div class="contact-row" role="listitem" tabindex="0"
+           data-name="Antoinette Nakad" data-role="Co-aidante"
+           onclick="startConv('nakad','Antoinette Nakad')"
+           onkeydown="if(event.key==='Enter')startConv('nakad','Antoinette Nakad')"
+           aria-label="Démarrer une conversation avec Antoinette Nakad — Co-aidante de Madeleine">
+        <div class="cr-av" style="background:linear-gradient(135deg,#1e3a6e,#27b6cc);">
+          AN
+          <div class="cr-offline" aria-label="Hors ligne"></div>
+        </div>
+        <div class="cr-info">
+          <div class="cr-name">Antoinette Nakad</div>
+          <div class="cr-role">Co-aidante · Madeleine · Hors ligne</div>
+        </div>
+        <svg class="cr-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+
+      <!-- Aucun résultat -->
+      <div id="nc-empty" style="display:none;text-align:center;padding:36px 24px;">
+        <div style="font-size:36px;margin-bottom:10px;" aria-hidden="true">🔍</div>
+        <p style="font-size:14px;font-weight:800;color:#2d1060;margin-bottom:6px;">Aucun résultat</p>
+        <p style="font-size:12px;font-weight:600;color:#8a7ab0;">Aucun contact ne correspond à votre recherche.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── MENU OPTIONS ── */
+var notifActive = true;
+
+function openOptionsMenu() {
+  var c = CONTACTS[currentChatId] || CONTACTS.basma;
+  document.getElementById('options-title').textContent = c.name;
+  document.getElementById('ov-options').classList.add('open');
+  document.addEventListener('keydown', trapOptions);
+  say('Menu options ouvert');
+}
+function closeOptionsMenu() {
+  document.getElementById('ov-options').classList.remove('open');
+  document.removeEventListener('keydown', trapOptions);
+}
+function trapOptions(e) { if (e.key === 'Escape') closeOptionsMenu(); }
+
+function optionRdv() {
+  closeOptionsMenu();
+  closeChat();
+  say('Redirection vers l\'agenda');
+}
+function optionNotif() {
+  notifActive = !notifActive;
+  var icon = document.getElementById('notif-icon');
+  var label = document.getElementById('notif-label');
+  var sub = document.getElementById('notif-sub');
+  if (notifActive) {
+    label.textContent = 'Couper les notifications';
+    sub.textContent = 'Ne plus recevoir d\'alertes pour cette conversation';
+    icon.setAttribute('stroke', '#8210cc');
+    document.querySelector('#menu-notif .ma-ico').style.background = '#f0e8ff';
+  } else {
+    label.textContent = 'Activer les notifications';
+    sub.textContent = 'Recevoir les alertes pour cette conversation';
+    icon.setAttribute('stroke', '#8a7ab0');
+    document.querySelector('#menu-notif .ma-ico').style.background = '#f5f3ff';
+  }
+  say(notifActive ? 'Notifications activées' : 'Notifications coupées');
+}
+function optionSupprimer() {
+  closeOptionsMenu();
+  if (confirm('Supprimer cette conversation ?\nCette action est irréversible.')) {
+    closeChat();
+    say('Conversation supprimée');
+  }
+}
+
+/* ── NOUVELLE CONVERSATION ── */
+function openNewConv() {
+  var ov = document.getElementById('ov-newconv');
+  ov.classList.add('open');
+  document.getElementById('nc-search').value = '';
+  filterContacts();
+  setTimeout(function() { document.getElementById('nc-search').focus(); }, 350);
+  document.addEventListener('keydown', trapNewConv);
+  say('Panneau nouvelle conversation ouvert');
+}
+function closeNewConv() {
+  document.getElementById('ov-newconv').classList.remove('open');
+  document.removeEventListener('keydown', trapNewConv);
+}
+function trapNewConv(e) { if (e.key === 'Escape') closeNewConv(); }
+
+function filterContacts() {
+  var q = document.getElementById('nc-search').value.toLowerCase().trim();
+  var rows = document.querySelectorAll('#nc-list .contact-row');
+  var sections = document.querySelectorAll('#nc-list .sheet-lbl');
+  var anyVisible = false;
+  rows.forEach(function(row) {
+    var name = row.getAttribute('data-name').toLowerCase();
+    var role = row.getAttribute('data-role').toLowerCase();
+    var match = !q || name.includes(q) || role.includes(q);
+    row.style.display = match ? '' : 'none';
+    if (match) anyVisible = true;
+  });
+  sections.forEach(function(lbl) {
+    var next = lbl.nextElementSibling;
+    var hasVisible = false;
+    while (next && !next.classList.contains('sheet-lbl') && next.id !== 'nc-empty') {
+      if (next.classList.contains('contact-row') && next.style.display !== 'none') hasVisible = true;
+      next = next.nextElementSibling;
+    }
+    lbl.style.display = hasVisible ? '' : 'none';
+  });
+  document.getElementById('nc-empty').style.display = anyVisible ? 'none' : 'block';
+}
+
+function startConv(id, name) {
+  closeNewConv();
+  setTimeout(function() { openChat(id); }, 120);
+  say('Ouverture de la conversation avec ' + name);
+}
+
+/* ── ONGLETS ── */
+function setTab(tab) {
+  currentTab = tab;
+  var btnToutes = document.getElementById('tab-toutes');
+  var btnNonlues = document.getElementById('tab-nonlues');
+  var isToutes = tab === 'toutes';
+
+  btnToutes.classList.toggle('active', isToutes);
+  btnToutes.setAttribute('aria-selected', isToutes ? 'true' : 'false');
+  btnToutes.setAttribute('tabindex', isToutes ? '0' : '-1');
+  btnNonlues.classList.toggle('active', !isToutes);
+  btnNonlues.setAttribute('aria-selected', !isToutes ? 'true' : 'false');
+  btnNonlues.setAttribute('tabindex', !isToutes ? '0' : '-1');
+
+  var empty = document.getElementById('empty-nonlues');
+
+  if (isToutes) {
+    // Tout afficher
+    document.getElementById('ia-pinned').style.display = '';
+    document.getElementById('support-section').style.display = '';
+    document.getElementById('convs-section').style.display = '';
+    empty.classList.remove('show');
+  } else {
+    // Non lues : masquer IA et support (pas de non lus), ne montrer que les convs unread
+    document.getElementById('ia-pinned').style.display = 'none';
+    document.getElementById('support-section').style.display = 'none';
+    var convs = document.querySelectorAll('#convs-section .conv');
+    var hasUnread = false;
+    convs.forEach(function(c) {
+      var unread = c.getAttribute('data-unread') === 'true';
+      c.style.display = unread ? '' : 'none';
+      if (unread) hasUnread = true;
+    });
+    // Masquer les labels de section si aucun non-lu en dessous
+    var careSection = document.querySelector('#convs-section .section-lbl:first-of-type');
+    // Garder simple : afficher convs-section si au moins 1 non-lu
+    document.getElementById('convs-section').style.display = hasUnread ? '' : 'none';
+    empty.classList.toggle('show', !hasUnread);
+  }
+  say('Filtre ' + (isToutes ? 'toutes les conversations' : 'messages non lus') + ' appliqué');
+}
+
+/* ── RECHERCHE ── */
+function onSearch(){
+  var q = document.getElementById('q').value;
+  document.getElementById('qclear').classList.toggle('show', q.length > 0);
+}
+function clearQ(){
+  document.getElementById('q').value = '';
+  document.getElementById('qclear').classList.remove('show');
+  document.getElementById('q').focus();
+}
+
+/* ── OUVRIR / FERMER CONVERSATION ── */
+var CONTACTS = {
+  basma:   {name:'Basma Frangieh',   av:'BF', bg:'linear-gradient(135deg,#27b6cc,#1e8fa0)', status:'En ligne · Care Manager'},
+  support: {name:'Support Sawa Care', av:'SC', bg:'linear-gradient(135deg,#b228FF,#8a2be2)', status:'En ligne · Support Admin'},
+  rabhot:  {name:'Rabhot Frahot',    av:'RF', bg:'linear-gradient(135deg,#8a2be2,#b228FF)', status:'En ligne · Co-aidant'},
+  charbel: {name:'Charbel Frangieh', av:'CF', bg:'linear-gradient(135deg,#27b6cc,#b228FF)', status:'Hors ligne · Co-aidant'},
+  nakad:   {name:'Antoinette Nakad', av:'AN', bg:'linear-gradient(135deg,#1e3a6e,#27b6cc)', status:'Hors ligne · Co-aidante'},
+  ia:      {name:'Assistant IA',     av:'IA', bg:'linear-gradient(135deg,#b228FF,#7b2fff,#27b6cc)', status:'Disponible 24h/24'},
+};
+
+var currentChatId = 'basma';
+function openChat(id){
+  currentChatId = id;
+  var c = CONTACTS[id] || CONTACTS.basma;
+  document.getElementById('chat-contact-name').textContent = c.name;
+  document.getElementById('chat-status').textContent = c.status;
+  var av = document.getElementById('chat-av');
+  av.textContent = c.av;
+  av.style.background = c.bg;
+  var panel = document.getElementById('chat-panel');
+  panel.classList.add('open');
+  panel.setAttribute('aria-hidden','false');
+  setTimeout(function(){ document.getElementById('chat-contact-name').focus(); }, 320);
+  document.addEventListener('keydown', trapChat);
+  /* Scroll bas */
+  var msgs = document.getElementById('chat-messages');
+  setTimeout(function(){ msgs.scrollTop = msgs.scrollHeight; }, 100);
+}
+
+function closeChat(){
+  document.getElementById('chat-panel').classList.remove('open');
+  document.getElementById('chat-panel').setAttribute('aria-hidden','true');
+  document.removeEventListener('keydown', trapChat);
+}
+function trapChat(e){ if(e.key === 'Escape') closeChat(); }
+
+/* ── ENVOYER MESSAGE ── */
+function sendMsg(){
+  var inp = document.getElementById('chat-input');
+  var txt = inp.value.trim();
+  if(!txt) return;
+  var msgs = document.getElementById('chat-messages');
+  var now = new Date();
+  var time = now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  var div = document.createElement('div');
+  div.className = 'msg me';
+  div.innerHTML = '<div class="msg-bubble">'+escHtml(txt)+'</div><div class="msg-time">'+time+'</div><div class="msg-status">✓ Envoyé</div>';
+  msgs.appendChild(div);
+  inp.value = '';
+  inp.style.height = 'auto';
+  msgs.scrollTop = msgs.scrollHeight;
+  say('Message envoyé');
+}
+
+function autoResize(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function escHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* Envoi avec Entrée (Shift+Entrée = saut de ligne) */
+document.getElementById('chat-input').addEventListener('keydown', function(e){
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendMsg(); }
+});
+
+function say(msg){
+  var z = document.getElementById('announce');
+  z.textContent = '';
+  setTimeout(function(){ z.textContent = msg; }, 50);
+}
+</script>
+</body>
+</html>

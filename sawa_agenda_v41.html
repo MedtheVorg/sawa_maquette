@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Sawa Care - Agenda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { height: 100%; -webkit-text-size-adjust: 100%; }
+body { height: 100%; font-family: 'Nunito', sans-serif; background: #ddd5f8; display: flex; flex-direction: column; overflow: hidden; max-width: 430px; margin: 0 auto; }
+
+/* HEADER */
+.hdr { background: linear-gradient(145deg,#b228FF 0%,#8a2be2 45%,#1e3a6e 80%,#0f5060 100%); padding: calc(env(safe-area-inset-top,44px) + 10px) 18px 14px; flex-shrink: 0; position: relative; overflow: hidden; }
+.hb1 { position: absolute; width: 160px; height: 160px; border-radius: 50%; background: rgba(255,255,255,0.07); top: -55px; right: -40px; pointer-events: none; }
+.hb2 { position: absolute; width: 90px; height: 90px; border-radius: 50%; background: rgba(133,255,239,0.1); bottom: -25px; left: 10px; pointer-events: none; }
+.hdr-bar { display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 2; margin-bottom: 12px; }
+.hdr-title { font-size: 18px; font-weight: 900; color: #fff; position: absolute; left: 50%; transform: translateX(-50%); }
+.icon-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.18); border: 1.5px solid rgba(255,255,255,0.28); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.icon-btn:focus-visible { outline: 2px solid #fff; }
+
+/* BARRE FILTRES */
+.filter-bar { display: flex; align-items: center; gap: 8px; position: relative; z-index: 2; }
+.proche-chips { flex: 1; display: flex; gap: 7px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; min-width: 0; }
+.proche-chips::-webkit-scrollbar { display: none; }
+.pchip { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 6px 12px; cursor: pointer; white-space: nowrap; font-family: 'Nunito', sans-serif; }
+.pchip.active { background: rgba(255,255,255,0.95); border-color: #fff; }
+.pchip-name { font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.9); }
+.pchip.active .pchip-name { color: #8210cc; }
+.pchip:focus-visible { outline: 2px solid rgba(255,255,255,0.8); }
+.filter-btn { flex-shrink: 0; width: 36px; height: 36px; border-radius: 11px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.9); position: relative; }
+.filter-btn.on { background: #fff; border-color: #fff; color: #8210cc; }
+.filter-btn:focus-visible { outline: 2px solid rgba(255,255,255,0.8); }
+.filter-badge { position: absolute; top: -5px; right: -5px; min-width: 16px; height: 16px; border-radius: 8px; background: #fcffad; color: #3d2e00; font-size: 9.5px; font-weight: 900; display: flex; align-items: center; justify-content: center; padding: 0 3px; }
+
+/* SHEET FILTRE TYPE */
+.tf-option { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 0.5px solid #f0ecff; cursor: pointer; }
+.tf-option:last-of-type { border-bottom: none; }
+.tf-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+.tf-lbl { flex: 1; font-size: 14px; font-weight: 800; color: #2d1060; }
+.tf-check { width: 22px; height: 22px; border-radius: 7px; border: 2px solid #e0d0ff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tf-option.sel .tf-check { background: linear-gradient(135deg,#b228FF,#8a2be2); border-color: transparent; }
+
+/* ZONE CALENDRIER */
+.cal-sticky { background: #ddd5f8; border-radius: 22px 22px 0 0; margin-top: -2px; padding: 14px 16px 0; flex-shrink: 0; }
+.cal-wrap { background: #fff; border-radius: 18px; border: 1.5px solid #e8e0ff; box-shadow: 0 2px 12px rgba(178,40,255,0.08); padding: 14px; margin-bottom: 10px; }
+.cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 6px; }
+.cal-month-btn { font-size: 15px; font-weight: 900; color: #2d1060; background: none; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 9px; }
+.cal-month-btn:hover { background: #f5f3ff; }
+.cal-month-btn:focus-visible { outline: 2px solid #b228FF; }
+.cal-btn { width: 32px; height: 32px; border-radius: 9px; background: #f5f3ff; border: 1.5px solid #e8e0ff; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.cal-btn:focus-visible { outline: 2px solid #b228FF; }
+.today-btn { display: inline-flex; align-items: center; gap: 5px; background: #f0e8ff; border: 1.5px solid #e0d0ff; border-radius: 12px; padding: 6px 11px; font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 800; color: #8210cc; cursor: pointer; margin-bottom: 10px; }
+.today-btn:focus-visible { outline: 2px solid #b228FF; }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 1px; }
+.cal-dow { font-size: 9.5px; font-weight: 800; color: #8a7ab0; text-align: center; padding: 2px 0 5px; }
+.cal-day { width: 100%; aspect-ratio: 1; border-radius: 9px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #2d1060; cursor: pointer; border: none; background: transparent; font-family: 'Nunito', sans-serif; position: relative; gap: 1px; }
+.cal-day:hover { background: #f0e8ff; color: #8210cc; }
+.cal-day.today { background: #ede9fe; color: #8210cc; font-weight: 900; }
+.cal-day.sel { background: linear-gradient(135deg,#b228FF,#8a2be2); color: #fff; font-weight: 900; box-shadow: 0 2px 8px rgba(178,40,255,0.35); }
+.cal-day.past { color: #b3a8d9; }
+.cal-day.empty { cursor: default; }
+.cal-day.empty:hover { background: transparent; }
+.cal-day:focus-visible { outline: 2px solid #b228FF; }
+.day-dots { display: flex; gap: 2px; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); }
+.dd { width: 4px; height: 4px; border-radius: 50%; }
+.dd-rdv { background: #b228FF; }
+.dd-aide { background: #27b6cc; }
+.dd-rappel { background: #f5d800; }
+.cal-day.sel .dd-rdv { background: rgba(255,255,255,0.9); }
+.cal-day.sel .dd-aide { background: rgba(133,255,239,0.9); }
+.cal-day.sel .dd-rappel { background: rgba(252,255,173,0.9); }
+
+/* LEGENDE */
+.leg-row { display: flex; gap: 14px; padding: 6px 2px 10px; flex-wrap: wrap; }
+.leg-item { display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 700; color: #5e5290; }
+.leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* SCROLL EVENEMENTS */
+.ev-scroll { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px calc(env(safe-area-inset-bottom,0px) + 90px); scrollbar-width: none; }
+.ev-scroll::-webkit-scrollbar { display: none; }
+.date-lbl { font-size: 13px; font-weight: 900; color: #2d1060; padding: 8px 0 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.date-lbl-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ev-count { font-size: 11px; font-weight: 700; color: #8a7ab0; }
+.past-tag { font-size: 9.5px; font-weight: 800; color: #9A6500; background: #FFF8E1; border-radius: 6px; padding: 1px 6px; display: inline-flex; align-self: flex-start; }
+.view-toggle { display: flex; background: #fff; border: 1.5px solid #e8e0ff; border-radius: 11px; padding: 2px; flex-shrink: 0; }
+.vt-btn { border: none; background: transparent; font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 800; color: #8a7ab0; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
+.vt-btn.active { background: linear-gradient(135deg,#b228FF,#8a2be2); color: #fff; }
+.vt-btn:focus-visible { outline: 2px solid #b228FF; }
+
+/* CARTE EVENEMENT */
+.ev-card { background: #fff; border-radius: 14px; border: 1.5px solid #e8e0ff; box-shadow: 0 2px 8px rgba(178,40,255,0.06); margin-bottom: 9px; overflow: hidden; cursor: pointer; display: flex; transition: box-shadow 130ms; animation: fadeUp 220ms ease-out both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.ev-card:hover { box-shadow: 0 4px 14px rgba(178,40,255,0.12); }
+.ev-card:active { transform: scale(0.99); }
+.ev-card:focus-visible { outline: 2px solid #b228FF; }
+.ev-card.cancelled { opacity: 0.6; }
+.ev-stripe { width: 5px; flex-shrink: 0; }
+.stripe-rdv { background: linear-gradient(180deg,#b228FF,#8a2be2); }
+.stripe-aide { background: linear-gradient(180deg,#27b6cc,#1e8fa0); }
+.stripe-rappel { background: linear-gradient(180deg,#f5d800,#e8a800); }
+.ev-body { flex: 1; padding: 11px 13px; display: flex; align-items: flex-start; gap: 11px; min-width: 0; }
+.ev-ico { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ico-rdv { background: #f0e8ff; }
+.ico-aide { background: #e0f5ff; }
+.ico-rappel { background: #fffbe0; }
+.ev-info { flex: 1; min-width: 0; }
+.ev-type { font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
+.type-rdv { color: #8210cc; }
+.type-aide { color: #1e8fa0; }
+.type-rappel { color: #9A6500; }
+.rec-badge { display: inline-flex; align-items: center; gap: 3px; background: #f5f3ff; color: #8a7ab0; border-radius: 6px; padding: 1px 6px; font-size: 9px; font-weight: 800; text-transform: none; letter-spacing: 0; }
+.ev-title { font-size: 13.5px; font-weight: 800; color: #2d1060; line-height: 1.3; margin-bottom: 3px; }
+.ev-title.strike { text-decoration: line-through; color: #9b91c8; }
+.ev-meta { font-size: 11.5px; font-weight: 600; color: #8a7ab0; line-height: 1.5; }
+.ev-meta-row { display: flex; align-items: center; gap: 4px; }
+.ev-status { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 800; border-radius: 6px; padding: 2px 7px; margin-top: 5px; }
+.st-ok { background: #e8f5ee; color: #1D9E75; }
+.st-wait { background: #FFF8E1; color: #9A6500; }
+.st-rem { background: #fffbe0; color: #9A6500; }
+.st-cancel { background: #fde8e8; color: #E24B4A; }
+.ev-time { font-size: 12px; font-weight: 800; color: #8a7ab0; flex-shrink: 0; margin-top: 2px; text-align: right; white-space: nowrap; }
+.ev-time small { display: block; font-size: 10px; font-weight: 700; color: #cdc5f0; }
+
+/* SECTION LISTE (vue prochains rdv) */
+.up-date-hdr { font-size: 11px; font-weight: 800; color: #4e4280; text-transform: uppercase; letter-spacing: 0.07em; padding: 12px 0 6px; }
+.up-date-hdr:first-child { padding-top: 2px; }
+
+/* ETAT VIDE */
+.empty-day { text-align: center; padding: 32px 16px; display: none; }
+.empty-day.show { display: block; }
+.empty-ico { font-size: 36px; margin-bottom: 10px; }
+.empty-t { font-size: 15px; font-weight: 800; color: #2d1060; margin-bottom: 5px; }
+.empty-s { font-size: 12px; font-weight: 600; color: #8a7ab0; line-height: 1.6; }
+
+/* OVERLAY */
+.ov { position: fixed; inset: 0; background: rgba(14,22,38,0.6); z-index: 200; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 200ms; backdrop-filter: blur(3px); }
+.ov.open { opacity: 1; pointer-events: all; }
+.ov-bg { position: absolute; inset: 0; }
+.sheet { background: #fff; border-radius: 26px 26px 0 0; width: 100%; padding: 0 20px calc(env(safe-area-inset-bottom,0px) + 24px); transform: translateY(100%); transition: transform 320ms cubic-bezier(.32,.72,0,1); position: relative; z-index: 1; max-height: 88vh; overflow-y: auto; }
+.ov.open .sheet { transform: translateY(0); }
+.drag { width: 38px; height: 4px; border-radius: 2px; background: #e4ddf7; margin: 12px auto 0; }
+.sheet-x { position: absolute; top: 12px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: #f5f3ff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.sheet-x:focus-visible { outline: 2px solid #b228FF; }
+.sheet-h { font-size: 18px; font-weight: 900; color: #2d1060; margin: 16px 0 4px; }
+.sheet-sub { font-size: 13px; font-weight: 600; color: #8a7ab0; margin-bottom: 18px; }
+
+/* TYPE PICKER */
+.type-picker { display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; margin-bottom: 20px; }
+.tpick { border-radius: 14px; border: 2px solid #e8e0ff; padding: 13px 8px; display: flex; flex-direction: column; align-items: center; gap: 7px; cursor: pointer; background: #fff; font-family: 'Nunito', sans-serif; }
+.tpick.sel { border-color: #b228FF; background: #f5eeff; }
+.tpick:focus-visible { outline: 2px solid #b228FF; }
+.tpick-ico { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; }
+.tpick-lbl { font-size: 11px; font-weight: 800; color: #5e5290; text-align: center; line-height: 1.3; }
+.tpick.sel .tpick-lbl { color: #8210cc; }
+
+/* CHAMPS FORM */
+.fld { margin-bottom: 14px; }
+.flbl { font-size: 11px; font-weight: 800; color: #4e4280; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; display: block; }
+.fhint { font-size: 11px; font-weight: 600; color: #8a7ab0; margin-top: 5px; line-height: 1.5; }
+.finp { width: 100%; background: #f9f7ff; border: 1.5px solid #e8e0ff; border-radius: 12px; padding: 12px 14px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600; color: #2d1060; outline: none; -webkit-appearance: none; }
+.finp:focus { border-color: #b228FF; box-shadow: 0 0 0 3px rgba(178,40,255,0.1); }
+.frow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fsel { width: 100%; background: #f9f7ff; border: 1.5px solid #e8e0ff; border-radius: 12px; padding: 12px 36px 12px 14px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600; color: #2d1060; outline: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23b228FF' stroke-width='2.5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+.btn-save { width: 100%; background: linear-gradient(135deg,#b228FF 0%,#8a2be2 50%,#27b6cc 100%); border: none; border-radius: 16px; padding: 15px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 900; color: #fff; cursor: pointer; margin-top: 8px; }
+.btn-save:focus-visible { outline: 2px solid #2d1060; outline-offset: 3px; }
+.btn-del { background: #fff0f0; color: #E24B4A; border: 1.5px solid #ffd5d5; border-radius: 16px; padding: 14px 16px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; margin-top: 8px; flex: 0 0 auto; }
+.btn-cancel-rdv { width: 100%; background: #fff0f0; color: #E24B4A; border: 1.5px solid #ffd5d5; border-radius: 16px; padding: 14px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-cancel-rdv:focus-visible { outline: 2px solid #E24B4A; }
+.row-btns { display: flex; gap: 10px; }
+
+/* DETAIL RDV */
+.rdv-recap { background: linear-gradient(135deg,#f5eeff,#eef5ff); border: 1.5px solid rgba(178,40,255,0.18); border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+.rdv-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 0.5px solid rgba(178,40,255,0.1); }
+.rdv-row:last-child { border-bottom: none; }
+.rdv-lbl { font-size: 12px; font-weight: 700; color: #8a7ab0; }
+.rdv-val { font-size: 13px; font-weight: 800; color: #2d1060; text-align: right; }
+.teams-btn { display: flex; align-items: center; gap: 10px; background: #fff; border: 1.5px solid #e8e0ff; border-radius: 14px; padding: 14px 16px; text-decoration: none; margin-bottom: 12px; }
+.teams-ico { width: 40px; height: 40px; border-radius: 11px; background: #e0f0ff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.teams-text-title { font-size: 14px; font-weight: 800; color: #0078d4; margin-bottom: 2px; }
+.teams-text-sub { font-size: 11px; font-weight: 600; color: #8a7ab0; }
+.notes-card { background: #fff; border-radius: 14px; border: 1.5px solid #e8e0ff; padding: 12px 14px; font-size: 12px; font-weight: 600; color: #5e5290; line-height: 1.6; }
+.notes-card-lbl { font-size: 10px; font-weight: 800; color: #4e4280; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; display: block; }
+
+/* PICKER MOIS/ANNEE */
+.my-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; margin: 6px 0 4px; }
+.my-cell { border-radius: 13px; border: 2px solid #e8e0ff; padding: 14px 6px; text-align: center; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; color: #5e5290; cursor: pointer; background: #fff; }
+.my-cell.sel { border-color: #b228FF; background: linear-gradient(135deg,#b228FF,#8a2be2); color: #fff; }
+.my-cell.cur:not(.sel) { border-color: #b228FF; color: #8210cc; }
+.my-cell:focus-visible { outline: 2px solid #b228FF; }
+.my-year-row { display: flex; align-items: center; justify-content: center; gap: 18px; margin-bottom: 16px; }
+.my-year-lbl { font-size: 19px; font-weight: 900; color: #2d1060; min-width: 70px; text-align: center; }
+
+/* NAV BAS */
+.nav-bar { flex-shrink: 0; background: #fff; border-top: 1.5px solid #cdc5f0; padding-bottom: env(safe-area-inset-bottom,0px); }
+.ai-r { display: flex; align-items: center; justify-content: flex-end; padding: 7px 18px 4px; gap: 8px; }
+.ai-lbl { font-size: 10px; font-weight: 700; color: #14233A; background: #fcffad; border-radius: 7px; padding: 4px 9px; }
+.ai-fab { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg,#b228FF,#7b2fff 45%,#27b6cc); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 14px rgba(178,40,255,0.4); }
+.bnav { display: flex; align-items: center; padding: 3px 0 7px; }
+.ni { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; min-height: 44px; justify-content: center; }
+.nl { font-size: 10px; font-weight: 700; color: #9080c0; }
+.ni.act .nl { color: #b228FF; }
+.nc { flex: 0 0 66px; display: flex; flex-direction: column; align-items: center; }
+.nfab { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg,#b228FF,#27b6cc); display: flex; align-items: center; justify-content: center; margin-top: -22px; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(178,40,255,0.3); cursor: pointer; }
+.nfl { font-size: 10px; font-weight: 700; color: #b228FF; margin-top: 1px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="sr" aria-live="polite" id="announce"></div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hb1"></div><div class="hb2"></div>
+  <div class="hdr-bar">
+    <div style="width:40px;flex-shrink:0;"></div>
+    <span class="hdr-title">Agenda</span>
+    <button class="icon-btn" onclick="openNew()" aria-label="Ajouter un événement">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+  </div>
+  <div class="filter-bar" role="group" aria-label="Filtrer par proche">
+    <div class="proche-chips">
+      <button class="pchip active" id="pchip-tous" onclick="setProche(this,'tous')" aria-pressed="true">
+        <span style="font-size:14px;">📋</span><span class="pchip-name">Tous</span>
+      </button>
+      <button class="pchip" id="pchip-martin" onclick="setProche(this,'martin')" aria-pressed="false">
+        <span style="font-size:14px;">🧑</span><span class="pchip-name">Martin</span>
+      </button>
+      <button class="pchip" id="pchip-madeleine" onclick="setProche(this,'madeleine')" aria-pressed="false">
+        <span style="font-size:14px;">👩</span><span class="pchip-name">Madeleine</span>
+      </button>
+      <button class="pchip" id="pchip-moi" onclick="setProche(this,'moi')" aria-pressed="false">
+        <span style="font-size:14px;">🔒</span><span class="pchip-name">Mes RDV</span>
+      </button>
+    </div>
+    <button class="filter-btn" id="filter-btn" onclick="openTypeFilter()" aria-label="Filtrer par type d'agenda">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+      <span class="filter-badge" id="filter-badge" style="display:none;">1</span>
+    </button>
+  </div>
+</div>
+
+<!-- CALENDRIER -->
+<div class="cal-sticky" id="cal-sticky">
+  <div class="cal-wrap" aria-label="Calendrier">
+    <div class="cal-nav">
+      <button class="cal-btn" onclick="prevMonth()" aria-label="Mois précédent">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5e5290" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="cal-month-btn" id="cal-month-lbl" onclick="openMonthYear()" aria-label="Choisir le mois et l'année">
+        Juin 2026
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <button class="cal-btn" onclick="nextMonth()" aria-label="Mois suivant">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5e5290" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+    <div class="cal-grid" id="cal-grid" role="grid"></div>
+  </div>
+  <div class="leg-row" aria-label="Légende">
+    <div class="leg-item"><div class="leg-dot" style="background:#b228FF;"></div>Mon RDV Care Manager</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#27b6cc;"></div>Agenda Aidé</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#f5d800;"></div>Rappel Aidé</div>
+  </div>
+</div>
+
+<!-- EVENEMENTS -->
+<div class="ev-scroll" id="ev-scroll">
+  <div class="date-lbl">
+    <div class="date-lbl-left">
+      <span id="date-lbl-text">Aujourd'hui · Vendredi 5 juin 2026</span>
+      <span class="ev-count" id="ev-count" aria-live="polite"></span>
+    </div>
+    <div class="view-toggle" role="group" aria-label="Mode d'affichage">
+      <button class="vt-btn active" id="vt-jour" onclick="setView('jour')" aria-pressed="true">Jour</button>
+      <button class="vt-btn" id="vt-liste" onclick="setView('liste')" aria-pressed="false">À venir</button>
+    </div>
+  </div>
+  <button class="today-btn" id="today-btn" onclick="goToday()" style="display:none;">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3" fill="#8210cc" stroke="none"/></svg>
+    Revenir à aujourd'hui
+  </button>
+  <div id="ev-list" role="list" aria-label="Événements du jour"></div>
+  <div id="up-list" role="list" aria-label="Prochains événements" style="display:none;"></div>
+  <div class="empty-day" id="empty-day">
+    <div class="empty-ico" aria-hidden="true">🗓️</div>
+    <p class="empty-t" id="empty-t">Aucun événement ce jour</p>
+    <p class="empty-s" id="empty-s">Appuyez sur + pour ajouter un rappel, une activité ou un RDV.</p>
+  </div>
+</div>
+
+<!-- OVERLAY NOUVEL EVENEMENT -->
+<div class="ov" id="ov-new" role="dialog" aria-modal="true" aria-labelledby="new-title">
+  <div class="ov-bg" onclick="closeNew()"></div>
+  <div class="sheet">
+    <div class="drag" aria-hidden="true"></div>
+    <button class="sheet-x" onclick="closeNew()" aria-label="Fermer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2 class="sheet-h" id="new-title" tabindex="-1">Nouvel événement</h2>
+    <p class="sheet-sub">Choisissez le type d'événement</p>
+    <div class="type-picker" role="radiogroup" aria-label="Type d'événement">
+      <div class="tpick" role="radio" aria-checked="false" tabindex="0" onclick="selectType(this,'rdv')" onkeydown="if(event.key==='Enter')selectType(this,'rdv')">
+        <div class="tpick-ico ico-rdv"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
+        <span class="tpick-lbl">RDV<br>Care Manager</span>
+      </div>
+      <div class="tpick" role="radio" aria-checked="false" tabindex="0" onclick="selectType(this,'aide')" onkeydown="if(event.key==='Enter')selectType(this,'aide')">
+        <div class="tpick-ico ico-aide"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e8fa0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></div>
+        <span class="tpick-lbl">Agenda<br>Aidé</span>
+      </div>
+      <div class="tpick" role="radio" aria-checked="false" tabindex="0" onclick="selectType(this,'rappel')" onkeydown="if(event.key==='Enter')selectType(this,'rappel')">
+        <div class="tpick-ico ico-rappel"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9A6500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+        <span class="tpick-lbl">Rappel<br>Aidé</span>
+      </div>
+    </div>
+    <div id="form-zone" style="display:none;">
+      <div class="fld"><label class="flbl" for="f-title">Titre *</label><input class="finp" type="text" id="f-title" aria-required="true"></div>
+      <div class="fld" id="f-proche-wrap"><label class="flbl" for="f-proche">Proche aidé</label>
+        <select class="fsel" id="f-proche"><option value="">Sélectionner…</option><option>Martin Dupont</option><option>Madeleine Thomas</option></select>
+      </div>
+      <div class="fld" id="f-aidant-wrap"><label class="flbl" for="f-aidant">Aidant responsable</label>
+        <select class="fsel" id="f-aidant">
+          <option value="">Sélectionner…</option>
+          <option>Vous</option>
+          <option>Rabhot Frahot</option>
+          <option>Charbel Frangieh</option>
+          <option>Antoinette Nakad</option>
+        </select>
+      </div>
+      <div class="frow">
+      <div class="fld"><label class="flbl" for="f-date">Date *</label><input class="finp" type="date" id="f-date" aria-required="true" onchange="checkPastDate(this)">
+          <p class="fhint" id="f-date-hint" style="display:none;">📅 Les événements ne peuvent pas être créés dans le passé — date réglée sur aujourd'hui.</p>
+        </div>
+        <div class="fld" id="f-heure-wrap"><label class="flbl" for="f-heure">Heure de début</label><input class="finp" type="time" id="f-heure"></div>
+      </div>
+      <div class="fld" id="f-heurefin-wrap"><label class="flbl" for="f-heurefin">Heure de fin</label><input class="finp" type="time" id="f-heurefin"></div>
+      <div class="fld" id="f-lieu-wrap"><label class="flbl" for="f-lieu">Lieu</label><input class="finp" type="text" id="f-lieu"></div>
+      <div class="fld"><label class="flbl" for="f-recurrence">Récurrence</label>
+        <select class="fsel" id="f-recurrence">
+          <option value="none">Ne se répète pas</option>
+          <option value="daily">Tous les jours</option>
+          <option value="weekly">Toutes les semaines</option>
+          <option value="monthly">Tous les mois</option>
+          <option value="yearly">Tous les ans</option>
+        </select>
+      </div>
+      <div class="fld"><label class="flbl" for="f-notes">Notes / Questions à préparer</label><textarea class="finp" id="f-notes" rows="3" style="resize:none;" placeholder="Ex : penser à demander le renouvellement de l'ordonnance, noter les symptômes de la semaine…"></textarea>
+        <p class="fhint">Centralisez ici vos remarques et questions pour préparer ce rendez-vous.</p>
+      </div>
+      <button class="btn-save" onclick="saveNew()">Enregistrer l'événement</button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY DETAIL / EDITION -->
+<div class="ov" id="ov-detail" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+  <div class="ov-bg" onclick="closeDetail()"></div>
+  <div class="sheet">
+    <div class="drag" aria-hidden="true"></div>
+    <button class="sheet-x" onclick="closeDetail()" aria-label="Fermer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div id="detail-hdr" style="display:flex;align-items:center;gap:12px;margin:16px 0 18px;"></div>
+
+    <!-- Edition (rappel + aide) -->
+    <div id="detail-edit">
+      <div class="fld"><label class="flbl" for="d-title">Titre</label><input class="finp" type="text" id="d-title"></div>
+      <div class="fld" id="d-proche-wrap"><label class="flbl" for="d-proche">Proche aidé</label>
+        <select class="fsel" id="d-proche"><option value="">Sélectionner…</option><option>Martin Dupont</option><option>Madeleine Thomas</option></select>
+      </div>
+      <div class="fld" id="d-aidant-wrap"><label class="flbl" for="d-aidant">Aidant responsable</label>
+        <select class="fsel" id="d-aidant">
+          <option value="">Sélectionner…</option>
+          <option>Vous</option>
+          <option>Rabhot Frahot</option>
+          <option>Charbel Frangieh</option>
+          <option>Antoinette Nakad</option>
+        </select>
+      </div>
+      <div class="frow">
+        <div class="fld"><label class="flbl" for="d-date">Date</label><input class="finp" type="date" id="d-date"></div>
+        <div class="fld" id="d-heure-wrap"><label class="flbl" for="d-heure">Heure de début</label><input class="finp" type="time" id="d-heure"></div>
+      </div>
+      <div class="fld" id="d-heurefin-wrap"><label class="flbl" for="d-heurefin">Heure de fin</label><input class="finp" type="time" id="d-heurefin"></div>
+      <div class="fld" id="d-lieu-wrap"><label class="flbl" for="d-lieu">Lieu</label><input class="finp" type="text" id="d-lieu"></div>
+      <div class="fld"><label class="flbl" for="d-recurrence">Récurrence</label>
+        <select class="fsel" id="d-recurrence">
+          <option value="none">Ne se répète pas</option>
+          <option value="daily">Tous les jours</option>
+          <option value="weekly">Toutes les semaines</option>
+          <option value="monthly">Tous les mois</option>
+          <option value="yearly">Tous les ans</option>
+        </select>
+      </div>
+      <div class="fld"><label class="flbl" for="d-notes">Notes / Questions à préparer</label><textarea class="finp" id="d-notes" rows="3" style="resize:none;"></textarea>
+        <p class="fhint">Centralisez ici vos remarques et questions pour préparer ce rendez-vous.</p>
+      </div>
+      <div class="row-btns">
+        <button class="btn-del" onclick="deleteEv()" aria-label="Supprimer l'événement">🗑️</button>
+        <button class="btn-save" style="flex:1;" onclick="saveEdit()">Enregistrer les modifications</button>
+      </div>
+    </div>
+
+    <!-- Detail RDV (lecture seule) -->
+    <div id="detail-rdv" style="display:none;">
+      <div class="rdv-recap" id="rdv-recap"></div>
+      <button class="teams-btn" id="call-btn" onclick="say('Lancement de l’appel avec Basma Frangieh')" style="border:1.5px solid #e8e0ff;cursor:pointer;width:100%;text-align:left;">
+        <div class="teams-ico" style="background:#e8f5ee;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="6" width="13" height="12" rx="2"/><path d="M16 8.5l6-3.5v14l-6-3.5V8.5z"/></svg></div>
+        <div><div class="teams-text-title" style="color:#1D9E75;">Appeler via l'app</div><div class="teams-text-sub" id="call-sub">Disponible à l'heure du RDV</div></div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </button>
+      <div class="notes-card">
+        <span class="notes-card-lbl">Mes notes / questions pour ce RDV</span>
+        <div id="rdv-notes"></div>
+      </div>
+      <button class="btn-cancel-rdv" id="btn-cancel-rdv" onclick="cancelRdv()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        Annuler le rendez-vous
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY FILTRE TYPE -->
+<div class="ov" id="ov-typefilter" role="dialog" aria-modal="true" aria-labelledby="tf-title">
+  <div class="ov-bg" onclick="closeTypeFilter()"></div>
+  <div class="sheet" style="max-height:70vh;">
+    <div class="drag" aria-hidden="true"></div>
+    <button class="sheet-x" onclick="closeTypeFilter()" aria-label="Fermer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2 class="sheet-h" id="tf-title" tabindex="-1">Filtrer par type</h2>
+    <p class="sheet-sub">Choisissez le ou les types d'agenda à afficher</p>
+    <div id="tf-options">
+      <div class="tf-option sel" data-type="rdv" onclick="toggleTypeFilter(this)" role="checkbox" aria-checked="true" tabindex="0" onkeydown="if(event.key==='Enter')toggleTypeFilter(this)">
+        <div class="tf-dot" style="background:#b228FF;"></div>
+        <span class="tf-lbl">RDV Care Manager</span>
+        <div class="tf-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+      <div class="tf-option sel" data-type="aide" onclick="toggleTypeFilter(this)" role="checkbox" aria-checked="true" tabindex="0" onkeydown="if(event.key==='Enter')toggleTypeFilter(this)">
+        <div class="tf-dot" style="background:#27b6cc;"></div>
+        <span class="tf-lbl">Agenda Aidé</span>
+        <div class="tf-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+      <div class="tf-option sel" data-type="rappel" onclick="toggleTypeFilter(this)" role="checkbox" aria-checked="true" tabindex="0" onkeydown="if(event.key==='Enter')toggleTypeFilter(this)">
+        <div class="tf-dot" style="background:#f5d800;"></div>
+        <span class="tf-lbl">Rappel Aidé</span>
+        <div class="tf-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+    </div>
+    <button class="btn-save" onclick="applyTypeFilter()" style="margin-top:6px;">Appliquer</button>
+  </div>
+</div>
+
+<!-- OVERLAY MOIS / ANNEE -->
+<div class="ov" id="ov-monthyear" role="dialog" aria-modal="true" aria-labelledby="my-title">
+  <div class="ov-bg" onclick="closeMonthYear()"></div>
+  <div class="sheet" style="max-height:75vh;">
+    <div class="drag" aria-hidden="true"></div>
+    <button class="sheet-x" onclick="closeMonthYear()" aria-label="Fermer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2 class="sheet-h" id="my-title" tabindex="-1">Aller à</h2>
+    <p class="sheet-sub">Choisissez une année puis un mois</p>
+    <div class="my-year-row">
+      <button class="cal-btn" onclick="myShiftYear(-1)" aria-label="Année précédente">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5e5290" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="my-year-lbl" id="my-year-lbl" aria-live="polite">2026</span>
+      <button class="cal-btn" onclick="myShiftYear(1)" aria-label="Année suivante">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5e5290" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+    <div class="my-grid" id="my-grid" role="group" aria-label="Mois"></div>
+  </div>
+</div>
+
+<!-- NAV BAS -->
+<div class="nav-bar">
+  <div class="ai-r">
+    <span class="ai-lbl" aria-hidden="true">Assistant IA</span>
+    <button class="ai-fab" aria-label="Assistant IA">
+      <svg width="24" height="24" viewBox="0 0 30 30" fill="none" aria-hidden="true"><circle cx="15" cy="11" r="5.5" stroke="#14233A" stroke-width="2"/><circle cx="15" cy="11" r="2" fill="#14233A"/><rect x="8" y="18" width="14" height="9" rx="3.5" stroke="#14233A" stroke-width="2"/><circle cx="11.5" cy="22" r="1.5" fill="#14233A"/><circle cx="18.5" cy="22" r="1.5" fill="#14233A"/></svg>
+    </button>
+  </div>
+  <nav class="bnav" aria-label="Navigation principale">
+    <div class="ni" role="button" tabindex="0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl">Accueil</span></div>
+    <div class="ni" role="button" tabindex="0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="nl">Messages</span></div>
+    <div class="nc"><button class="nfab" aria-label="Appel"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="1" y="6" width="13" height="12" rx="2" fill="white"/><path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white"/></svg></button><span class="nfl">Appel</span></div>
+    <div class="ni act" role="button" tabindex="0" aria-current="page"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg><span class="nl" style="color:#b228FF;">Agenda</span></div>
+    <div class="ni" role="button" tabindex="0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">Profil</span></div>
+  </nav>
+</div>
+
+<script>
+var today = new Date();
+var TODAY_KEY = fmtKey(today.getFullYear(), today.getMonth()+1, today.getDate());
+
+var curYear = today.getFullYear();
+var curMonth = today.getMonth();
+var selDate = TODAY_KEY;
+var selProche = 'tous';
+var selTypes = {rdv:true, aide:true, rappel:true};
+var selTypeNew = null;
+var curEv = null;
+var curEvDate = null;
+var currentView = 'jour';
+var myPickerYear = curYear;
+
+var MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+var JOURS = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+var DOW = ['L','M','M','J','V','S','D'];
+var RECLABELS = {none:'', daily:'Tous les jours', weekly:'Toutes les semaines', monthly:'Tous les mois', yearly:'Tous les ans'};
+var RECLABELS_SHORT = {none:'', daily:'Quotidien', weekly:'Hebdomadaire', monthly:'Mensuel', yearly:'Annuel'};
+
+function fmtKey(y,m,d){
+  var mm = m < 10 ? '0'+m : ''+m;
+  var dd = d < 10 ? '0'+d : ''+d;
+  return y+'-'+mm+'-'+dd;
+}
+
+var DATA = {
+  '2026-06-01': [
+    {type:'aide', title:'Kiné de Martin', proche:'Martin Dupont', aidant:'Vous', time:'10:00', endTime:'11:00', lieu:'Cabinet Moreau', status:'ok', recurrence:'weekly', notes:''},
+    {type:'rappel', title:'Médicaments du matin', proche:'Martin Dupont', time:'08:00', status:'rem', recurrence:'daily', notes:''}
+  ],
+  '2026-06-05': [
+    {type:'rdv', title:'RDV avec Basma Frangieh', proche:'Martin Dupont', time:'10:00', endTime:'10:45', status:'ok', notes:"Penser à demander le renouvellement de l'ordonnance de Martin."},
+    {type:'aide', title:'Consultation Dr Lemaire', proche:'Madeleine Thomas', aidant:'Charbel Frangieh', time:'14:30', endTime:'15:30', lieu:'Clinique Saint-Jean', status:'ok', recurrence:'none', notes:''},
+    {type:'rappel', title:'Prise de tension - Madeleine', proche:'Madeleine Thomas', time:'09:00', status:'rem', recurrence:'daily', notes:''}
+  ],
+  '2026-06-08': [
+    {type:'rappel', title:'Médicaments semaine - Martin', proche:'Martin Dupont', time:'08:00', status:'rem', recurrence:'daily', notes:''},
+    {type:'aide', title:'Sortie au parc avec Martin', proche:'Martin Dupont', aidant:'Vous', time:'15:00', endTime:'16:30', lieu:'Parc Montsouris', status:'ok', recurrence:'none', notes:''}
+  ],
+  '2026-06-12': [
+    {type:'rdv', title:'Suivi mensuel - Basma Frangieh', proche:'Madeleine Thomas', time:'11:00', endTime:'11:30', status:'ok', notes:'Demander un point sur le dossier MDPH.'}
+  ],
+  '2026-06-15': [
+    {type:'aide', title:'Orthophoniste - Madeleine', proche:'Madeleine Thomas', aidant:'Vous', time:'09:30', endTime:'10:15', lieu:'Cabinet Dupuis', status:'ok', recurrence:'weekly', notes:''},
+    {type:'rappel', title:'Renouvellement ordonnance', proche:'Martin Dupont', time:'10:00', status:'rem', recurrence:'monthly', notes:''}
+  ],
+  '2026-06-22': [
+    {type:'rdv', title:'Bilan semestriel - Basma Frangieh', proche:'Martin Dupont', time:'14:00', endTime:'15:00', status:'ok', notes:''},
+    {type:'aide', title:'Bilan nutritionnel', proche:'Madeleine Thomas', aidant:'Rabhot Frahot', time:'16:00', endTime:'17:00', lieu:'CHU Cochin', status:'ok', recurrence:'none', notes:''}
+  ],
+  '2026-06-29': [
+    {type:'aide', title:'Physiothérapeute - Martin', proche:'Martin Dupont', aidant:'Vous', time:'10:30', endTime:'11:30', lieu:'Centre de rééducation', status:'ok', recurrence:'weekly', notes:''}
+  ],
+  '2026-05-28': [
+    {type:'rdv', title:'RDV avec Basma Frangieh', proche:'Martin Dupont', time:'09:00', endTime:'09:30', status:'ok', notes:''},
+    {type:'aide', title:'Dentiste - Madeleine', proche:'Madeleine Thomas', aidant:'Vous', time:'14:00', endTime:'15:00', lieu:'Cabinet Lefèvre', status:'ok', recurrence:'none', notes:''}
+  ]
+};
+
+function getEvs(key) {
+  var list = DATA[key] || [];
+  if (selProche === 'martin') list = list.filter(function(e){ return e.proche && e.proche.indexOf('Martin') !== -1; });
+  else if (selProche === 'madeleine') list = list.filter(function(e){ return e.proche && e.proche.indexOf('Madeleine') !== -1; });
+  else if (selProche === 'moi') list = list.filter(function(e){ return e.type === 'rdv'; });
+  list = list.filter(function(e){ return selTypes[e.type]; });
+  return list;
+}
+
+/* ══════════ CALENDRIER ══════════ */
+function renderCal() {
+  document.getElementById('cal-month-lbl').firstChild.textContent = MONTHS[curMonth] + ' ' + curYear + ' ';
+  var grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  DOW.forEach(function(d) {
+    var el = document.createElement('div');
+    el.className = 'cal-dow';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  var firstDay = new Date(curYear, curMonth, 1).getDay();
+  var offset = firstDay === 0 ? 6 : firstDay - 1;
+  var daysInMonth = new Date(curYear, curMonth + 1, 0).getDate();
+  var tY = today.getFullYear(), tM = today.getMonth(), tD = today.getDate();
+
+  for (var i = 0; i < offset; i++) {
+    var empty = document.createElement('div');
+    empty.className = 'cal-day empty';
+    grid.appendChild(empty);
+  }
+
+  for (var d = 1; d <= daysInMonth; d++) {
+    var key = fmtKey(curYear, curMonth+1, d);
+    var isToday = (d === tD && curMonth === tM && curYear === tY);
+    var isSel = key === selDate;
+    var isPast = new Date(curYear, curMonth, d) < new Date(tY, tM, tD);
+    var evs = getEvs(key);
+
+    var btn = document.createElement('button');
+    var cls = 'cal-day';
+    if (isToday) cls += ' today';
+    if (isSel) cls += ' sel';
+    if (isPast && !isToday) cls += ' past';
+    btn.className = cls;
+    btn.textContent = d;
+    btn.setAttribute('aria-label', d + ' ' + MONTHS[curMonth] + (isPast ? ' (passé)' : ''));
+
+    if (evs.length) {
+      var hasR = evs.some(function(e){ return e.type === 'rdv'; });
+      var hasA = evs.some(function(e){ return e.type === 'aide'; });
+      var hasP = evs.some(function(e){ return e.type === 'rappel'; });
+      var dots = document.createElement('div');
+      dots.className = 'day-dots';
+      if (hasR) { var dr = document.createElement('div'); dr.className = 'dd dd-rdv'; dots.appendChild(dr); }
+      if (hasA) { var da = document.createElement('div'); da.className = 'dd dd-aide'; dots.appendChild(da); }
+      if (hasP) { var dp = document.createElement('div'); dp.className = 'dd dd-rappel'; dots.appendChild(dp); }
+      btn.appendChild(dots);
+    }
+
+    (function(k) {
+      btn.addEventListener('click', function() { selectDay(k); });
+    })(key);
+
+    grid.appendChild(btn);
+  }
+
+  updTodayBtn();
+}
+
+function updTodayBtn(){
+  var btn = document.getElementById('today-btn');
+  var notOnTodayMonth = (curMonth !== today.getMonth() || curYear !== today.getFullYear());
+  var notOnTodaySel = (selDate !== TODAY_KEY);
+  btn.style.display = (notOnTodayMonth || notOnTodaySel) ? 'inline-flex' : 'none';
+}
+
+function goToday(){
+  curYear = today.getFullYear();
+  curMonth = today.getMonth();
+  selDate = TODAY_KEY;
+  setView('jour');
+  renderCal();
+  renderEvs();
+  document.getElementById('ev-scroll').scrollTo({top:0, behavior:'smooth'});
+  say("Retour à aujourd'hui");
+}
+
+function selectDay(key) {
+  selDate = key;
+  if (currentView === 'liste') setView('jour');
+  else { renderCal(); renderEvs(); }
+  document.getElementById('ev-scroll').scrollTo({top: 0, behavior: 'smooth'});
+}
+
+/* ══════════ PICKER MOIS / ANNEE ══════════ */
+function openMonthYear(){
+  myPickerYear = curYear;
+  renderMonthYear();
+  document.getElementById('ov-monthyear').classList.add('open');
+  setTimeout(function(){ document.getElementById('my-title').focus(); }, 300);
+  document.addEventListener('keydown', escMY);
+}
+function closeMonthYear(){
+  document.getElementById('ov-monthyear').classList.remove('open');
+  document.removeEventListener('keydown', escMY);
+}
+function escMY(e){ if (e.key === 'Escape') closeMonthYear(); }
+function myShiftYear(delta){
+  myPickerYear += delta;
+  renderMonthYear();
+}
+function renderMonthYear(){
+  document.getElementById('my-year-lbl').textContent = myPickerYear;
+  var grid = document.getElementById('my-grid');
+  grid.innerHTML = '';
+  var tY = today.getFullYear(), tM = today.getMonth();
+  MONTHS.forEach(function(m, idx){
+    var cell = document.createElement('button');
+    var cls = 'my-cell';
+    if (myPickerYear === curYear && idx === curMonth) cls += ' sel';
+    else if (myPickerYear === tY && idx === tM) cls += ' cur';
+    cell.className = cls;
+    cell.textContent = m.slice(0,3);
+    cell.setAttribute('aria-label', m + ' ' + myPickerYear);
+    cell.addEventListener('click', function(){
+      curMonth = idx;
+      curYear = myPickerYear;
+      closeMonthYear();
+      renderCal();
+      say(m + ' ' + myPickerYear);
+    });
+    grid.appendChild(cell);
+  });
+}
+
+function prevMonth() {
+  if (curMonth === 0) { curMonth = 11; curYear--; } else curMonth--;
+  renderCal();
+  say(MONTHS[curMonth] + ' ' + curYear);
+}
+function nextMonth() {
+  if (curMonth === 11) { curMonth = 0; curYear++; } else curMonth++;
+  renderCal();
+  say(MONTHS[curMonth] + ' ' + curYear);
+}
+
+/* ══════════ VUE JOUR / LISTE ══════════ */
+function setView(v){
+  currentView = v;
+  document.getElementById('vt-jour').classList.toggle('active', v==='jour');
+  document.getElementById('vt-jour').setAttribute('aria-pressed', v==='jour');
+  document.getElementById('vt-liste').classList.toggle('active', v==='liste');
+  document.getElementById('vt-liste').setAttribute('aria-pressed', v==='liste');
+  document.getElementById('cal-sticky').style.display = v==='jour' ? '' : 'none';
+  document.getElementById('ev-list').style.display = v==='jour' ? '' : 'none';
+  document.getElementById('up-list').style.display = v==='liste' ? '' : 'none';
+  if (v === 'jour') {
+    renderEvs();
+  } else {
+    renderUpcoming();
+  }
+}
+
+/* ══════════ EVENEMENTS DU JOUR ══════════ */
+var ICONS = {
+  rdv: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>',
+  aide: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e8fa0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  rappel: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9A6500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>'
+};
+var TLABELS = {rdv: 'RDV Care Manager', aide: 'Agenda Aidé', rappel: 'Rappel Aidé'};
+var STSTYLE = {ok: 'st-ok', rem: 'st-rem', cancelled: 'st-cancel'};
+var STLABEL = {ok: 'Confirmé', rem: 'Rappel', cancelled: 'Annulé'};
+var REC_ICON = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>';
+
+function buildEvInfo(ev){
+  var metaParts = [];
+  if (ev.proche) metaParts.push(ev.proche);
+  if (ev.type === 'aide' && ev.aidant) metaParts.push('Aidant : ' + ev.aidant);
+  if (ev.lieu) metaParts.push(ev.lieu);
+
+  var recBadge = (ev.recurrence && ev.recurrence !== 'none') ? '<span class="rec-badge">' + REC_ICON + ' ' + (RECLABELS_SHORT[ev.recurrence] || 'Récurrent') + '</span>' : '';
+
+  var html = '<div class="ev-type type-' + ev.type + '">' + TLABELS[ev.type] + recBadge + '</div>' +
+    '<div class="ev-title' + (ev.status==='cancelled' ? ' strike' : '') + '">' + ev.title + '</div>';
+
+  if (metaParts.length) html += '<div class="ev-meta">' + metaParts.join(' · ') + '</div>';
+
+  if (ev.type === 'rdv' || ev.status === 'cancelled') {
+    html += '<span class="ev-status ' + (STSTYLE[ev.status] || 'st-ok') + '">' + (STLABEL[ev.status] || '') + '</span>';
+  }
+  return html;
+}
+
+function buildEvTime(ev){
+  if (!ev.time) return '';
+  var html = ev.time;
+  if (ev.endTime) html += '<small>→ ' + ev.endTime + '</small>';
+  return html;
+}
+
+function renderEvs() {
+  var parts = selDate.split('-');
+  var dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  var isPast = dateObj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  var isToday = selDate === TODAY_KEY;
+  var prefix = isToday ? "Aujourd'hui · " : '';
+  var lbl = prefix + JOURS[dateObj.getDay()] + ' ' + parseInt(parts[2]) + ' ' + MONTHS[parseInt(parts[1]) - 1] + ' ' + parts[0];
+  document.getElementById('date-lbl-text').textContent = lbl;
+
+  var evs = getEvs(selDate).slice().sort(function(a, b) {
+    return (a.time || '').localeCompare(b.time || '');
+  });
+
+  document.getElementById('ev-count').textContent = evs.length ? evs.length + ' événement' + (evs.length > 1 ? 's' : '') : '';
+
+  var list = document.getElementById('ev-list');
+  var empty = document.getElementById('empty-day');
+  list.innerHTML = '';
+
+  document.getElementById('empty-t').textContent = isPast ? 'Aucun événement ce jour-là' : 'Aucun événement ce jour';
+  document.getElementById('empty-s').textContent = isPast ? "Aucun rendez-vous ni activité n'a été enregistré pour cette date." : 'Appuyez sur + en haut pour ajouter un rappel, une activité ou un RDV.';
+
+  if (!evs.length) { empty.classList.add('show'); return; }
+  empty.classList.remove('show');
+
+  evs.forEach(function(ev, i) {
+    var card = document.createElement('div');
+    card.className = 'ev-card' + (ev.status === 'cancelled' ? ' cancelled' : '');
+    card.setAttribute('role', 'listitem');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', ev.title + (ev.time ? ' à ' + ev.time : '') + (isPast ? ' (passé)' : ''));
+    card.style.animationDelay = (i * 40) + 'ms';
+
+    var stripe = document.createElement('div');
+    stripe.className = 'ev-stripe stripe-' + ev.type;
+    card.appendChild(stripe);
+
+    var body = document.createElement('div');
+    body.className = 'ev-body';
+
+    var ico = document.createElement('div');
+    ico.className = 'ev-ico ico-' + ev.type;
+    ico.innerHTML = ICONS[ev.type];
+    body.appendChild(ico);
+
+    var info = document.createElement('div');
+    info.className = 'ev-info';
+    info.innerHTML = buildEvInfo(ev);
+    body.appendChild(info);
+
+    if (ev.time) {
+      var t = document.createElement('div');
+      t.className = 'ev-time';
+      t.innerHTML = buildEvTime(ev);
+      body.appendChild(t);
+    }
+
+    card.appendChild(body);
+
+    (function(e) {
+      card.addEventListener('click', function() { openDetail(e, selDate); });
+      card.addEventListener('keydown', function(evt) { if (evt.key === 'Enter') openDetail(e, selDate); });
+    })(ev);
+
+    list.appendChild(card);
+  });
+}
+
+/* ══════════ VUE "A VENIR" (LISTE) ══════════ */
+function renderUpcoming(){
+  var list = document.getElementById('up-list');
+  var empty = document.getElementById('empty-day');
+  list.innerHTML = '';
+  document.getElementById('date-lbl-text').textContent = 'Prochains événements';
+
+  var keys = Object.keys(DATA).filter(function(k){
+    return k >= TODAY_KEY;
+  }).sort();
+
+  var totalCount = 0;
+  var rendered = 0;
+
+  keys.forEach(function(key){
+    var evs = getEvs(key).filter(function(e){ return e.status !== 'cancelled'; }).slice().sort(function(a,b){ return (a.time||'').localeCompare(b.time||''); });
+    if (!evs.length) return;
+    totalCount += evs.length;
+
+    var parts = key.split('-');
+    var dObj = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+    var isToday = key === TODAY_KEY;
+    var hdrTxt = (isToday ? "Aujourd'hui · " : '') + JOURS[dObj.getDay()] + ' ' + parseInt(parts[2]) + ' ' + MONTHS[parseInt(parts[1])-1];
+
+    var hdr = document.createElement('div');
+    hdr.className = 'up-date-hdr';
+    hdr.textContent = hdrTxt;
+    list.appendChild(hdr);
+
+    evs.forEach(function(ev, i){
+      rendered++;
+      var card = document.createElement('div');
+      card.className = 'ev-card' + (ev.status === 'cancelled' ? ' cancelled' : '');
+      card.setAttribute('role', 'listitem');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', ev.title + (ev.time ? ' à ' + ev.time : '') + ', ' + hdrTxt);
+      card.style.animationDelay = (i * 30) + 'ms';
+
+      var stripe = document.createElement('div');
+      stripe.className = 'ev-stripe stripe-' + ev.type;
+      card.appendChild(stripe);
+
+      var body = document.createElement('div');
+      body.className = 'ev-body';
+
+      var ico = document.createElement('div');
+      ico.className = 'ev-ico ico-' + ev.type;
+      ico.innerHTML = ICONS[ev.type];
+      body.appendChild(ico);
+
+      var info = document.createElement('div');
+      info.className = 'ev-info';
+      info.innerHTML = buildEvInfo(ev);
+      body.appendChild(info);
+
+      if (ev.time) {
+        var t = document.createElement('div');
+        t.className = 'ev-time';
+        t.innerHTML = buildEvTime(ev);
+        body.appendChild(t);
+      }
+
+      card.appendChild(body);
+
+      (function(e,k){
+        card.addEventListener('click', function(){ openDetail(e, k); });
+        card.addEventListener('keydown', function(evt){ if (evt.key === 'Enter') openDetail(e, k); });
+      })(ev, key);
+
+      list.appendChild(card);
+    });
+  });
+
+  document.getElementById('ev-count').textContent = totalCount ? totalCount + ' événement' + (totalCount > 1 ? 's' : '') + ' à venir' : '';
+
+  if (!rendered) {
+    document.getElementById('empty-t').textContent = 'Aucun événement à venir';
+    document.getElementById('empty-s').textContent = 'Votre agenda est vide pour les prochains jours.';
+    empty.classList.add('show');
+  } else {
+    empty.classList.remove('show');
+  }
+}
+
+/* ══════════ FILTRES ══════════ */
+function setProche(el, p) {
+  selProche = p;
+  document.querySelectorAll('.pchip').forEach(function(c) {
+    c.classList.remove('active');
+    c.setAttribute('aria-pressed', 'false');
+  });
+  el.classList.add('active');
+  el.setAttribute('aria-pressed', 'true');
+  renderCal();
+  if (currentView==='jour') renderEvs(); else renderUpcoming();
+  say('Filtre : ' + el.querySelector('.pchip-name').textContent);
+}
+
+/* ══════════ FILTRE TYPE (sheet) ══════════ */
+function openTypeFilter(){
+  document.querySelectorAll('#tf-options .tf-option').forEach(function(opt){
+    var t = opt.getAttribute('data-type');
+    var sel = selTypes[t];
+    opt.classList.toggle('sel', sel);
+    opt.setAttribute('aria-checked', sel ? 'true' : 'false');
+  });
+  document.getElementById('ov-typefilter').classList.add('open');
+  setTimeout(function(){ document.getElementById('tf-title').focus(); }, 300);
+  document.addEventListener('keydown', escTF);
+}
+function closeTypeFilter(){
+  document.getElementById('ov-typefilter').classList.remove('open');
+  document.removeEventListener('keydown', escTF);
+}
+function escTF(e){ if (e.key === 'Escape') closeTypeFilter(); }
+function toggleTypeFilter(el){
+  var t = el.getAttribute('data-type');
+  var nowSel = !el.classList.contains('sel');
+  // Empêche de tout décocher : au moins un type doit rester actif
+  var selCount = document.querySelectorAll('#tf-options .tf-option.sel').length;
+  if (!nowSel && selCount <= 1) { say('Au moins un type doit rester sélectionné'); return; }
+  el.classList.toggle('sel', nowSel);
+  el.setAttribute('aria-checked', nowSel ? 'true' : 'false');
+  selTypes[t] = nowSel;
+}
+function applyTypeFilter(){
+  closeTypeFilter();
+  updFilterBadge();
+  renderCal();
+  if (currentView==='jour') renderEvs(); else renderUpcoming();
+  var n = Object.values(selTypes).filter(Boolean).length;
+  say(n === 3 ? 'Filtre type réinitialisé : tous les types affichés' : n + ' type' + (n>1?'s':'') + ' affiché' + (n>1?'s':''));
+}
+function updFilterBadge(){
+  var n = Object.values(selTypes).filter(Boolean).length;
+  var badge = document.getElementById('filter-badge');
+  var btn = document.getElementById('filter-btn');
+  if (n === 3) { badge.style.display = 'none'; btn.classList.remove('on'); }
+  else { badge.style.display = 'flex'; badge.textContent = n; btn.classList.add('on'); }
+}
+
+/* ══════════ NOUVEL EVENEMENT ══════════ */
+function openNew() {
+  selTypeNew = null;
+  document.querySelectorAll('.tpick').forEach(function(t) { t.classList.remove('sel'); t.setAttribute('aria-checked', 'false'); });
+  document.getElementById('form-zone').style.display = 'none';
+
+  var defaultDate = (selDate >= TODAY_KEY) ? selDate : TODAY_KEY;
+  document.getElementById('f-date').value = defaultDate;
+  document.getElementById('f-date').min = TODAY_KEY;
+  document.getElementById('f-date-hint').style.display = (selDate < TODAY_KEY) ? 'block' : 'none';
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-proche').value = '';
+  document.getElementById('f-aidant').value = '';
+  document.getElementById('f-heure').value = '';
+  document.getElementById('f-heurefin').value = '';
+  document.getElementById('f-lieu').value = '';
+  document.getElementById('f-recurrence').value = 'none';
+  document.getElementById('f-notes').value = '';
+
+  document.getElementById('ov-new').classList.add('open');
+  setTimeout(function() { document.getElementById('new-title').focus(); }, 300);
+  document.addEventListener('keydown', escNew);
+}
+function checkPastDate(input){
+  if (input.value < TODAY_KEY) {
+    input.value = TODAY_KEY;
+    document.getElementById('f-date-hint').style.display = 'block';
+    say("Impossible de choisir une date passée — date réglée sur aujourd'hui");
+  } else {
+    document.getElementById('f-date-hint').style.display = 'none';
+  }
+}
+
+function closeNew() {
+  document.getElementById('ov-new').classList.remove('open');
+  document.removeEventListener('keydown', escNew);
+}
+function escNew(e) { if (e.key === 'Escape') closeNew(); }
+
+function selectType(el, type) {
+  selTypeNew = type;
+  document.querySelectorAll('.tpick').forEach(function(t) { t.classList.remove('sel'); t.setAttribute('aria-checked', 'false'); });
+  el.classList.add('sel');
+  el.setAttribute('aria-checked', 'true');
+  document.getElementById('form-zone').style.display = 'block';
+  document.getElementById('f-proche-wrap').style.display = type !== 'rdv' ? 'block' : 'none';
+  document.getElementById('f-aidant-wrap').style.display = type === 'aide' ? 'block' : 'none';
+  document.getElementById('f-lieu-wrap').style.display = type !== 'rappel' ? 'block' : 'none';
+  document.getElementById('f-heurefin-wrap').style.display = type !== 'rappel' ? 'block' : 'none';
+  document.getElementById('f-heure-wrap').querySelector('label').textContent = type === 'rappel' ? 'Heure' : 'Heure de début';
+}
+
+function validateDateNotPast(dateStr){
+  return dateStr >= TODAY_KEY;
+}
+
+function saveNew() {
+  var title = document.getElementById('f-title').value.trim();
+  var date = document.getElementById('f-date').value;
+  if (!title || !date || !selTypeNew) { say('Veuillez remplir les champs obligatoires'); return; }
+  if (!validateDateNotPast(date)) { say("Impossible de créer un événement dans le passé"); return; }
+  if (!DATA[date]) DATA[date] = [];
+  DATA[date].push({
+    type: selTypeNew,
+    title: title,
+    proche: document.getElementById('f-proche').value || '',
+    aidant: document.getElementById('f-aidant').value || '',
+    time: document.getElementById('f-heure').value || '',
+    endTime: document.getElementById('f-heurefin').value || '',
+    lieu: document.getElementById('f-lieu').value || '',
+    recurrence: document.getElementById('f-recurrence').value || 'none',
+    notes: document.getElementById('f-notes').value || '',
+    status: selTypeNew === 'rappel' ? 'rem' : 'ok'
+  });
+  closeNew();
+  selDate = date;
+  curYear = parseInt(date.split('-')[0]);
+  curMonth = parseInt(date.split('-')[1]) - 1;
+  renderCal();
+  if (currentView === 'jour') renderEvs(); else renderUpcoming();
+  say('Événement ajouté');
+}
+
+/* ══════════ DETAIL / EDITION ══════════ */
+function openDetail(ev, dateKey) {
+  curEv = ev;
+  curEvDate = dateKey;
+  var parts = dateKey.split('-');
+  var dObj = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+  var isPast = dObj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+  var colors = {rdv: '#8210cc', aide: '#1e8fa0', rappel: '#9A6500'};
+  var bgs = {rdv: '#f0e8ff', aide: '#e0f5ff', rappel: '#fffbe0'};
+  var labels = {rdv: 'RDV Care Manager', aide: 'Agenda Aidé', rappel: 'Rappel Aidé'};
+  var ICONS2 = {
+    rdv: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="'+colors[ev.type]+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>',
+    aide: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="'+colors[ev.type]+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    rappel: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="'+colors[ev.type]+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>'
+  };
+
+  var hdr = document.getElementById('detail-hdr');
+  hdr.innerHTML =
+    '<div style="width:44px;height:44px;border-radius:13px;background:'+bgs[ev.type]+';display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + ICONS2[ev.type] + '</div>' +
+    '<div><div style="font-size:10px;font-weight:800;color:'+colors[ev.type]+';text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;">'+labels[ev.type]+(isPast?' · Passé':'')+'</div>' +
+    '<div id="detail-title" style="font-size:17px;font-weight:900;color:#2d1060;line-height:1.2;" tabindex="-1">'+ev.title+'</div></div>';
+
+  if (ev.type === 'rdv') {
+    document.getElementById('detail-edit').style.display = 'none';
+    document.getElementById('detail-rdv').style.display = 'block';
+    var stLabel = ev.status === 'cancelled' ? 'Annulé' : 'Confirmé';
+    var rows = [
+      {l: 'Care Manager', v: 'Basma Frangieh'},
+      {l: 'Proche Aidé', v: ev.proche || '-'},
+      {l: 'Date', v: curEvDate.split('-').reverse().join('/')},
+      {l: 'Heure de début', v: ev.time || '-'},
+      {l: 'Heure de fin', v: ev.endTime || '-'},
+      {l: 'Statut', v: stLabel}
+    ];
+    var recap = document.getElementById('rdv-recap');
+    recap.innerHTML = rows.map(function(r) {
+      return '<div class="rdv-row"><span class="rdv-lbl">'+r.l+'</span><span class="rdv-val">'+r.v+'</span></div>';
+    }).join('');
+
+    var callBtn = document.getElementById('call-btn');
+    var callSub = document.getElementById('call-sub');
+    if (ev.status === 'cancelled') {
+      callBtn.style.display = 'none';
+    } else if (curEvDate === TODAY_KEY) {
+      callBtn.style.display = 'flex';
+      callBtn.disabled = false;
+      callBtn.style.opacity = '1';
+      callSub.textContent = 'Disponible à ' + (ev.time || 'l\'heure du RDV');
+    } else {
+      callBtn.style.display = 'flex';
+      callBtn.disabled = true;
+      callBtn.style.opacity = '0.55';
+      callSub.textContent = 'Sera disponible le jour du RDV (' + (ev.time || '') + ')';
+    }
+    document.getElementById('rdv-notes').textContent = ev.notes || 'Aucune note pour ce rendez-vous. Modifiable une fois le RDV créé.';
+
+    var cancelBtn = document.getElementById('btn-cancel-rdv');
+    if (ev.status === 'cancelled' || isPast) {
+      cancelBtn.style.display = 'none';
+    } else {
+      cancelBtn.style.display = 'flex';
+    }
+  } else {
+    document.getElementById('detail-rdv').style.display = 'none';
+    document.getElementById('detail-edit').style.display = 'block';
+    document.getElementById('d-title').value = ev.title || '';
+    document.getElementById('d-proche').value = ev.proche || '';
+    document.getElementById('d-aidant').value = ev.aidant || '';
+    document.getElementById('d-date').value = curEvDate;
+    document.getElementById('d-date').min = TODAY_KEY;
+    document.getElementById('d-heure').value = ev.time || '';
+    document.getElementById('d-heurefin').value = ev.endTime || '';
+    document.getElementById('d-lieu').value = ev.lieu || '';
+    document.getElementById('d-recurrence').value = ev.recurrence || 'none';
+    document.getElementById('d-notes').value = ev.notes || '';
+    document.getElementById('d-proche-wrap').style.display = 'block';
+    document.getElementById('d-aidant-wrap').style.display = ev.type === 'aide' ? 'block' : 'none';
+    document.getElementById('d-lieu-wrap').style.display = ev.type === 'rappel' ? 'none' : 'block';
+    document.getElementById('d-heurefin-wrap').style.display = ev.type === 'rappel' ? 'none' : 'block';
+    document.querySelector('label[for="d-heure"]').textContent = ev.type === 'rappel' ? 'Heure' : 'Heure de début';
+  }
+
+  document.getElementById('ov-detail').classList.add('open');
+  setTimeout(function() {
+    var dt = document.getElementById('detail-title');
+    if (dt) dt.focus();
+  }, 320);
+  document.addEventListener('keydown', escDetail);
+}
+
+function closeDetail() {
+  document.getElementById('ov-detail').classList.remove('open');
+  document.removeEventListener('keydown', escDetail);
+  curEv = null;
+}
+function escDetail(e) { if (e.key === 'Escape') closeDetail(); }
+
+function saveEdit() {
+  if (!curEv) return;
+  var newDate = document.getElementById('d-date').value;
+  if (!validateDateNotPast(newDate)) { say("Impossible de programmer un événement dans le passé"); return; }
+
+  curEv.title = document.getElementById('d-title').value.trim() || curEv.title;
+  curEv.proche = document.getElementById('d-proche').value;
+  curEv.aidant = document.getElementById('d-aidant').value;
+  curEv.time = document.getElementById('d-heure').value;
+  curEv.endTime = document.getElementById('d-heurefin').value;
+  curEv.lieu = document.getElementById('d-lieu').value;
+  curEv.recurrence = document.getElementById('d-recurrence').value;
+  curEv.notes = document.getElementById('d-notes').value;
+
+  if (newDate !== curEvDate) {
+    var list = DATA[curEvDate];
+    if (list) {
+      var idx = list.indexOf(curEv);
+      if (idx !== -1) list.splice(idx, 1);
+    }
+    if (!DATA[newDate]) DATA[newDate] = [];
+    DATA[newDate].push(curEv);
+    curEvDate = newDate;
+    selDate = newDate;
+    curYear = parseInt(newDate.split('-')[0]);
+    curMonth = parseInt(newDate.split('-')[1]) - 1;
+  }
+
+  closeDetail();
+  renderCal();
+  if (currentView === 'jour') renderEvs(); else renderUpcoming();
+  say('Événement modifié');
+}
+
+function deleteEv() {
+  if (!curEv || !curEvDate) return;
+  if (!confirm('Supprimer cet événement ?')) return;
+  var list = DATA[curEvDate];
+  if (list) {
+    var idx = list.indexOf(curEv);
+    if (idx !== -1) list.splice(idx, 1);
+  }
+  closeDetail();
+  renderCal();
+  if (currentView === 'jour') renderEvs(); else renderUpcoming();
+  say('Événement supprimé');
+}
+
+function cancelRdv(){
+  if (!curEv) return;
+  if (!confirm('Annuler ce rendez-vous avec votre Care Manager ?')) return;
+  curEv.status = 'cancelled';
+  closeDetail();
+  renderCal();
+  if (currentView === 'jour') renderEvs(); else renderUpcoming();
+  say('Rendez-vous annulé');
+}
+
+function say(msg) {
+  var z = document.getElementById('announce');
+  z.textContent = '';
+  setTimeout(function() { z.textContent = msg; }, 50);
+}
+
+renderCal();
+renderEvs();
+</script>
+</body>
+</html>

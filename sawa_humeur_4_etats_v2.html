@@ -1,0 +1,305 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
+*{box-sizing:border-box;}
+.scene{display:flex;gap:20px;justify-content:center;padding:20px 12px 32px;flex-wrap:wrap;background:#1a1a2e;}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.col-lbl{font-size:9px;font-weight:800;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;text-align:center;line-height:1.4;}
+
+.phone{width:200px;height:400px;border-radius:40px;background:#fff;overflow:hidden;border:5px solid #252540;box-shadow:0 0 0 1px #3a3a5a,0 24px 48px rgba(0,0,0,0.6);display:flex;flex-direction:column;font-family:'Nunito',sans-serif;}
+.notch{width:72px;height:16px;background:#252540;border-radius:0 0 10px 10px;margin:0 auto;flex-shrink:0;}
+
+/* Header */
+.hdr{background:linear-gradient(145deg,#b228FF 0%,#8a2be2 42%,#27b6cc 100%);padding:8px 14px 16px;position:relative;overflow:hidden;flex-shrink:0;}
+.hb1{position:absolute;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,0.08);top:-40px;right:-30px;}
+.hb2{position:absolute;width:70px;height:70px;border-radius:50%;background:rgba(133,255,239,0.1);bottom:-20px;left:8px;}
+.htop{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;}
+.av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#c44dff,#27b6cc);border:1.5px solid rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;font-size:12px;}
+.grt{font-size:7.5px;font-weight:600;color:rgba(255,255,255,0.85);}
+.unm{font-size:13px;font-weight:900;color:#fff;}
+.nbtn{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;position:relative;}
+.ndot{width:6px;height:6px;border-radius:50%;background:#fcffad;position:absolute;top:4px;right:4px;}
+
+/* Body */
+.body{background:#ddd5f8;border-radius:14px 14px 0 0;margin-top:-3px;padding:12px;flex:1;min-height:0;overflow-y:auto;}
+.mq{font-size:8px;font-weight:800;color:#2d1060;margin-bottom:8px;display:block;}
+
+/* Chips */
+.chips{display:flex;gap:5px;overflow:hidden;padding-right:16px;}
+.chip{flex:0 0 auto;background:#fff;border-radius:24px;padding:6px 9px;display:flex;align-items:center;gap:4px;border:1px solid #e8e0ff;position:relative;}
+.chip .em{font-size:13px;line-height:1;}
+.chip .ml{font-size:7.5px;font-weight:800;color:#5e5290;}
+.chip.sel{border-color:#b228FF;background:#f5eeff;}
+.chip.sel .ml{color:#8210cc;}
+.chip.dim{opacity:0.35;}
+.chip-chk{position:absolute;top:-3px;right:-3px;width:11px;height:11px;border-radius:50%;background:#b228FF;display:none;align-items:center;justify-content:center;border:1.5px solid #ddd5f8;}
+.chip.sel .chip-chk{display:flex;}
+
+/* Badge */
+.mbadge{background:#f0e8ff;border-left:2.5px solid #b228FF;border-radius:0 8px 8px 0;padding:6px 8px;display:flex;align-items:center;gap:6px;margin-top:7px;}
+.mbico{width:16px;height:16px;border-radius:50%;background:#b228FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mbtxt{font-size:7px;font-weight:700;color:#5e5290;line-height:1.4;}
+.ph{background:#fff;border-radius:10px;height:44px;margin-top:10px;border:1px solid #cdc5f0;opacity:0.6;}
+
+/* Overlay statique pour écrans 2 et 3b */
+.phone-ov{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;overflow-y:auto;}
+.faux-bg{background:rgba(14,22,38,0.58);flex:1;min-height:30px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;}
+.fb-line{height:14px;background:rgba(255,255,255,0.1);border-radius:5px;}
+
+/* Bottom sheet */
+.sheet{background:#fff;border-radius:18px 18px 0 0;padding:0 16px 16px;}
+.drag{width:30px;height:3px;border-radius:2px;background:#e4ddf7;margin:8px auto 0;}
+.sh-x{position:absolute;top:8px;right:12px;width:24px;height:24px;border-radius:50%;background:#f5f3ff;display:flex;align-items:center;justify-content:center;font-size:9px;color:#8a7ab0;}
+
+/* Émoji dynamique */
+.emo-wrap{width:72px;height:72px;border-radius:50%;margin:12px auto 6px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;}
+.emo-wrap::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 38% 32%,rgba(255,255,255,0.52) 0%,transparent 60%);z-index:1;}
+.emo-wrap .e{font-size:40px;line-height:1;position:relative;z-index:2;filter:drop-shadow(0 3px 7px rgba(0,0,0,0.22));}
+.bg-col{background:radial-gradient(circle at 40% 30%,#FFB347 0%,#FF6B35 45%,#E63E1C 100%);}
+.bg-tri{background:radial-gradient(circle at 40% 30%,#6ECBFF 0%,#4A9FE0 45%,#2B6BB5 100%);}
+.bg-joy{background:radial-gradient(circle at 40% 30%,#FFE066 0%,#FFB800 45%,#D48F00 100%);}
+.bg-rel{background:radial-gradient(circle at 40% 30%,#6EFFD4 0%,#2DD4A0 45%,#1A9E74 100%);}
+
+.cbar{width:32px;height:3px;border-radius:2px;margin:0 auto 10px;}
+.sh-ttl{font-size:16px;font-weight:900;color:#2d1060;text-align:center;margin-bottom:8px;}
+.sh-div{height:0.5px;background:#ede9f5;margin-bottom:9px;}
+.sh-txt{font-size:7.5px;font-weight:600;color:#5e5290;line-height:1.75;margin-bottom:14px;text-align:left;}
+.btn-ok{width:100%;background:linear-gradient(135deg,#b228FF,#8a2be2 50%,#27b6cc);border:none;border-radius:12px;padding:11px;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;color:#fff;text-align:center;position:relative;overflow:hidden;}
+.btn-ok::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,0.1);border-radius:12px 12px 0 0;}
+
+/* Done sheet */
+.done-emo{width:56px;height:56px;border-radius:50%;margin:10px auto 5px;display:flex;align-items:center;justify-content:center;position:relative;}
+.done-emo::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 38% 32%,rgba(255,255,255,0.52) 0%,transparent 60%);z-index:1;}
+.done-emo .e{font-size:30px;line-height:1;position:relative;z-index:2;filter:drop-shadow(0 2px 5px rgba(0,0,0,0.2));}
+.done-badge{display:inline-block;font-size:8px;font-weight:800;border-radius:14px;padding:2px 9px;margin-bottom:6px;}
+.done-ttl{font-size:12px;font-weight:900;color:#2d1060;text-align:center;margin-bottom:4px;}
+.done-txt{font-size:7.5px;font-weight:600;color:#8a7ab0;text-align:center;line-height:1.6;margin-bottom:5px;}
+.done-time{display:inline-flex;align-items:center;gap:3px;font-size:8px;font-weight:700;color:#b228FF;background:#f5eeff;border-radius:6px;padding:3px 8px;margin-bottom:10px;}
+.done-div{height:0.5px;background:#ede9f5;margin-bottom:9px;}
+.done-next{background:#f9f7ff;border-radius:9px;padding:8px 10px;display:flex;align-items:flex-start;gap:7px;margin-bottom:10px;border:0.5px solid #ede9f5;}
+.dn-ico{font-size:16px;flex-shrink:0;}
+.dn-txt{font-size:7.5px;font-weight:700;color:#5e5290;line-height:1.5;}
+.dn-txt strong{color:#2d1060;}
+.btn-done{width:100%;background:#fff;border:1.5px solid #b228FF;border-radius:12px;padding:10px;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;color:#b228FF;text-align:center;}
+
+/* Nav */
+.nav{background:#fff;border-top:0.5px solid #cdc5f0;flex-shrink:0;}
+.ai-r{display:flex;align-items:center;justify-content:flex-end;padding:5px 14px 3px;gap:7px;}
+.ai-l{font-size:7.5px;font-weight:700;color:#14233A;background:#fcffad;border-radius:5px;padding:3px 7px;}
+.ai-f{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#7b2fff 45%,#27b6cc);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(178,40,255,0.38);}
+.bnav{display:flex;padding:3px 0 7px;}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px 0;}
+.nl{font-size:7.5px;font-weight:700;color:#9080c0;}
+.ni.act .nl{color:#b228FF;}
+.nc{flex:0 0 52px;display:flex;flex-direction:column;align-items:center;}
+.nfb{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#27b6cc);display:flex;align-items:center;justify-content:center;margin-top:-16px;border:2.5px solid #fff;box-shadow:0 3px 8px rgba(178,40,255,0.3);}
+.nfl{font-size:7.5px;font-weight:700;color:#b228FF;margin-top:1px;}
+</style>
+
+<div class="scene">
+
+  <!-- ══ ÉTAT 1 : SÉLECTION ══ -->
+  <div class="col">
+    <p class="col-lbl">État 1<br>Sélection</p>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="hdr">
+        <div class="hb1"></div><div class="hb2"></div>
+        <div class="htop">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div class="av">🧑</div>
+            <div><p class="grt">Bonjour 👋</p><p class="unm">Antoinette</p></div>
+          </div>
+          <div class="nbtn"><div class="ndot"></div>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="body">
+        <span class="mq">Comment vous sentez-vous aujourd'hui ?</span>
+        <div class="chips">
+          <div class="chip"><div class="chip-chk"></div><span class="em">😤</span><span class="ml">En colère</span></div>
+          <div class="chip"><div class="chip-chk"></div><span class="em">😢</span><span class="ml">Triste</span></div>
+          <div class="chip"><div class="chip-chk"></div><span class="em">😊</span><span class="ml">Joyeux·se</span></div>
+          <div class="chip"><div class="chip-chk"></div><span class="em">😰</span><span class="ml">Anxieux·se</span></div>
+          <div class="chip"><div class="chip-chk"></div><span class="em">😔</span><span class="ml">Déprimé·e</span></div>
+          <div class="chip"><div class="chip-chk"></div><span class="em">😌</span><span class="ml">Relaxé·e</span></div>
+        </div>
+        <div class="ph"></div>
+      </div>
+      <div class="nav">
+        <div class="ai-r"><span class="ai-l">Assistant IA</span><div class="ai-f"><svg width="18" height="18" viewBox="0 0 30 30" fill="none"><circle cx="15" cy="11" r="5.5" stroke="#14233A" stroke-width="2"/><circle cx="15" cy="11" r="2" fill="#14233A"/><rect x="8" y="18" width="14" height="9" rx="3.5" stroke="#14233A" stroke-width="2"/><circle cx="11.5" cy="22" r="1.5" fill="#14233A"/><circle cx="18.5" cy="22" r="1.5" fill="#14233A"/></svg></div></div>
+        <div class="bnav">
+          <div class="ni act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl" style="color:#b228FF;">Accueil</span></div>
+          <div class="ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="nl">Messages</span></div>
+          <div class="nc"><div class="nfb"><svg width="15" height="15" viewBox="0 0 24 24"><rect x="1" y="6" width="13" height="12" rx="2" fill="white"/><path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white"/></svg></div><span class="nfl">Appel</span></div>
+          <div class="ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">Agenda</span></div>
+          <div class="ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">Profil</span></div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.5);text-align:center;max-width:120px;line-height:1.5;">Chips en ligne, scroll horizontal</p>
+  </div>
+
+  <!-- ══ ÉTAT 2 : BOTTOM SHEET EXPLICATION ══ -->
+  <div class="col">
+    <p class="col-lbl">État 2<br>Explication</p>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="hdr" style="flex-shrink:0;">
+        <div class="hb1"></div><div class="hb2"></div>
+        <div class="htop">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div class="av">🧑</div>
+            <div><p class="grt">Bonjour 👋</p><p class="unm">Antoinette</p></div>
+          </div>
+          <div class="nbtn"><div class="ndot"></div>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+        </div>
+      </div>
+      <!-- Overlay + sheet -->
+      <div class="phone-ov">
+        <div class="faux-bg">
+          <div style="height:10px;background:rgba(255,255,255,0.12);border-radius:5px;margin-bottom:5px;"></div>
+          <div style="display:flex;gap:4px;">
+            <div style="flex:1;height:28px;background:rgba(255,255,255,0.08);border-radius:6px;"></div>
+            <div style="flex:1;height:28px;background:rgba(255,255,255,0.08);border-radius:6px;"></div>
+            <div style="flex:1;height:28px;background:rgba(255,255,255,0.08);border-radius:6px;"></div>
+          </div>
+        </div>
+        <div class="sheet" style="position:relative;">
+          <div class="drag"></div>
+          <div class="sh-x">✕</div>
+          <div style="text-align:center;">
+            <div class="emo-wrap bg-col"><span class="e">😤</span></div>
+            <div class="cbar" style="background:#FF6B35;"></div>
+            <h2 class="sh-ttl">En colère</h2>
+            <div class="sh-div"></div>
+            <p class="sh-txt">La colère apparaît quand une limite a été franchie ou qu'un besoin essentiel n'a pas été respecté. Dans votre rôle d'aidant·e, elle peut naître de la fatigue ou du manque de reconnaissance. Accueillir cette colère sans vous juger est déjà une manière de prendre soin de vous.</p>
+            <div class="btn-ok"><span style="position:relative;z-index:1;">Je m'y retrouve →</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="nav" style="opacity:0.4;">
+        <div class="ai-r"><span class="ai-l">Assistant IA</span><div class="ai-f"></div></div>
+        <div class="bnav">
+          <div class="ni act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl" style="color:#b228FF;">Accueil</span></div>
+          <div class="ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="nl">Messages</span></div>
+          <div class="nc"><div class="nfb"><svg width="15" height="15" viewBox="0 0 24 24"><rect x="1" y="6" width="13" height="12" rx="2" fill="white"/><path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white"/></svg></div><span class="nfl">Appel</span></div>
+          <div class="ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">Agenda</span></div>
+          <div class="ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">Profil</span></div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.5);text-align:center;max-width:120px;line-height:1.5;">Émoji sur cercle dégradé + texte + CTA</p>
+  </div>
+
+  <!-- ══ ÉTAT 3A : VALIDÉE ══ -->
+  <div class="col">
+    <p class="col-lbl">État 3a<br>Validée</p>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="hdr">
+        <div class="hb1"></div><div class="hb2"></div>
+        <div class="htop">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div class="av">🧑</div>
+            <div><p class="grt">Bonjour 👋</p><p class="unm">Antoinette</p></div>
+          </div>
+          <div class="nbtn"><div class="ndot"></div>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="body">
+        <span class="mq">Comment vous sentez-vous aujourd'hui ?</span>
+        <div class="chips">
+          <div class="chip sel"><div class="chip-chk"><svg width="6" height="6" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="em">😤</span><span class="ml">En colère</span></div>
+          <div class="chip dim"><span class="em">😢</span><span class="ml">Triste</span></div>
+          <div class="chip dim"><span class="em">😊</span><span class="ml">Joyeux·se</span></div>
+          <div class="chip dim"><span class="em">😰</span><span class="ml">Anxieux·se</span></div>
+          <div class="chip dim"><span class="em">😔</span><span class="ml">Déprimé·e</span></div>
+          <div class="chip dim"><span class="em">😌</span><span class="ml">Relaxé·e</span></div>
+        </div>
+        <div class="mbadge">
+          <div class="mbico"><svg width="8" height="8" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <p class="mbtxt"><strong>Humeur enregistrée</strong> : 😤 En colère — merci de nous l'avoir partagé 💜</p>
+        </div>
+        <div class="ph"></div>
+      </div>
+      <div class="nav">
+        <div class="ai-r"><span class="ai-l">Assistant IA</span><div class="ai-f"><svg width="18" height="18" viewBox="0 0 30 30" fill="none"><circle cx="15" cy="11" r="5.5" stroke="#14233A" stroke-width="2"/><circle cx="15" cy="11" r="2" fill="#14233A"/><rect x="8" y="18" width="14" height="9" rx="3.5" stroke="#14233A" stroke-width="2"/><circle cx="11.5" cy="22" r="1.5" fill="#14233A"/><circle cx="18.5" cy="22" r="1.5" fill="#14233A"/></svg></div></div>
+        <div class="bnav">
+          <div class="ni act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl" style="color:#b228FF;">Accueil</span></div>
+          <div class="ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="nl">Messages</span></div>
+          <div class="nc"><div class="nfb"><svg width="15" height="15" viewBox="0 0 24 24"><rect x="1" y="6" width="13" height="12" rx="2" fill="white"/><path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white"/></svg></div><span class="nfl">Appel</span></div>
+          <div class="ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">Agenda</span></div>
+          <div class="ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">Profil</span></div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.5);text-align:center;max-width:120px;line-height:1.5;">Chip ✓ en relief + badge confirmation</p>
+  </div>
+
+  <!-- ══ ÉTAT 3B : DÉJÀ PARTAGÉE ══ -->
+  <div class="col">
+    <p class="col-lbl">État 3b<br>Déjà partagée</p>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="hdr" style="flex-shrink:0;">
+        <div class="hb1"></div><div class="hb2"></div>
+        <div class="htop">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div class="av">🧑</div>
+            <div><p class="grt">Bonjour 👋</p><p class="unm">Antoinette</p></div>
+          </div>
+          <div class="nbtn"><div class="ndot"></div>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="phone-ov">
+        <div class="faux-bg">
+          <div style="height:10px;background:rgba(255,255,255,0.12);border-radius:5px;margin-bottom:5px;"></div>
+          <div style="display:flex;gap:4px;">
+            <div style="height:28px;flex:1;background:rgba(178,40,255,0.22);border:1px solid rgba(178,40,255,0.35);border-radius:6px;"></div>
+            <div style="height:28px;flex:1;background:rgba(255,255,255,0.06);border-radius:6px;opacity:0.4;"></div>
+            <div style="height:28px;flex:1;background:rgba(255,255,255,0.06);border-radius:6px;opacity:0.4;"></div>
+          </div>
+        </div>
+        <div class="sheet">
+          <div class="drag"></div>
+          <div style="text-align:center;">
+            <div class="done-emo bg-col"><span class="e">😤</span></div>
+            <span class="done-badge" style="background:#FFF0F0;color:#C02A0A;border:1px solid #C02A0A33;">😤 En colère</span>
+            <h2 class="done-ttl">Humeur déjà partagée</h2>
+            <p class="done-txt">Vous avez déjà exprimé votre humeur. Elle a bien été prise en compte 💜</p>
+            <div class="done-time">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Partagée aujourd'hui à 08h42
+            </div>
+            <div class="done-div"></div>
+            <div class="done-next">
+              <span class="dn-ico">🌙</span>
+              <p class="dn-txt"><strong>Revenez demain</strong> pour partager comment vous vous sentez.</p>
+            </div>
+            <div class="btn-done">✓ Compris, merci !</div>
+          </div>
+        </div>
+      </div>
+      <div class="nav" style="opacity:0.4;">
+        <div class="ai-r"><span class="ai-l">Assistant IA</span><div class="ai-f"></div></div>
+        <div class="bnav">
+          <div class="ni act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl" style="color:#b228FF;">Accueil</span></div>
+          <div class="ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="nl">Messages</span></div>
+          <div class="nc"><div class="nfb"><svg width="15" height="15" viewBox="0 0 24 24"><rect x="1" y="6" width="13" height="12" rx="2" fill="white"/><path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white"/></svg></div><span class="nfl">Appel</span></div>
+          <div class="ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">Agenda</span></div>
+          <div class="ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">Profil</span></div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.5);text-align:center;max-width:120px;line-height:1.5;">Émoji + heure de partage + "Revenez demain"</p>
+  </div>
+
+</div>

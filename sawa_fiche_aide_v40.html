@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Sawa Care — Fiche aidé</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{height:100%;-webkit-text-size-adjust:100%;}
+body{height:100%;font-family:'Nunito',sans-serif;background:#ddd5f8;display:flex;flex-direction:column;overflow:hidden;max-width:430px;margin:0 auto;}
+
+/* ── HEADER ── */
+.hdr{
+  background:linear-gradient(145deg,#b228FF 0%,#8a2be2 45%,#1e3a6e 80%,#0f5060 100%);
+  padding:calc(env(safe-area-inset-top,44px)+10px) 18px 24px;
+  flex-shrink:0;position:relative;overflow:hidden;
+}
+.hb1{position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.07);top:-55px;right:-40px;pointer-events:none;}
+.hb2{position:absolute;width:90px;height:90px;border-radius:50%;background:rgba(133,255,239,0.1);bottom:-25px;left:10px;pointer-events:none;}
+
+.hdr-bar{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;margin-bottom:20px;}
+.icon-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.icon-btn:focus-visible{outline:2px solid #fff;}
+.hdr-title-top{font-size:17px;font-weight:900;color:#fff;}
+
+/* Avatar + nom */
+.hdr-profile{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:2;}
+.avatar-wrap{position:relative;width:80px;height:80px;}
+.avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#27b6cc,#b228FF);border:3px solid rgba(255,255,255,0.9);overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(0,0,0,0.3);font-size:28px;}
+.avatar-edit{position:absolute;bottom:0;right:0;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#8a2be2);border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
+.profile-name{font-size:22px;font-weight:900;color:#fff;text-align:center;line-height:1.2;}
+.profile-meta{font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);text-align:center;}
+
+/* Badges pathologie + lien */
+.profile-badges{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
+.pbadge{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:800;}
+.pbadge-patho{background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.25);}
+.pbadge-lien{background:rgba(252,255,173,0.2);color:#fcffad;border:1px solid rgba(252,255,173,0.3);}
+
+/* Stats rapides */
+
+
+/* ── BARRE PROGRESSION GLOBALE ── */
+.global-prog-wrap{
+  position:relative;z-index:2;
+  margin-top:14px;
+  background:rgba(255,255,255,0.12);
+  border-radius:12px;padding:10px 14px;
+}
+.gp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.gp-lbl{font-size:11px;font-weight:700;color:rgba(255,255,255,0.85);}
+.gp-pct{font-size:13px;font-weight:900;color:#fff;}
+.gp-track{height:6px;background:rgba(255,255,255,0.25);border-radius:10px;overflow:hidden;}
+.gp-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,rgba(255,255,255,0.9),rgba(133,255,239,0.9));transition:width 600ms ease;}
+/* Légende statuts */
+.gp-legend{display:flex;gap:12px;margin-top:8px;}
+.gp-leg-item{display:flex;align-items:center;gap:4px;font-size:9px;font-weight:700;color:rgba(255,255,255,0.7);}
+.gp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ── SCROLL BODY ── */
+.scroll-body{flex:1;overflow-y:auto;background:#ddd5f8;border-radius:22px 22px 0 0;margin-top:6px;padding:24px 16px calc(env(safe-area-inset-bottom,0px)+90px);scrollbar-width:none;}
+.scroll-body::-webkit-scrollbar{display:none;}
+
+/* ── SECTION CARD ── */
+.sec{background:#fff;border-radius:18px;border:1.5px solid #e8e0ff;box-shadow:0 2px 12px rgba(178,40,255,0.06);margin-bottom:12px;overflow:hidden;animation:fadeUp 250ms ease-out both;}
+
+/* En-tête section */
+.sec-hdr{display:flex;align-items:center;gap:11px;padding:14px 16px;cursor:pointer;position:relative;}
+.sec-hdr:focus-visible{outline:2px solid #b228FF;border-radius:16px 16px 0 0;}
+.sec-ico{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 200ms;}
+.sec-info{flex:1;min-width:0;}
+.sec-title{font-size:13.5px;font-weight:900;color:#2d1060;line-height:1.2;}
+.sec-sub{font-size:10.5px;font-weight:600;color:#8a7ab0;margin-top:1px;}
+.sec-right{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.sec-edit{width:30px;height:30px;border-radius:9px;background:#f5f3ff;border:1px solid #e8e0ff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.sec-edit:focus-visible{outline:2px solid #b228FF;}
+.sec-chevron{transition:transform 250ms;flex-shrink:0;}
+.sec.open .sec-chevron{transform:rotate(180deg);}
+
+/* Pastille statut complétion */
+.status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.dot-full{background:#27b6cc;}     /* complète */
+.dot-partial{background:#fcffad;}  /* partielle — jaune */
+.dot-empty{background:#ffd5d5;border:1.5px solid #E24B4A;} /* à compléter */
+
+/* Corps section */
+.sec-body{padding:16px;display:none;}
+.sec.open .sec-body{display:block;}
+
+/* Grille champs */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.f{display:flex;flex-direction:column;gap:3px;}
+.f.full{grid-column:1/-1;}
+.fl{font-size:11px;font-weight:700;color:#8a7ab0;line-height:1;}
+.fv{font-size:13.5px;font-weight:800;color:#2d1060;line-height:1.3;}
+.fv.empty{color:#bbb4d8;font-weight:600;font-style:italic;font-size:13px;}
+.fv.link{color:#b228FF;cursor:pointer;}
+.f-sep{height:0.5px;background:#ede9f5;grid-column:1/-1;margin:4px 0;}
+
+/* Pills tags */
+.f-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px;}
+.fpill{font-size:10.5px;font-weight:700;border-radius:7px;padding:3px 8px;}
+.p-violet{color:#8210cc;background:#f0e8ff;}
+.p-cyan{color:#1e8fa0;background:#e0f5ff;}
+.p-green{color:#1D9E75;background:#e8f5ee;}
+.p-orange{color:#a05a00;background:#fff3e0;}
+.p-red{color:#C02A0A;background:#fff0f0;}
+
+/* ── BARRE PROGRESSION PAR SECTION ── */
+.sec-prog{
+  padding:8px 16px 10px;
+  background:#fafafa;border-top:0.5px solid #ede9f5;
+}
+.sp-row{display:flex;align-items:center;gap:8px;}
+.sp-track{flex:1;height:5px;background:#ede9fe;border-radius:5px;overflow:hidden;}
+.sp-fill{height:100%;border-radius:5px;transition:width 500ms ease;}
+.fill-full{background:linear-gradient(90deg,#0097cc,#0077a8);}
+.fill-partial{background:linear-gradient(90deg,#f5d800,#d4a800);}
+.fill-empty{background:#fca5a5;}
+.sp-lbl{font-size:10px;font-weight:800;white-space:nowrap;flex-shrink:0;}
+.lbl-full{color:#0077a8;}
+.lbl-partial{color:#9A6500;}
+.lbl-empty{color:#B91C1C;}
+
+/* ── CO-AIDANT BANNIÈRE ── */
+.co-banner{
+  background:linear-gradient(135deg,#f5eeff,#eef5ff);
+  border:1.5px solid rgba(178,40,255,0.2);
+  border-radius:16px;padding:14px 16px;margin-bottom:12px;
+  display:flex;align-items:center;gap:12px;
+  animation:fadeUp 200ms ease-out;
+}
+.co-illo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#b228FF,#8a2be2);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(178,40,255,0.3);}
+.co-text h4{font-size:13px;font-weight:900;color:#2d1060;margin-bottom:3px;}
+.co-text p{font-size:11px;font-weight:600;color:#5e5290;line-height:1.5;}
+.co-cta{font-size:11px;font-weight:800;color:#b228FF;cursor:pointer;margin-top:4px;display:inline-block;}
+
+/* ── ALERTE SECTIONS INCOMPLÈTES ── */
+.alert-box{display:flex;align-items:flex-start;gap:10px;background:#FFF8E1;border:1.5px solid #FFD54F;border-radius:14px;padding:12px 14px;margin-bottom:22px;animation:fadeUp 200ms ease-out;}
+.alert-ico{font-size:18px;flex-shrink:0;}
+.alert-txt strong{font-size:13px;font-weight:800;color:#5d3a00;display:block;margin-bottom:2px;}
+.alert-txt p{font-size:11.5px;font-weight:600;color:#7d5200;line-height:1.5;}
+
+/* ── NAV BAS ── */
+.nav-bar{flex-shrink:0;background:#fff;border-top:1.5px solid #cdc5f0;padding-bottom:env(safe-area-inset-bottom,0px);}
+.ai-r{display:flex;align-items:center;justify-content:flex-end;padding:7px 18px 4px;gap:8px;}
+.ai-lbl{font-size:10px;font-weight:700;color:#14233A;background:#fcffad;border-radius:7px;padding:4px 9px;}
+.ai-fab{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#7b2fff 45%,#27b6cc);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(178,40,255,0.4);overflow:hidden;position:relative;}
+.ai-fab::before{content:'';position:absolute;top:4px;left:8px;width:30px;height:12px;background:rgba(255,255,255,0.18);border-radius:50%;transform:rotate(-8deg);}
+.bnav{display:flex;align-items:center;padding:3px 0 7px;}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;min-height:44px;justify-content:center;}
+.nl{font-size:10px;font-weight:700;color:#9080c0;}
+.ni.act .nl{color:#b228FF;}
+.nc{flex:0 0 66px;display:flex;flex-direction:column;align-items:center;}
+.nfab{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#27b6cc);display:flex;align-items:center;justify-content:center;margin-top:-22px;border:3px solid #fff;box-shadow:0 4px 12px rgba(178,40,255,0.3);cursor:pointer;}
+.nfl{font-size:10px;font-weight:700;color:#b228FF;margin-top:1px;}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="sr" aria-live="polite" id="announce"></div>
+
+<!-- ═══ HEADER ═══ -->
+<div class="hdr" role="banner">
+  <div class="hb1"></div><div class="hb2"></div>
+
+  <!-- Barre top -->
+  <div class="hdr-bar">
+    <button class="icon-btn" onclick="history.back()" aria-label="Retour à la liste des proches">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="hdr-title-top">Fiche aidé</span>
+    <button class="icon-btn" onclick="editFiche()" aria-label="Modifier la fiche">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </button>
+  </div>
+
+  <!-- Profil aidé -->
+  <div class="hdr-profile">
+    <div class="avatar-wrap">
+      <div class="avatar" role="img" aria-label="Photo de profil de Martin Dupont">🧑</div>
+      <div class="avatar-edit" role="button" tabindex="0" aria-label="Changer la photo">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      </div>
+    </div>
+    <div style="text-align:center;">
+      <h1 class="profile-name">Martin Dupont</h1>
+      <p class="profile-meta">78 ans</p>
+    </div>
+    <div class="profile-badges">
+      <span class="pbadge pbadge-patho" aria-label="Pathologie : Alzheimer modéré">🧠 Alzheimer modéré</span>
+      <span class="pbadge pbadge-lien" aria-label="Lien avec l'aidant : Père de l'aidante">👨 Père de l'aidante</span>
+    </div>
+
+    <!-- Stats rapides -->
+
+
+    <!-- Barre progression globale -->
+    <div class="global-prog-wrap" aria-label="Progression globale de la fiche" style="padding:8px 14px;">
+      <div class="gp-top" style="margin-bottom:0;">
+        <span class="gp-lbl">Complétion de la fiche</span>
+        <span class="gp-pct" id="global-pct-txt" style="margin-left:8px;">61 %</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCROLL ═══ -->
+<main class="scroll-body" id="scroll-body">
+
+  <!-- Alerte sections incomplètes -->
+  <div class="alert-box" role="alert" aria-label="Sections à compléter">
+    <span class="alert-ico" aria-hidden="true">💡</span>
+    <div class="alert-txt">
+      <strong>2 sections à compléter</strong>
+      <p>Les informations professionnelles et de protection sociale aideront votre Care Manager à vous orienter vers les bons dispositifs.</p>
+    </div>
+  </div>
+
+  <!-- Bannière co-aidant -->
+  <div class="co-banner" role="complementary" aria-label="Co-aidants">
+    <div class="co-illo" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div class="co-text">
+      <h4>Cercle d'aidants — 2 aidants</h4>
+      <p>Pierre Dupont accompagne Martin avec vous.</p>
+      <span class="co-cta" role="button" tabindex="0" aria-label="Gérer le cercle d'aidants">Gérer le cercle →</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════
+       1. INFORMATIONS PERSONNELLES ET COORDONNÉES
+       Statut : complète (100%)
+  ══════════════════ -->
+  <div class="sec open" id="sec-1" style="animation-delay:50ms;">
+    <div class="sec-hdr" role="button" tabindex="0" aria-expanded="true" onclick="toggleSec('sec-1')" onkeydown="if(event.key==='Enter'||event.key===' ')toggleSec('sec-1')">
+      <div class="sec-ico" style="background:linear-gradient(135deg,#27b6cc,#1e8fa0);" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title">Informations personnelles</div>
+      </div>
+      <div class="sec-right">
+        <button class="sec-edit" onclick="event.stopPropagation();editSec(1)" aria-label="Modifier les informations personnelles">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <svg class="sec-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="fg">
+        <div class="f"><span class="fl">Civilité</span><span class="fv">M.</span></div>
+        <div class="f"><span class="fl">Nom de naissance</span><span class="fv">Dupont</span></div>
+        <div class="f"><span class="fl">Prénom</span><span class="fv">Martin</span></div>
+        <div class="f"><span class="fl">Date de naissance</span><span class="fv">12 mars 1946</span></div>
+        <div class="f"><span class="fl">Téléphone</span><span class="fv link" role="link" tabindex="0">06 12 34 56 78</span></div>
+        <div class="f"><span class="fl">E-mail</span><span class="fv link" role="link" tabindex="0">martin.dupont@email.fr</span></div>
+        <div class="f-sep"></div>
+        <div class="f full"><span class="fl">Adresse</span><span class="fv">12 rue des Lilas, 75014 Paris</span></div>
+      </div>
+    </div>
+    <div class="sec-prog" aria-label="Section complétée à 100%">
+      <div class="sp-row">
+        <div class="sp-track"><div class="sp-fill fill-full" style="width:100%;" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div></div>
+        <span class="sp-lbl lbl-full">✓ Complète</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════
+       2. ÉTAT CIVIL ET SITUATION FAMILIALE
+       Statut : partielle (60%)
+  ══════════════════ -->
+  <div class="sec" id="sec-2" style="animation-delay:100ms;">
+    <div class="sec-hdr" role="button" tabindex="0" aria-expanded="false" onclick="toggleSec('sec-2')" onkeydown="if(event.key==='Enter'||event.key===' ')toggleSec('sec-2')">
+      <div class="sec-ico" style="background:linear-gradient(135deg,#f5d800,#e8a800);" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title">État civil &amp; situation familiale</div>
+      </div>
+      <div class="sec-right">
+        <button class="sec-edit" onclick="event.stopPropagation();editSec(2)" aria-label="Modifier l'état civil">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <svg class="sec-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="fg">
+        <div class="f"><span class="fl">Situation maritale</span><span class="fv">Veuf</span></div>
+        <div class="f"><span class="fl">Nb d'enfants</span><span class="fv">3</span></div>
+        <div class="f"><span class="fl">Situation de logement</span><span class="fv">Domicile personnel</span></div>
+        <div class="f"><span class="fl">Type de logement</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">Accessibilité du logement</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">Aménagements réalisés</span><span class="fv empty">Non renseigné</span></div>
+      </div>
+    </div>
+    <div class="sec-prog" aria-label="Section complétée à 60%">
+      <div class="sp-row">
+        <div class="sp-track"><div class="sp-fill fill-partial" style="width:60%;" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div></div>
+        <span class="sp-lbl lbl-partial">60% — Partielle</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════
+       3. PROTECTION SOCIALE
+       Statut : à compléter (0%)
+  ══════════════════ -->
+  <div class="sec" id="sec-3" style="animation-delay:150ms;">
+    <div class="sec-hdr" role="button" tabindex="0" aria-expanded="false" onclick="toggleSec('sec-3')" onkeydown="if(event.key==='Enter'||event.key===' ')toggleSec('sec-3')">
+      <div class="sec-ico" style="background:linear-gradient(135deg,#f5c0c0,#e88080);" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title">Protection sociale</div>
+      </div>
+      <div class="sec-right">
+        <button class="sec-edit" onclick="event.stopPropagation();editSec(3)" aria-label="Renseigner la protection sociale">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <svg class="sec-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="sec-body">
+      <!-- Bandeau confidentialité -->
+      <div style="background:#eee8ff;border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:8px;margin-bottom:14px;border:1px solid rgba(178,40,255,0.18);">
+        <span style="font-size:18px;" aria-hidden="true">🔒</span>
+        <p style="font-size:11.5px;font-weight:700;color:#5e5290;line-height:1.5;"><strong style="color:#8210cc;">Données chiffrées et sécurisées.</strong> Ces informations ne sont jamais partagées sans votre accord explicite.</p>
+      </div>
+      <div class="fg">
+        <div class="f full"><span class="fl">N° de sécurité sociale</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">Mutuelle</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">N° adhérent</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">Médecin traitant</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">APA perçue</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">PCH perçue</span><span class="fv empty">Non renseigné</span></div>
+      </div>
+    </div>
+    <div class="sec-prog" aria-label="Section non complétée">
+      <div class="sp-row">
+        <div class="sp-track"><div class="sp-fill fill-empty" style="width:5%;" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div></div>
+        <span class="sp-lbl lbl-empty">À compléter</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════
+       4. INFORMATIONS PROFESSIONNELLES
+       Statut : à compléter (0%)
+  ══════════════════ -->
+  <div class="sec" id="sec-4" style="animation-delay:200ms;">
+    <div class="sec-hdr" role="button" tabindex="0" aria-expanded="false" onclick="toggleSec('sec-4')" onkeydown="if(event.key==='Enter'||event.key===' ')toggleSec('sec-4')">
+      <div class="sec-ico" style="background:linear-gradient(135deg,#f5c0c0,#e88080);" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title">Informations professionnelles</div>
+      </div>
+      <div class="sec-right">
+        <button class="sec-edit" onclick="event.stopPropagation();editSec(4)" aria-label="Renseigner les informations professionnelles">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <svg class="sec-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="fg">
+        <div class="f full"><span class="fl">Situation actuelle</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">Profession exercée</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">Dernier employeur</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">Date de retraite</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">Revenus mensuels</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">Travailleur handicapé</span><span class="fv empty">Non renseigné</span></div>
+      </div>
+    </div>
+    <div class="sec-prog" aria-label="Section non complétée">
+      <div class="sp-row">
+        <div class="sp-track"><div class="sp-fill fill-empty" style="width:5%;" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div></div>
+        <span class="sp-lbl lbl-empty">À compléter</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════
+       5. LIEN AVEC LE PROCHE AIDANT
+       Statut : complète (100%)
+  ══════════════════ -->
+  <div class="sec" id="sec-5" style="animation-delay:250ms;">
+    <div class="sec-hdr" role="button" tabindex="0" aria-expanded="false" onclick="toggleSec('sec-5')" onkeydown="if(event.key==='Enter'||event.key===' ')toggleSec('sec-5')">
+      <div class="sec-ico" style="background:linear-gradient(135deg,#27b6cc,#1e8fa0);" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title">Lien avec le proche aidant</div>
+      </div>
+      <div class="sec-right">
+        <button class="sec-edit" onclick="event.stopPropagation();editSec(5)" aria-label="Modifier le lien aidant">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <svg class="sec-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="fg">
+        <div class="f"><span class="fl">Lien avec l'aidant</span><span class="fv">Père</span></div>
+        <div class="f"><span class="fl">Aidance depuis</span><span class="fv">Janvier 2023</span></div>
+        <div class="f full"><span class="fl">Types d'accompagnement</span>
+          <div class="f-pills">
+            <span class="fpill p-violet">Mobilité</span>
+            <span class="fpill p-violet">Gestion médicale</span>
+            <span class="fpill p-cyan">Démarches admin.</span>
+            <span class="fpill p-violet">Présence psychologique</span>
+          </div>
+        </div>
+        <div class="f"><span class="fl">Fréquence des visites</span><span class="fv">Quotidienne</span></div>
+        <div class="f"><span class="fl">Distance domicile</span><span class="fv">2,4 km</span></div>
+      </div>
+    </div>
+    <div class="sec-prog" aria-label="Section complétée à 100%">
+      <div class="sp-row">
+        <div class="sp-track"><div class="sp-fill fill-full" style="width:100%;" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div></div>
+        <span class="sp-lbl lbl-full">✓ Complète</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════
+       6. PERTE D'AUTONOMIE ET ACCOMPAGNEMENT
+       Statut : partielle (70%)
+  ══════════════════ -->
+  <div class="sec" id="sec-6" style="animation-delay:300ms;">
+    <div class="sec-hdr" role="button" tabindex="0" aria-expanded="false" onclick="toggleSec('sec-6')" onkeydown="if(event.key==='Enter'||event.key===' ')toggleSec('sec-6')">
+      <div class="sec-ico" style="background:linear-gradient(135deg,#f5d800,#e8a800);" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title">Perte d'autonomie &amp; accompagnement</div>
+      </div>
+      <div class="sec-right">
+        <button class="sec-edit" onclick="event.stopPropagation();editSec(6)" aria-label="Modifier perte d'autonomie">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <svg class="sec-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="fg">
+        <div class="f"><span class="fl">Pathologie principale</span><span class="fv">Alzheimer</span></div>
+        <div class="f"><span class="fl">Stade</span><span class="fv">Modéré</span></div>
+        <div class="f"><span class="fl">Niveau GIR</span><span class="fv">GIR 3</span></div>
+        <div class="f"><span class="fl">Dépendance estimée</span><span class="fv">🧑‍🦽 Aide régulière</span></div>
+        <div class="f full"><span class="fl">Besoins principaux</span>
+          <div class="f-pills">
+            <span class="fpill p-violet">Toilette</span>
+            <span class="fpill p-violet">Repas</span>
+            <span class="fpill p-cyan">Mobilité</span>
+            <span class="fpill p-orange">Médication</span>
+          </div>
+        </div>
+        <div class="f full"><span class="fl">Précisions médicales</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">Médecin référent</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">Hospitalisations récentes</span><span class="fv empty">Non renseigné</span></div>
+      </div>
+    </div>
+    <div class="sec-prog" aria-label="Section complétée à 70%">
+      <div class="sp-row">
+        <div class="sp-track"><div class="sp-fill fill-partial" style="width:70%;" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div></div>
+        <span class="sp-lbl lbl-partial">70% — Partielle</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════
+       7. RENSEIGNEMENTS SUPPLÉMENTAIRES
+       Statut : partielle (40%)
+  ══════════════════ -->
+  <div class="sec" id="sec-7" style="animation-delay:350ms;">
+    <div class="sec-hdr" role="button" tabindex="0" aria-expanded="false" onclick="toggleSec('sec-7')" onkeydown="if(event.key==='Enter'||event.key===' ')toggleSec('sec-7')">
+      <div class="sec-ico" style="background:linear-gradient(135deg,#f5d800,#e8a800);" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title">Renseignements supplémentaires</div>
+      </div>
+      <div class="sec-right">
+        <button class="sec-edit" onclick="event.stopPropagation();editSec(7)" aria-label="Modifier les renseignements supplémentaires">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <svg class="sec-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="fg">
+        <div class="f full"><span class="fl">Contact d'urgence</span><span class="fv">Antoinette Thomas — 07 60 87 35 11</span></div>
+        <div class="f"><span class="fl">Directives anticipées</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f"><span class="fl">Personne de confiance</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f full"><span class="fl">Allergies / Contre-indications</span><span class="fv empty">Non renseigné</span></div>
+        <div class="f full"><span class="fl">Notes libres</span><span class="fv empty">Aucune note renseignée</span></div>
+      </div>
+    </div>
+    <div class="sec-prog" aria-label="Section complétée à 40%">
+      <div class="sp-row">
+        <div class="sp-track"><div class="sp-fill fill-partial" style="width:40%;" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div></div>
+        <span class="sp-lbl lbl-partial">40% — Partielle</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══ NAV BAS ═══ -->
+<div class="nav-bar">
+  <div class="ai-r">
+    <span class="ai-lbl" aria-hidden="true">Assistant IA</span>
+    <button class="ai-fab" aria-label="Assistant IA">
+      <svg width="24" height="24" viewBox="0 0 30 30" fill="none" aria-hidden="true"><circle cx="15" cy="11" r="5.5" stroke="#14233A" stroke-width="2"/><circle cx="15" cy="11" r="2" fill="#14233A"/><rect x="8" y="18" width="14" height="9" rx="3.5" stroke="#14233A" stroke-width="2"/><circle cx="11.5" cy="22" r="1.5" fill="#14233A"/><circle cx="18.5" cy="22" r="1.5" fill="#14233A"/></svg>
+    </button>
+  </div>
+  <nav class="bnav" aria-label="Navigation principale">
+    <div class="ni act" role="button" tabindex="0" aria-current="page" aria-label="Accueil">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="nl" style="color:#b228FF;">Accueil</span>
+    </div>
+    <div class="ni" role="button" tabindex="0" aria-label="Messages">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span class="nl">Messages</span>
+    </div>
+    <div class="nc">
+      <button class="nfab" aria-label="Appel">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="6" width="13" height="12" rx="2" fill="white"/><path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white"/></svg>
+      </button>
+      <span class="nfl">Appel</span>
+    </div>
+    <div class="ni" role="button" tabindex="0" aria-label="Agenda">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span class="nl">Agenda</span>
+    </div>
+    <div class="ni" role="button" tabindex="0" aria-label="Profil">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="nl">Profil</span>
+    </div>
+  </nav>
+</div>
+
+<script>
+/* ── ACCORDÉON ── */
+function toggleSec(id){
+  var sec = document.getElementById(id);
+  var isOpen = sec.classList.contains('open');
+  sec.classList.toggle('open', !isOpen);
+  var hdr = sec.querySelector('.sec-hdr');
+  hdr.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+  if(!isOpen){
+    setTimeout(function(){
+      sec.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 60);
+  }
+}
+
+/* ── CALCUL PROGRESSION GLOBALE ── */
+(function calcGlobal(){
+  var sections = [100, 60, 0, 0, 100, 70, 40];
+  var avg = Math.round(sections.reduce(function(a,b){return a+b;},0) / sections.length);
+  var txt = document.getElementById('global-pct-txt');
+  if(txt) txt.textContent = avg + ' %';
+})();
+
+/* ── ÉDITER ── */
+function editFiche(){
+  alert('Édition de la fiche — à connecter au formulaire en production');
+}
+function editSec(n){
+  alert('Édition de la section ' + n + ' — à connecter en production');
+}
+</script>
+</body>
+</html>

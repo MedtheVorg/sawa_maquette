@@ -1,0 +1,258 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
+.scene{display:flex;gap:22px;justify-content:center;padding:24px 16px 32px;background:#1a1a2e;flex-wrap:wrap;}
+.col{display:flex;flex-direction:column;align-items:center;gap:12px;}
+.lbl{font-size:9px;font-weight:800;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;text-align:center;line-height:1.5;}
+
+.phone{width:230px;border-radius:40px;background:#ddd5f8;overflow:hidden;border:5px solid #252540;box-shadow:0 0 0 1px #3a3a5a,0 24px 48px rgba(0,0,0,0.65);font-family:'Nunito',sans-serif;display:flex;flex-direction:column;}
+.notch{width:72px;height:16px;background:#252540;border-radius:0 0 10px 10px;margin:0 auto;flex-shrink:0;}
+
+.hdr{background:linear-gradient(145deg,#b228FF 0%,#8a2be2 42%,#27b6cc 100%);padding:9px 14px 16px;position:relative;overflow:hidden;flex-shrink:0;}
+.hb1{position:absolute;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,0.08);top:-38px;right:-28px;}
+.hb2{position:absolute;width:70px;height:70px;border-radius:50%;background:rgba(133,255,239,0.1);bottom:-20px;left:8px;}
+.htop{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;}
+.av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c44dff,#27b6cc);border:1.5px solid rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;font-size:13px;}
+.grt{font-size:7.5px;font-weight:600;color:rgba(255,255,255,0.85);}
+.unm{font-size:14px;font-weight:900;color:#fff;}
+.nbtn{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;position:relative;}
+.ndot{width:6px;height:6px;border-radius:50%;background:#fcffad;position:absolute;top:4px;right:4px;}
+
+.body{padding:12px;flex:1;}
+.sec-lbl{font-size:8.5px;font-weight:800;color:#4e4280;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:8px;display:block;}
+
+/* Scroll proches */
+.pscroll{display:flex;gap:9px;overflow-x:auto;padding-bottom:5px;scrollbar-width:none;}
+.pscroll::-webkit-scrollbar{display:none;}
+
+/* Carte proche */
+.pcard{flex:0 0 148px;background:#fff;border-radius:13px;padding:11px;border:1.5px solid #cdc5f0;box-shadow:0 2px 8px rgba(178,40,255,0.06);}
+.pctop{display:flex;align-items:center;gap:7px;margin-bottom:7px;}
+.pca{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1.5px solid #e8e0ff;}
+.v1{background:linear-gradient(135deg,#27b6cc,#8a2be2);}
+.v2{background:linear-gradient(135deg,#b228FF,#1D9E75);}
+.pcn{font-size:10px;font-weight:800;color:#2d1060;}
+.pcs{font-size:8px;font-weight:600;color:#8a7ab0;margin-top:1px;}
+.badge{font-size:7.5px;font-weight:800;border-radius:5px;padding:1px 5px;flex-shrink:0;}
+.ba{background:#f0e8ff;color:#8210cc;}
+.bs{background:#E1F5EE;color:#085041;}
+.prog{height:3.5px;background:#ede9fe;border-radius:3px;overflow:hidden;margin-bottom:7px;}
+.pf{height:100%;border-radius:3px;}
+.crow{display:flex;align-items:center;gap:5px;padding-top:6px;border-top:0.5px solid #ede9f5;}
+.ami{width:16px;height:16px;border-radius:50%;border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:5.5px;font-weight:800;color:#fff;flex-shrink:0;}
+.a1{background:#b228FF;}.a2{background:#27b6cc;}
+.ct{font-size:7.5px;font-weight:700;color:#8a7ab0;flex:1;}
+.chv{width:14px;height:14px;border-radius:50%;background:#f0e8ff;display:flex;align-items:center;justify-content:center;}
+
+/* ── ÉTAT VIDE — grande carte CTA ── */
+.empty-card{
+  background:#fff;border-radius:16px;
+  padding:22px 16px;border:2px dashed #b228FF;
+  display:flex;flex-direction:column;align-items:center;
+  gap:10px;text-align:center;
+  box-shadow:0 2px 10px rgba(178,40,255,0.07);
+}
+.empty-illo{
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,#f0e8ff,#e8f5ff);
+  border:1.5px solid rgba(178,40,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+}
+.empty-title{font-size:13px;font-weight:900;color:#2d1060;line-height:1.3;}
+.empty-sub{font-size:10px;font-weight:600;color:#8a7ab0;line-height:1.5;}
+.empty-cta{
+  width:100%;background:linear-gradient(135deg,#b228FF,#8a2be2);
+  border:none;border-radius:14px;padding:12px;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;color:#fff;
+  position:relative;overflow:hidden;
+}
+.empty-cta::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,0.12);border-radius:14px 14px 0 0;}
+.empty-cta span{position:relative;z-index:1;}
+
+/* ── CARTE "+" COMPACTE (1+ proche) ── */
+.pcard-plus{
+  flex:0 0 96px;background:#fff;border-radius:13px;
+  border:2px dashed rgba(178,40,255,0.45);
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:7px;
+  min-height:110px;
+}
+.plus-circle{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,#b228FF,#8a2be2);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 10px rgba(178,40,255,0.35);
+}
+.plus-lbl{font-size:8px;font-weight:800;color:#8210cc;text-align:center;line-height:1.4;}
+
+/* Dots */
+.dots{display:flex;justify-content:center;gap:5px;margin-top:7px;}
+.dot{width:5px;height:5px;border-radius:50%;background:#cdc5f0;}
+.dot.a{background:#b228FF;width:12px;border-radius:3px;}
+
+/* Placeholder */
+.ph{background:#fff;border-radius:11px;height:44px;margin-top:11px;border:1px solid #cdc5f0;opacity:0.6;}
+
+/* Humeur mini */
+.mood-mini{height:26px;background:#fff;border-radius:18px;margin-bottom:10px;border:1px solid #e8e0ff;opacity:0.8;display:flex;align-items:center;padding:0 8px;gap:5px;}
+</style>
+
+<div class="scene">
+
+  <!-- ══ ÉTAT 0 : AUCUN PROCHE ══ -->
+  <div class="col">
+    <p class="lbl">Premier usage<br>Aucun proche</p>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="hdr">
+        <div class="hb1"></div><div class="hb2"></div>
+        <div class="htop">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div class="av">🧑</div>
+            <div><p class="grt">Bonjour 👋</p><p class="unm">Antoinette</p></div>
+          </div>
+          <div class="nbtn"><div class="ndot"></div>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="mood-mini"><span style="font-size:13px;">😊</span><div style="height:5px;background:#ede9fe;border-radius:3px;flex:1;"></div></div>
+        <span class="sec-lbl">Mes proches aidés</span>
+        <!-- Grande carte état vide -->
+        <div class="empty-card">
+          <div class="empty-illo">🤝</div>
+          <p class="empty-title">Ajoutez votre premier proche aidé</p>
+          <p class="empty-sub">Centralisez le suivi et coordonnez l'aide autour de lui.</p>
+          <button class="empty-cta">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Ajouter un proche</span>
+          </button>
+        </div>
+        <div class="ph" style="height:30px;"></div>
+      </div>
+    </div>
+    <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.45);text-align:center;max-width:140px;line-height:1.5;">Grande carte vide avec illustration + CTA central fort. Impossible de rater l'action.</p>
+  </div>
+
+  <!-- ══ ÉTAT 1 : 1 PROCHE + CARTE "+" ══ -->
+  <div class="col">
+    <p class="lbl">1 proche existant<br>Carte "+" compacte</p>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="hdr">
+        <div class="hb1"></div><div class="hb2"></div>
+        <div class="htop">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div class="av">🧑</div>
+            <div><p class="grt">Bonjour 👋</p><p class="unm">Antoinette</p></div>
+          </div>
+          <div class="nbtn"><div class="ndot"></div>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="mood-mini"><span style="font-size:13px;">😤</span><div style="height:5px;background:#ede9fe;border-radius:3px;flex:1;"></div></div>
+        <span class="sec-lbl">Mes proches aidés</span>
+        <div class="pscroll">
+          <!-- Carte Martin -->
+          <div class="pcard">
+            <div class="pctop">
+              <div class="pca v1"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div style="flex:1;min-width:0;"><p class="pcn">Martin</p><p class="pcs">Père · 78 ans</p></div>
+              <span class="badge ba">Actif</span>
+            </div>
+            <div style="font-size:7.5px;font-weight:700;color:#8210cc;margin-bottom:3px;display:flex;justify-content:space-between;"><span>Plan</span><span>72%</span></div>
+            <div class="prog"><div class="pf" style="width:72%;background:linear-gradient(90deg,#b228FF,#8a2be2);"></div></div>
+            <div class="crow">
+              <div class="ami a1">AT</div>
+              <span class="ct">Seul·e aidant·e</span>
+              <div class="chv"><svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </div>
+          </div>
+          <!-- Carte "+" compacte -->
+          <div class="pcard-plus" role="button" aria-label="Ajouter un proche aidé">
+            <div class="plus-circle">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <p class="plus-lbl">Ajouter<br>un proche</p>
+          </div>
+        </div>
+        <div class="dots"><div class="dot a"></div><div class="dot"></div></div>
+        <div class="ph"></div>
+      </div>
+    </div>
+    <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.45);text-align:center;max-width:140px;line-height:1.5;">La carte "+" est toujours visible à droite dans le scroll. Min-width 44px — conforme WCAG.</p>
+  </div>
+
+  <!-- ══ ÉTAT 2 : 2 PROCHES + CARTE "+" ══ -->
+  <div class="col">
+    <p class="lbl">2 proches existants<br>Carte "+" toujours présente</p>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="hdr">
+        <div class="hb1"></div><div class="hb2"></div>
+        <div class="htop">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div class="av">🧑</div>
+            <div><p class="grt">Bonjour 👋</p><p class="unm">Antoinette</p></div>
+          </div>
+          <div class="nbtn"><div class="ndot"></div>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="mood-mini"><span style="font-size:13px;">😌</span><div style="height:5px;background:#ede9fe;border-radius:3px;flex:1;"></div></div>
+        <span class="sec-lbl">Mes proches aidés</span>
+        <div class="pscroll">
+          <!-- Martin -->
+          <div class="pcard">
+            <div class="pctop">
+              <div class="pca v1"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div style="flex:1;min-width:0;"><p class="pcn">Martin</p><p class="pcs">Père · 78 ans</p></div>
+              <span class="badge ba">Actif</span>
+            </div>
+            <div style="font-size:7.5px;font-weight:700;color:#8210cc;margin-bottom:3px;display:flex;justify-content:space-between;"><span>Plan</span><span>72%</span></div>
+            <div class="prog"><div class="pf" style="width:72%;background:linear-gradient(90deg,#b228FF,#8a2be2);"></div></div>
+            <div class="crow">
+              <div class="ami a1">AT</div>
+              <span class="ct">Seul·e aidant·e</span>
+              <div class="chv"><svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </div>
+          </div>
+          <!-- Madeleine -->
+          <div class="pcard">
+            <div class="pctop">
+              <div class="pca v2"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div style="flex:1;min-width:0;"><p class="pcn">Madeleine</p><p class="pcs">Mère · 74 ans</p></div>
+              <span class="badge bs">Stable</span>
+            </div>
+            <div style="font-size:7.5px;font-weight:700;color:#27b6cc;margin-bottom:3px;display:flex;justify-content:space-between;"><span>Plan</span><span>45%</span></div>
+            <div class="prog"><div class="pf" style="width:45%;background:linear-gradient(90deg,#27b6cc,#1D9E75);"></div></div>
+            <div class="crow">
+              <div class="ami a1">AT</div>
+              <div class="ami a2" style="margin-left:-4px;">PD</div>
+              <span class="ct">2 co-aidants</span>
+              <div class="chv"><svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </div>
+          </div>
+          <!-- Carte "+" -->
+          <div class="pcard-plus" role="button" aria-label="Ajouter un proche aidé">
+            <div class="plus-circle">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <p class="plus-lbl">Ajouter<br>un proche</p>
+          </div>
+        </div>
+        <div class="dots"><div class="dot a"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="ph"></div>
+      </div>
+    </div>
+    <p style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.45);text-align:center;max-width:140px;line-height:1.5;">La carte "+" reste en dernière position, quel que soit le nombre de proches.</p>
+  </div>
+
+</div>

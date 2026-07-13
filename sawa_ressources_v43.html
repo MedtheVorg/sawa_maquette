@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Sawa Care — Ressources</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -300px 0
+      }
+
+      100% {
+        background-position: 300px 0
+      }
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(1)
+      }
+
+      45% {
+        transform: scale(1.3)
+      }
+
+      100% {
+        transform: scale(1)
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      height: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      height: 100%;
+      font-family: 'Nunito', sans-serif;
+      background: #ddd5f8;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      max-width: 430px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ══ HEADER — compact ══ */
+    .hdr {
+      background: linear-gradient(145deg, #b228FF 0%, #8a2be2 45%, #27b6cc 100%);
+      padding: 52px 18px 16px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hb1 {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      top: -50px;
+      right: -35px;
+      pointer-events: none;
+    }
+
+    .hb2 {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(133, 255, 239, 0.1);
+      bottom: -25px;
+      left: 10px;
+      pointer-events: none;
+    }
+
+    .hdr-top {
+      position: absolute;
+      top: 10px;
+      left: 18px;
+      right: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 2;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .hdr-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hdr-ico {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .hdr-text h1 {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .hdr-text p {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.75);
+      margin-top: 2px;
+    }
+
+    .hdr-stats {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 14px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .stat-lbl {
+      font-size: 9px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .stat-sep {
+      width: 1px;
+      height: 22px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* ══ ZONE RECHERCHE + FILTRES — fond lavande ══ */
+    .search-zone {
+      background: #ddd5f8;
+      border-radius: 20px 20px 0 0;
+      margin-top: -2px;
+      padding: 14px 16px 8px;
+      flex-shrink: 0;
+    }
+
+    /* Barre recherche */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border-radius: 14px;
+      border: 1.5px solid #e8e0ff;
+      padding: 10px 13px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(178, 40, 255, 0.06);
+      transition: border-color 150ms;
+    }
+
+    .search-bar:focus-within {
+      border-color: #b228FF;
+    }
+
+    .search-bar input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #2d1060;
+    }
+
+    .search-bar input::placeholder {
+      color: #9b91c8;
+    }
+
+    .search-clear {
+      display: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ede9fe;
+      border: none;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .search-clear.show {
+      display: flex;
+    }
+
+    /* Boutons Filtrer / Tri */
+    .btn-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      border: 1.5px solid #e8e0ff;
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      color: #5e5290;
+      cursor: pointer;
+      white-space: nowrap;
+      min-height: 36px;
+      transition: all 130ms;
+      position: relative;
+    }
+
+    .btn-filter:hover {
+      border-color: #b228FF;
+      color: #8210cc;
+    }
+
+    .btn-filter.on {
+      background: #f0e8ff;
+      border-color: #b228FF;
+      color: #8210cc;
+    }
+
+    .btn-filter:focus-visible {
+      outline: 2px solid #b228FF;
+    }
+
+    .adv-badge {
+      display: none;
+      min-width: 17px;
+      height: 17px;
+      border-radius: 9px;
+      padding: 0 4px;
+      background: #b228FF;
+      font-size: 9px;
+      font-weight: 900;
+      color: #fff;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .adv-badge.show {
+      display: inline-flex;
+    }
+
+    /* ══ CONTENU SCROLLABLE ══ */
+    .scroll-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 16px 110px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .scroll-body::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Meta ligne */
+    .meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0 8px;
+    }
+
+    .meta-count {
+      font-size: 11px;
+      font-weight: 800;
+      color: #8a7ab0;
+    }
+
+    .sort-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #fff;
+      border: 1.5px solid #e8e0ff;
+      border-radius: 9px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      color: #5e5290;
+    }
+
+    .sort-btn:hover {
+      border-color: #b228FF;
+      color: #8210cc;
+    }
+
+    /* ══ SECTIONS ÉDITORIALES ══ */
+    .ed-section {
+      margin-bottom: 14px;
+    }
+
+    .ed-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 9px;
+    }
+
+    .ed-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: #2d1060;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ed-link {
+      font-size: 11px;
+      font-weight: 700;
+      color: #b228FF;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    /* Scroll horizontal cartes compact */
+    .h-scroll {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      padding-right: 16px;
+      scrollbar-width: none;
+    }
+
+    .h-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hcard {
+      flex: 0 0 150px;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1.5px solid #e8e0ff;
+      box-shadow: 0 2px 8px rgba(178, 40, 255, 0.07);
+      cursor: pointer;
+      transition: transform 120ms;
+    }
+
+    .hcard:active {
+      transform: scale(0.97);
+    }
+
+    .hthumb {
+      position: relative;
+      width: 100%;
+      padding-top: 56%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hthumb-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .play-sm {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    .hcard-body {
+      padding: 8px 9px;
+    }
+
+    .hcard-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #2d1060;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 5px;
+      min-height: 2.6em;
+    }
+
+    .hcard-meta {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dur {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #8a7ab0;
+    }
+
+    /* Barre progression sur thumb */
+    .prog-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .prog-fill {
+      height: 100%;
+      background: #b228FF;
+      border-radius: 2px;
+    }
+
+    /* ══ GRILLE 2 COLONNES ══ */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* Carte vidéo principale */
+    .vcard {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1.5px solid #e8e0ff;
+      box-shadow: 0 2px 8px rgba(178, 40, 255, 0.06);
+      cursor: pointer;
+      position: relative;
+      transition: transform 120ms;
+      animation: fadeUp 250ms ease-out both;
+    }
+
+    .vcard:active {
+      transform: scale(0.97);
+    }
+
+    /* Thumbnail coloré par catégorie */
+    .vthumb {
+      position: relative;
+      width: 100%;
+      padding-top: 57%;
+    }
+
+    .vthumb-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .c-conseil {
+      background: linear-gradient(135deg, #f3eeff, #e6d8ff);
+    }
+
+    .c-mobilite {
+      background: linear-gradient(135deg, #e0f6ff, #b8eaf8);
+    }
+
+    .c-nutrition {
+      background: linear-gradient(135deg, #fff4e0, #ffdfa0);
+    }
+
+    .c-bienetre {
+      background: linear-gradient(135deg, #e8f5ee, #b8dfc8);
+    }
+
+    .c-admin {
+      background: linear-gradient(135deg, #fffbe0, #ffe082);
+    }
+
+    .c-temoignage {
+      background: linear-gradient(135deg, #fce8f0, #f8bbd4);
+    }
+
+    .play-ico {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    /* Badges thumbnail */
+    .bdg-dur {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      background: rgba(14, 22, 38, 0.72);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      border-radius: 5px;
+      padding: 2px 6px;
+    }
+
+    .bdg-new {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: linear-gradient(135deg, #b228FF, #8a2be2);
+      color: #fff;
+      font-size: 8.5px;
+      font-weight: 800;
+      border-radius: 5px;
+      padding: 2px 7px;
+    }
+
+    /* Bouton partager sur carte */
+    .share-btn {
+      position: absolute;
+      bottom: 5px;
+      left: 5px;
+      z-index: 3;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.88);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.14);
+      transition: background 130ms;
+    }
+
+    .share-btn:hover {
+      background: #fff;
+    }
+
+    .share-btn:focus-visible {
+      outline: 2px solid #b228FF;
+    }
+
+    /* Bouton favori */
+    .fav-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      z-index: 3;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.88);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.14);
+    }
+
+    .fav-btn.on {
+      background: #fff0f8;
+    }
+
+    /* Corps carte */
+    .vcard-body {
+      padding: 8px 10px 10px;
+    }
+
+    .vcard-title {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #2d1060;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 2.7em;
+      margin-bottom: 6px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 9.5px;
+      font-weight: 700;
+      border-radius: 5px;
+      padding: 2px 6px;
+    }
+
+    .t-violet {
+      color: #8210cc;
+      background: #f0e8ff;
+    }
+
+    .t-cyan {
+      color: #1e8fa0;
+      background: #e0f5ff;
+    }
+
+    .t-orange {
+      color: #a05a00;
+      background: #fff3e0;
+    }
+
+    .t-green {
+      color: #1D9E75;
+      background: #e8f5ee;
+    }
+
+    .t-rose {
+      color: #ad1457;
+      background: #fce4ec;
+    }
+
+    /* Séparateur section */
+    .sep {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0 8px;
+    }
+
+    .sep-lbl {
+      font-size: 10px;
+      font-weight: 800;
+      color: #4e4280;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      white-space: nowrap;
+    }
+
+    .sep-line {
+      flex: 1;
+      height: 0.5px;
+      background: #cdc5f0;
+    }
+
+    /* Sheet partage vidéo */
+    .sv-contact {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 0.5px solid #f0ecff;
+      cursor: pointer;
+      transition: background 120ms;
+      border-radius: 10px;
+    }
+
+    .sv-contact:last-child {
+      border-bottom: none;
+    }
+
+    .sv-contact:hover {
+      background: #faf8ff;
+    }
+
+    .sv-contact:active {
+      background: #f0e8ff;
+    }
+
+    .sv-contact:focus-visible {
+      outline: 2px solid #b228FF;
+      outline-offset: 2px;
+    }
+
+    .sv-av {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .sv-info {
+      flex: 1;
+    }
+
+    .sv-name {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #2d1060;
+    }
+
+    .sv-role {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8a7ab0;
+      margin-top: 1px;
+    }
+
+    .sv-send-btn {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #b228FF;
+      white-space: nowrap;
+    }
+
+    .skel-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .skel-card {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1.5px solid #e8e0ff;
+    }
+
+    .skel-t {
+      width: 100%;
+      padding-top: 57%;
+      background: linear-gradient(90deg, #ede9fe 25%, #ddd5f8 50%, #ede9fe 75%);
+      background-size: 300px 100%;
+      animation: shimmer 1.3s ease-in-out infinite;
+    }
+
+    .skel-b {
+      padding: 8px 10px;
+    }
+
+    .skel-l {
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #ede9fe 25%, #ddd5f8 50%, #ede9fe 75%);
+      background-size: 300px 100%;
+      animation: shimmer 1.3s ease-in-out infinite;
+      margin-bottom: 6px;
+    }
+
+    .skel-l.s {
+      width: 60%;
+    }
+
+    /* ══ PAGINATION ══ */
+    .pag {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 14px 0 6px;
+    }
+
+    .pag-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      border: 1.5px solid #e8e0ff;
+      background: #fff;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      color: #5e5290;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 130ms;
+    }
+
+    .pag-btn:hover {
+      border-color: #b228FF;
+      color: #8210cc;
+    }
+
+    .pag-btn.cur {
+      background: #b228FF;
+      border-color: #b228FF;
+      color: #fff;
+    }
+
+    .pag-btn.off {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .pag-dots {
+      font-size: 12px;
+      color: #9b91c8;
+    }
+
+    /* ══ ÉTAT VIDE ══ */
+    .empty {
+      text-align: center;
+      padding: 36px 20px;
+      display: none;
+    }
+
+    .empty.show {
+      display: block;
+    }
+
+    .empty-ico {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .empty-t {
+      font-size: 16px;
+      font-weight: 900;
+      color: #2d1060;
+      margin-bottom: 7px;
+    }
+
+    .empty-s {
+      font-size: 13px;
+      font-weight: 600;
+      color: #8a7ab0;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .btn-reset {
+      background: #f0e8ff;
+      border: 1.5px solid #b228FF;
+      border-radius: 12px;
+      padding: 10px 22px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: #8210cc;
+      cursor: pointer;
+    }
+
+    /* ══ OVERLAY BOTTOM SHEETS ══ */
+    .ov {
+      position: fixed;
+      inset: 0;
+      background: rgba(14, 22, 38, 0.58);
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms;
+      backdrop-filter: blur(3px);
+    }
+
+    .ov.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .ov-bg {
+      position: absolute;
+      inset: 0;
+    }
+
+    .sheet {
+      background: #fff;
+      border-radius: 26px 26px 0 0;
+      width: 100%;
+      padding: 0 20px 34px;
+      transform: translateY(100%);
+      transition: transform 320ms cubic-bezier(.32, .72, 0, 1);
+      position: relative;
+      z-index: 1;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .ov.open .sheet {
+      transform: translateY(0);
+    }
+
+    .drag {
+      width: 38px;
+      height: 4px;
+      border-radius: 2px;
+      background: #e4ddf7;
+      margin: 12px auto 0;
+    }
+
+    .sheet-x {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #f5f3ff;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sheet-h {
+      font-size: 17px;
+      font-weight: 900;
+      color: #2d1060;
+      margin: 14px 0 16px;
+    }
+
+    .fg {
+      margin-bottom: 16px;
+    }
+
+    .fg-lbl {
+      font-size: 10px;
+      font-weight: 800;
+      color: #4e4280;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .fp-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .fp {
+      background: #f9f7ff;
+      border: 1.5px solid #e8e0ff;
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #5e5290;
+      cursor: pointer;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      transition: all 130ms;
+    }
+
+    .fp.on {
+      background: #f0e8ff;
+      border-color: #b228FF;
+      color: #8210cc;
+    }
+
+    .sheet-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .btn-raz {
+      flex: 1;
+      background: #f0e8ff;
+      border: 1.5px solid #b228FF;
+      border-radius: 13px;
+      padding: 13px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: #8210cc;
+      cursor: pointer;
+    }
+
+    .btn-app {
+      flex: 2;
+      background: linear-gradient(135deg, #b228FF, #8a2be2);
+      border: none;
+      border-radius: 13px;
+      padding: 13px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+      color: #fff;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-app::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 50% 0;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 13px 13px 0 0;
+    }
+
+    .btn-app span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Sheet tri */
+    .sort-opt {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 0;
+      border-bottom: 0.5px solid #ede9f5;
+      cursor: pointer;
+    }
+
+    .sort-opt:last-child {
+      border-bottom: none;
+    }
+
+    .sort-opt-lbl {
+      font-size: 14px;
+      font-weight: 700;
+      color: #2d1060;
+    }
+
+    .sort-opt.cur .sort-opt-lbl {
+      color: #8210cc;
+      font-weight: 900;
+    }
+
+    .sort-chk {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid #e8e0ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sort-opt.cur .sort-chk {
+      background: #b228FF;
+      border-color: #b228FF;
+    }
+
+    /* ══ NAV BAS ══ */
+    .nav-bar {
+      flex-shrink: 0;
+      background: #fff;
+      border-top: 1.5px solid #cdc5f0;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .ai-r {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 7px 18px 4px;
+      gap: 8px;
+    }
+
+    .ai-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      color: #14233A;
+      background: #fcffad;
+      border-radius: 7px;
+      padding: 4px 9px;
+    }
+
+    .ai-fab {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #b228FF, #7b2fff 45%, #27b6cc);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(178, 40, 255, 0.4);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ai-fab::before {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 8px;
+      width: 30px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
+      transform: rotate(-8deg);
+    }
+
+    .bnav {
+      display: flex;
+      align-items: center;
+      padding: 3px 0 7px;
+    }
+
+    .ni {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      cursor: pointer;
+      min-height: 44px;
+      justify-content: center;
+    }
+
+    .nl {
+      font-size: 10px;
+      font-weight: 700;
+      color: #9080c0;
+    }
+
+    .ni.act .nl {
+      color: #b228FF;
+    }
+
+    .nc {
+      flex: 0 0 66px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .nfab {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #b228FF, #27b6cc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -22px;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 12px rgba(178, 40, 255, 0.3);
+      cursor: pointer;
+    }
+
+    .nfl {
+      font-size: 10px;
+      font-weight: 700;
+      color: #b228FF;
+      margin-top: 1px;
+    }
+
+    .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sr" aria-live="polite" id="announce"></div>
+
+  <!-- ═══ HEADER ═══ -->
+  <div class="hdr">
+    <div class="hb1"></div>
+    <div class="hb2"></div>
+    <div class="hdr-top">
+      <button class="back-btn" aria-label="Retour" onclick="window.location.href='sawa_care_home_v41.html'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+      <h1 style="position:absolute;left:50%;transform:translateX(-50%);font-size:18px;font-weight:900;color:#fff;">
+        Ressources</h1>
+      <div style="width:36px;flex-shrink:0;"></div>
+    </div>
+    <div class="hdr-content" style="margin-top:6px;">
+      <div class="hdr-ico" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" />
+          <polygon points="10 8 16 11 10 14" fill="white" stroke="none" />
+          <line x1="8" y1="21" x2="16" y2="21" />
+          <line x1="12" y1="17" x2="12" y2="21" />
+        </svg>
+      </div>
+      <div class="hdr-text">
+        <p style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.8);">Vidéos & conseils pour les aidant·e·s</p>
+      </div>
+      <div class="hdr-stats" aria-label="Statistiques">
+        <div class="stat-item">
+          <div class="stat-val">700</div>
+          <div class="stat-lbl">Vidéos</div>
+        </div>
+        <div class="stat-sep" aria-hidden="true"></div>
+        <div class="stat-item">
+          <div class="stat-val" id="fav-count">3</div>
+          <div class="stat-lbl">Favoris</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ RECHERCHE + FILTRES ═══ -->
+  <div class="search-zone">
+    <div class="search-bar" role="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9b91c8" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+      <input type="text" id="q" placeholder="Titre, thème, mot-clé…" aria-label="Rechercher" oninput="onSearch()">
+      <button class="search-clear" id="qclear" onclick="clearQ()" aria-label="Effacer">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#5e5290" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-filter" id="btn-adv" onclick="openFilters()" aria-label="Filtres avancés">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="8" y1="12" x2="16" y2="12" />
+          <line x1="11" y1="18" x2="13" y2="18" />
+        </svg>
+        Filtrer
+        <span class="adv-badge" id="adv-badge" aria-live="polite">0</span>
+      </button>
+      <button class="btn-filter" onclick="openSort()" aria-label="Trier les vidéos">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="15" y2="12" />
+          <line x1="3" y1="18" x2="9" y2="18" />
+        </svg>
+        <span id="sort-lbl">Récent</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ SCROLL PRINCIPAL ═══ -->
+  <div class="scroll-body" id="scroll-body">
+
+    <!-- Sections éditoriales -->
+    <div id="ed-zone">
+      <!-- Recommandées -->
+      <div class="ed-section">
+        <div class="ed-hdr">
+          <span class="ed-title">✨ Recommandées pour vous</span>
+          <button class="ed-link" onclick="setCat(document.querySelector('.chip'),'Tous')">Tout voir</button>
+        </div>
+        <div class="h-scroll" role="list">
+          <div class="hcard" role="listitem" tabindex="0" aria-label="Lire Comprendre le vieillissement 12 min">
+            <div class="hthumb">
+              <div class="hthumb-bg c-conseil">
+                <div class="play-sm"><svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                    <polygon points="5 3 19 12 5 21 5 3" fill="#8210cc" />
+                  </svg></div>
+              </div><span class="bdg-dur">12 min</span>
+            </div>
+            <div class="hcard-body">
+              <h3 class="hcard-title">Comprendre le vieillissement</h3>
+              <div class="hcard-meta"><span class="tag t-violet">💡 Conseils</span><span class="dur">12 min</span></div>
+            </div>
+          </div>
+          <div class="hcard" role="listitem" tabindex="0" aria-label="Lire Aider à se lever d'un fauteuil 8 min">
+            <div class="hthumb">
+              <div class="hthumb-bg c-mobilite">
+                <div class="play-sm"><svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                    <polygon points="5 3 19 12 5 21 5 3" fill="#1e8fa0" />
+                  </svg></div>
+              </div><span class="bdg-dur">8 min</span>
+            </div>
+            <div class="hcard-body">
+              <h3 class="hcard-title">Aider à se lever d'un fauteuil</h3>
+              <div class="hcard-meta"><span class="tag t-cyan">🧑‍🦽 Mobilité</span><span class="dur">8 min</span></div>
+            </div>
+          </div>
+          <div class="hcard" role="listitem" tabindex="0" aria-label="Lire Gérer le stress de l'aidant 14 min">
+            <div class="hthumb">
+              <div class="hthumb-bg c-bienetre">
+                <div class="play-sm"><svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                    <polygon points="5 3 19 12 5 21 5 3" fill="#1D9E75" />
+                  </svg></div>
+              </div><span class="bdg-dur">14 min</span>
+            </div>
+            <div class="hcard-body">
+              <h3 class="hcard-title">Gérer le stress de l'aidant·e</h3>
+              <div class="hcard-meta"><span class="tag t-green">💆 Bien-être</span><span class="dur">14 min</span></div>
+            </div>
+          </div>
+          <div class="hcard" role="listitem" tabindex="0" aria-label="Lire Prévenir la dénutrition 9 min">
+            <div class="hthumb">
+              <div class="hthumb-bg c-nutrition">
+                <div class="play-sm"><svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                    <polygon points="5 3 19 12 5 21 5 3" fill="#a05a00" />
+                  </svg></div>
+              </div><span class="bdg-dur">9 min</span>
+            </div>
+            <div class="hcard-body">
+              <h3 class="hcard-title">Enrichir un plat — prévenir la dénutrition</h3>
+              <div class="hcard-meta"><span class="tag t-orange">🥗 Nutrition</span><span class="dur">9 min</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Récemment vus -->
+      <div class="ed-section">
+        <div class="ed-hdr">
+          <span class="ed-title">🕐 Récemment vus</span>
+          <button class="ed-link">Historique</button>
+        </div>
+        <div class="h-scroll" role="list">
+          <div class="hcard" role="listitem" tabindex="0"
+            aria-label="Lire Faire manger une personne en perte d'autonomie 7 min — vu à 65%">
+            <div class="hthumb">
+              <div class="hthumb-bg c-nutrition">
+                <div class="play-sm"><svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                    <polygon points="5 3 19 12 5 21 5 3" fill="#a05a00" />
+                  </svg></div>
+                <div class="prog-bar">
+                  <div class="prog-fill" style="width:65%;"></div>
+                </div>
+              </div><span class="bdg-dur">7 min</span>
+            </div>
+            <div class="hcard-body">
+              <h3 class="hcard-title">Faire manger une personne en perte d'autonomie</h3>
+              <div class="hcard-meta"><span class="tag t-orange">🥗</span><span class="dur" style="color:#b228FF;">65%
+                  vu</span></div>
+            </div>
+          </div>
+          <div class="hcard" role="listitem" tabindex="0" aria-label="Lire Prendre soin de soi — terminé">
+            <div class="hthumb">
+              <div class="hthumb-bg c-bienetre">
+                <div class="play-sm"><svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                    <polygon points="5 3 19 12 5 21 5 3" fill="#1D9E75" />
+                  </svg></div>
+                <div class="prog-bar">
+                  <div class="prog-fill" style="width:100%;background:#1D9E75;"></div>
+                </div>
+              </div><span class="bdg-dur">15 min</span>
+            </div>
+            <div class="hcard-body">
+              <h3 class="hcard-title">Prendre soin de soi en tant qu'aidant·e</h3>
+              <div class="hcard-meta"><span class="tag t-green">✓ Vu</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /ed-zone -->
+
+    <!-- Meta + tri -->
+    <div class="meta-row">
+      <span class="meta-count" id="meta-count" aria-live="polite">24 vidéos · Page 1/29</span>
+      <button class="sort-btn" onclick="openSort()" aria-haspopup="listbox">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="15" y2="12" />
+          <line x1="3" y1="18" x2="9" y2="18" />
+        </svg>
+        <span id="sort-lbl">Récent</span>
+      </button>
+    </div>
+
+    <!-- Skeleton -->
+    <div class="skel-grid" id="skel" style="display:none;">
+      <div class="skel-card">
+        <div class="skel-t"></div>
+        <div class="skel-b">
+          <div class="skel-l"></div>
+          <div class="skel-l s"></div>
+        </div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-t"></div>
+        <div class="skel-b">
+          <div class="skel-l"></div>
+          <div class="skel-l s"></div>
+        </div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-t"></div>
+        <div class="skel-b">
+          <div class="skel-l"></div>
+          <div class="skel-l s"></div>
+        </div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-t"></div>
+        <div class="skel-b">
+          <div class="skel-l"></div>
+          <div class="skel-l s"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grille -->
+    <div class="grid" id="grid" role="list" aria-label="Vidéos"></div>
+
+    <!-- État vide -->
+    <div class="empty" id="empty">
+      <div class="empty-ico">🔍</div>
+      <p class="empty-t">Aucun résultat</p>
+      <p class="empty-s">Essayez un autre mot-clé ou retirez les filtres.</p>
+      <button class="btn-reset" onclick="resetAll()">Voir toutes les ressources</button>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pag" id="pag" aria-label="Pages"></div>
+
+  </div><!-- /scroll-body -->
+
+  <!-- ═══ OVERLAY FILTRES ═══ -->
+  <div class="ov" id="ov-filters" role="dialog" aria-modal="true" aria-labelledby="fsh-title">
+    <div class="ov-bg" onclick="closeFilters()"></div>
+    <div class="sheet">
+      <div class="drag" aria-hidden="true"></div>
+      <button class="sheet-x" onclick="closeFilters()" aria-label="Fermer">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <h2 class="sheet-h" id="fsh-title">Filtres avancés</h2>
+      <div class="fg">
+        <p class="fg-lbl">Durée</p>
+        <div class="fp-row">
+          <button class="fp" data-g="dur" data-v="court" onclick="toggleFP(this)">⚡ Moins de 5 min</button>
+          <button class="fp" data-g="dur" data-v="moyen" onclick="toggleFP(this)">🎬 5 à 15 min</button>
+          <button class="fp" data-g="dur" data-v="long" onclick="toggleFP(this)">📺 Plus de 15 min</button>
+        </div>
+      </div>
+      <div class="fg">
+        <p class="fg-lbl">Niveau</p>
+        <div class="fp-row">
+          <button class="fp" data-g="niv" data-v="deb" onclick="toggleFP(this)">🌱 Débutant</button>
+          <button class="fp" data-g="niv" data-v="int" onclick="toggleFP(this)">📗 Intermédiaire</button>
+          <button class="fp" data-g="niv" data-v="av" onclick="toggleFP(this)">🎯 Avancé</button>
+        </div>
+      </div>
+      <div class="fg">
+        <p class="fg-lbl">Format</p>
+        <div class="fp-row">
+          <button class="fp" data-g="fmt" data-v="tuto" onclick="toggleFP(this)">🎥 Tutoriel</button>
+          <button class="fp" data-g="fmt" data-v="temo" onclick="toggleFP(this)">💬 Témoignage</button>
+          <button class="fp" data-g="fmt" data-v="exp" onclick="toggleFP(this)">👨‍⚕️ Expert</button>
+          <button class="fp" data-g="fmt" data-v="anim" onclick="toggleFP(this)">✏️ Animation</button>
+        </div>
+      </div>
+      <div class="fg">
+        <p class="fg-lbl">Afficher</p>
+        <div class="fp-row">
+          <button class="fp" data-g="show" data-v="new" onclick="toggleFP(this)">🆕 Nouveautés</button>
+          <button class="fp" data-g="show" data-v="fav" onclick="toggleFP(this)">❤️ Mes favoris</button>
+          <button class="fp" data-g="show" data-v="unseen" onclick="toggleFP(this)">👁 Non vus</button>
+        </div>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn-raz" onclick="resetFP()">Réinitialiser</button>
+        <button class="btn-app" onclick="applyFP()"><span>Appliquer</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ OVERLAY TRI ═══ -->
+  <div class="ov" id="ov-sort" role="dialog" aria-modal="true" aria-label="Trier">
+    <div class="ov-bg" onclick="closeSort()"></div>
+    <div class="sheet" style="max-height:50vh;">
+      <div class="drag" aria-hidden="true"></div>
+      <h2 class="sheet-h">Trier par</h2>
+      <div role="listbox">
+        <div class="sort-opt cur" onclick="setSort(this,'Récent')"><span class="sort-opt-lbl">🕐 Plus récent</span>
+          <div class="sort-chk"><svg width="9" height="9" viewBox="0 0 24 24" fill="none">
+              <path d="M20 6L9 17l-5-5" stroke="white" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg></div>
+        </div>
+        <div class="sort-opt" onclick="setSort(this,'Populaire')"><span class="sort-opt-lbl">🔥 Plus populaire</span>
+          <div class="sort-chk"></div>
+        </div>
+        <div class="sort-opt" onclick="setSort(this,'Court')"><span class="sort-opt-lbl">⚡ Plus court</span>
+          <div class="sort-chk"></div>
+        </div>
+        <div class="sort-opt" onclick="setSort(this,'A–Z')"><span class="sort-opt-lbl">🔤 A → Z</span>
+          <div class="sort-chk"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ NAV BAS ═══ -->
+  <div class="nav-bar">
+    <div class="ai-r">
+      <span class="ai-lbl">Assistant IA</span>
+      <button class="ai-fab" aria-label="Assistant IA">
+        <svg width="24" height="24" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+          <circle cx="15" cy="11" r="5.5" stroke="#14233A" stroke-width="2" />
+          <circle cx="15" cy="11" r="2" fill="#14233A" />
+          <rect x="8" y="18" width="14" height="9" rx="3.5" stroke="#14233A" stroke-width="2" />
+          <circle cx="11.5" cy="22" r="1.5" fill="#14233A" />
+          <circle cx="18.5" cy="22" r="1.5" fill="#14233A" />
+        </svg>
+      </button>
+    </div>
+    <nav class="bnav" aria-label="Navigation">
+      <div class="ni" onclick="window.location.href='sawa_care_home_v41.html'"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg><span class="nl">Accueil</span></div>
+      <div class="ni"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg><span class="nl">Messages</span></div>
+      <div class="nc"><button class="nfab" aria-label="Appel"><svg width="22" height="22" viewBox="0 0 24 24"
+            aria-hidden="true">
+            <rect x="1" y="6" width="13" height="12" rx="2" fill="white" />
+            <path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white" />
+          </svg></button><span class="nfl">Appel</span></div>
+      <div class="ni"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg><span class="nl">Agenda</span></div>
+      <div class="ni act"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="3" width="20" height="14" rx="2" />
+          <line x1="8" y1="21" x2="16" y2="21" />
+          <line x1="12" y1="17" x2="12" y2="21" />
+        </svg><span class="nl" style="color:#b228FF;">Ressources</span></div>
+    </nav>
+  </div>
+
+  <script>
+    /* ── DONNÉES ── */
+    var DATA = [
+      ['Conseils', 'Comprendre le vieillissement et ses enjeux', '12 min', true, false],
+      ['Mobilité', 'Aider son proche à se lever d\'un fauteuil', '8 min', false, true],
+      ['Nutrition', 'Faire manger une personne en perte d\'autonomie', '7 min', false, false],
+      ['Bien-être', 'Prendre soin de soi en tant qu\'aidant·e', '15 min', true, true],
+      ['Mobilité', 'Coucher son proche sans se blesser', '10 min', true, false],
+      ['Nutrition', 'Enrichir un plat pour prévenir la dénutrition', '9 min', false, false],
+      ['Conseils', 'Les aides financières disponibles', '11 min', false, true],
+      ['Témoignages', 'Marie raconte son quotidien avec sa mère', '18 min', true, false],
+      ['Bien-être', 'Gérer le stress et l\'épuisement de l\'aidant·e', '14 min', false, false],
+      ['Administratif', 'Demander l\'APA — étapes et démarches', '6 min', false, false],
+      ['Mobilité', 'Utiliser les aides techniques de transfert', '12 min', true, false],
+      ['Nutrition', 'Hydratation des personnes âgées', '8 min', false, true],
+      ['Conseils', 'La communication non-violente avec son proche', '16 min', false, false],
+      ['Bien-être', 'Méditation guidée pour les aidant·e·s', '10 min', true, false],
+      ['Témoignages', 'Pierre — ce qu\'il aurait voulu savoir', '22 min', false, false],
+      ['Administratif', 'MDPH — comment constituer un dossier', '13 min', false, true],
+      ['Mobilité', 'Prévenir les chutes à domicile', '9 min', true, false],
+      ['Nutrition', 'Recette enrichie : soupe protéinée', '5 min', true, false],
+      ['Conseils', 'Gérer les troubles du comportement Alzheimer', '17 min', false, false],
+      ['Bien-être', 'Trouver du temps pour soi', '11 min', false, false],
+      ['Mobilité', 'Fauteuil roulant — utilisation en sécurité', '14 min', false, true],
+      ['Témoignages', 'L\'entrée en EHPAD de son père', '19 min', true, false],
+      ['Administratif', 'Les aides du Conseil Départemental', '8 min', false, false],
+      ['Nutrition', 'Adapter les repas aux troubles de déglutition', '12 min', true, false],
+    ];
+    var CATS = {
+      'Conseils': { cls: 'c-conseil', tag: 't-violet', ico: '💡' },
+      'Mobilité': { cls: 'c-mobilite', tag: 't-cyan', ico: '🧑‍🦽' },
+      'Nutrition': { cls: 'c-nutrition', tag: 't-orange', ico: '🥗' },
+      'Bien-être': { cls: 'c-bienetre', tag: 't-green', ico: '💆' },
+      'Administratif': { cls: 'c-admin', tag: 't-violet', ico: '📋' },
+      'Témoignages': { cls: 'c-temoignage', tag: 't-rose', ico: '💬' },
+    };
+    var PAGE = 24, TOTAL = 700, favs = new Set([1, 3, 7]);
+    var page = 1, cat = 'Tous', q = '', sort = 'Récent', advN = 0;
+
+    function pages() { return Math.ceil(TOTAL / PAGE); }
+
+    function makeCard(i) {
+      var d = DATA[i % DATA.length];
+      var C = CATS[d[0]] || CATS['Conseils'];
+      var isFav = favs.has(i), isNew = d[3], isSeen = d[4];
+      var card = document.createElement('div');
+      card.className = 'vcard';
+      card.setAttribute('role', 'listitem');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', 'Lire : ' + d[1] + ' — ' + d[2]);
+      card.style.animationDelay = (i % PAGE * 25) + 'ms';
+      card.dataset.i = i;
+      card.innerHTML =
+        '<div class="vthumb"><div class="vthumb-bg ' + C.cls + '">' +
+        '<div class="play-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3" fill="#b228FF"/></svg></div>' +
+        (isNew ? '<span class="bdg-new">Nouveau</span>' : '') +
+        '<span class="bdg-dur">' + d[2] + '</span>' +
+        (isSeen ? '<div class="prog-bar"><div class="prog-fill" style="width:100%;background:#1D9E75;"></div></div>' : '') +
+        '</div></div>' +
+        '<button class="fav-btn' + (isFav ? ' on' : '') + '" onclick="toggleFav(event,' + i + ')" aria-label="' + (isFav ? 'Retirer des favoris' : 'Ajouter aux favoris') + '" aria-pressed="' + (isFav ? 'true' : 'false') + '">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="' + (isFav ? '#b228FF' : 'none') + '" stroke="' + (isFav ? '#b228FF' : '#9b91c8') + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+        '</button>' +
+        '<button class="share-btn" onclick="openShareVideo(event,' + i + ',\'' + d[1].replace(/'/g, "\\'") + '\')" aria-label="Partager cette vidéo">' +
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>' +
+        '</button>' +
+        '<div class="vcard-body"><h3 class="vcard-title">' + d[1] + '</h3>' +
+        '<div><span class="tag ' + C.tag + '">' + C.ico + ' ' + d[0] + '</span>' + (isSeen ? '<span class="tag t-green" style="margin-left:4px;">✓ Vu</span>' : '') + '</div></div>';
+      card.addEventListener('click', function (e) { if (!e.target.closest('.fav-btn') && !e.target.closest('.share-btn')) say('Lecture : ' + d[1]); });
+      card.addEventListener('keydown', function (e) { if (e.key === 'Enter') say('Lecture : ' + d[1]); });
+      return card;
+    }
+
+    function render(skeleton) {
+      var grid = document.getElementById('grid');
+      var sk = document.getElementById('skel');
+      if (skeleton) { sk.style.display = 'grid'; grid.innerHTML = ''; document.getElementById('pag').innerHTML = ''; return; }
+      setTimeout(function () {
+        sk.style.display = 'none'; grid.innerHTML = '';
+        var start = (page - 1) * PAGE;
+        for (var i = 0; i < PAGE; i++) grid.appendChild(makeCard(start + i));
+        renderPag();
+        var show = cat !== 'Tous' || q.length > 0;
+        document.getElementById('ed-zone').style.display = show ? 'none' : '';
+        document.getElementById('meta-count').textContent = PAGE + ' vidéos · Page ' + page + '/' + pages();
+        say(PAGE + ' vidéos, page ' + page + ' sur ' + pages());
+      }, skeleton ? 700 : 0);
+    }
+
+    function renderPag() {
+      var total = pages(), p = document.getElementById('pag');
+      p.innerHTML = '';
+      function btn(lbl, pg, cur, dis) {
+        var b = document.createElement('button');
+        b.className = 'pag-btn' + (cur ? ' cur' : '') + (dis ? ' off' : '');
+        b.innerHTML = lbl;
+        b.setAttribute('aria-label', typeof pg === 'number' ? 'Page ' + pg : lbl);
+        if (cur) b.setAttribute('aria-current', 'page');
+        if (!dis) b.onclick = function () { goPage(pg); };
+        p.appendChild(b);
+      }
+      function dots() { var s = document.createElement('span'); s.className = 'pag-dots'; s.textContent = '…'; p.appendChild(s); }
+      btn('‹', page - 1, false, page === 1);
+      if (total <= 7) { for (var i = 1; i <= total; i++)btn(i, i, i === page, false); }
+      else {
+        btn(1, 1, page === 1, false);
+        if (page > 3) dots();
+        for (var j = Math.max(2, page - 1); j <= Math.min(total - 1, page + 1); j++)btn(j, j, j === page, false);
+        if (page < total - 2) dots();
+        btn(total, total, page === total, false);
+      }
+      btn('›', page + 1, false, page === total);
+    }
+
+    function goPage(p) {
+      if (p < 1 || p > pages()) return;
+      page = p; render(true);
+      document.getElementById('scroll-body').scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(function () { render(false); }, 700);
+    }
+
+    function onSearch() {
+      q = document.getElementById('q').value.trim();
+      document.getElementById('qclear').classList.toggle('show', q.length > 0);
+      page = 1; render(false);
+    }
+    function clearQ() {
+      document.getElementById('q').value = ''; q = '';
+      document.getElementById('qclear').classList.remove('show');
+      render(false); document.getElementById('q').focus();
+    }
+    function setCat(btn, c) {
+      cat = c; page = 1;
+      document.querySelectorAll('.chips-scroll .chip').forEach(function (ch) {
+        var match = ch.textContent.trim().replace(/[^\w\s]/gu, '').trim() === c.replace(/[^\w\s]/gu, '').trim() || c === 'Tous' && ch.textContent.trim() === 'Tous';
+        ch.classList.toggle('active', match);
+        ch.setAttribute('aria-pressed', match ? 'true' : 'false');
+      });
+      render(false);
+    }
+    function toggleFav(e, i) {
+      e.stopPropagation();
+      var btn = e.currentTarget;
+      if (favs.has(i)) favs.delete(i); else favs.add(i);
+      var on = favs.has(i);
+      btn.classList.toggle('on', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      var svg = btn.querySelector('svg');
+      if (svg) { svg.setAttribute('fill', on ? '#b228FF' : 'none'); svg.setAttribute('stroke', on ? '#b228FF' : '#9b91c8'); }
+      btn.style.animation = 'pop 280ms ease-out';
+      setTimeout(function () { btn.style.animation = ''; }, 280);
+      document.getElementById('fav-count').textContent = favs.size;
+      say(on ? 'Ajouté aux favoris' : 'Retiré des favoris');
+    }
+    var currentShareTitle = '';
+    function openShareVideo(e, i, title) {
+      e.stopPropagation();
+      currentShareTitle = title;
+      document.getElementById('sv-video-title').textContent = title;
+      document.getElementById('ov-share-video').classList.add('open');
+      say('Partager la video ' + title);
+    }
+    function closeShareVideo() {
+      document.getElementById('ov-share-video').classList.remove('open');
+    }
+    function sendVideoTo(name) {
+      closeShareVideo();
+      say('Vidéo partagée avec ' + name);
+    }
+
+    function openFilters() { document.getElementById('ov-filters').classList.add('open'); }
+    function closeFilters() { document.getElementById('ov-filters').classList.remove('open'); }
+    function toggleFP(btn) { btn.classList.toggle('on'); btn.setAttribute('aria-pressed', btn.classList.contains('on') ? 'true' : 'false'); }
+    function resetFP() { document.querySelectorAll('.fp').forEach(function (b) { b.classList.remove('on'); b.setAttribute('aria-pressed', 'false'); }); advN = 0; updAdvBadge(); }
+    function applyFP() { advN = document.querySelectorAll('.fp.on').length; updAdvBadge(); closeFilters(); page = 1; render(false); }
+    function updAdvBadge() {
+      var badge = document.getElementById('adv-badge');
+      var btn = document.getElementById('btn-adv');
+      badge.textContent = advN;
+      badge.classList.toggle('show', advN > 0);
+      btn.classList.toggle('on', advN > 0);
+    }
+    function openSort() { document.getElementById('ov-sort').classList.add('open'); }
+    function closeSort() { document.getElementById('ov-sort').classList.remove('open'); }
+    function setSort(el, lbl) {
+      sort = lbl;
+      document.querySelectorAll('.sort-opt').forEach(function (o) {
+        o.classList.remove('cur'); o.setAttribute('aria-selected', 'false');
+        o.querySelector('.sort-chk').innerHTML = '';
+      });
+      el.classList.add('cur'); el.setAttribute('aria-selected', 'true');
+      el.querySelector('.sort-chk').innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      document.getElementById('sort-lbl').textContent = lbl;
+      closeSort(); page = 1; render(false);
+    }
+    function resetAll() { clearQ(); setCat(document.querySelector('.chip'), 'Tous'); resetFP(); }
+    function say(msg) { var z = document.getElementById('announce'); z.textContent = ''; setTimeout(function () { z.textContent = msg; }, 50); }
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeFilters(); closeSort(); closeShareVideo(); } });
+
+    /* Init */
+    render(true);
+    setTimeout(function () { render(false); }, 700);
+  </script>
+  <!-- ═══ OVERLAY PARTAGER VIDÉO ═══ -->
+  <div class="ov" id="ov-share-video" role="dialog" aria-modal="true" aria-labelledby="sv-title">
+    <div class="ov-bg" onclick="closeShareVideo()"></div>
+    <div class="sheet"
+      style="padding:0 20px calc(env(safe-area-inset-bottom,0px)+24px);max-height:80vh;overflow-y:auto;">
+      <div class="drag" aria-hidden="true"></div>
+      <button class="sheet-x" onclick="closeShareVideo()" aria-label="Fermer">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <h2 class="sheet-h" id="sv-title">Partager</h2>
+
+      <!-- Titre de la vidéo -->
+      <div
+        style="background:#f5f3ff;border-radius:12px;padding:10px 13px;margin-bottom:18px;display:flex;align-items:center;gap:10px;">
+        <div
+          style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#b228FF,#8a2be2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <polygon points="5 3 19 12 5 21 5 3" fill="white" />
+          </svg>
+        </div>
+        <p id="sv-video-title" style="font-size:12.5px;font-weight:800;color:#2d1060;line-height:1.3;"></p>
+      </div>
+
+      <p
+        style="font-size:10px;font-weight:800;color:#4e4280;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:10px;">
+        Envoyer à</p>
+
+      <!-- Care Manager -->
+      <div
+        style="margin-bottom:6px;font-size:10px;font-weight:800;color:#8a7ab0;text-transform:uppercase;letter-spacing:0.07em;padding:6px 0 4px;">
+        Care Manager</div>
+      <div class="sv-contact" tabindex="0" role="button" onclick="sendVideoTo('Basma Frangieh')"
+        onkeydown="if(event.key==='Enter')sendVideoTo('Basma Frangieh')" aria-label="Partager avec Basma Frangieh">
+        <div class="sv-av" style="background:linear-gradient(135deg,#27b6cc,#1e8fa0);">BF</div>
+        <div class="sv-info">
+          <div class="sv-name">Basma Frangieh</div>
+          <div class="sv-role">Care Manager · En ligne</div>
+        </div>
+        <div class="sv-send-btn" aria-hidden="true">Envoyer</div>
+      </div>
+
+      <!-- Co-aidants -->
+      <div
+        style="margin-bottom:6px;font-size:10px;font-weight:800;color:#8a7ab0;text-transform:uppercase;letter-spacing:0.07em;padding:10px 0 4px;">
+        Co-aidants</div>
+      <div class="sv-contact" tabindex="0" role="button" onclick="sendVideoTo('Rabhot Frahot')"
+        onkeydown="if(event.key==='Enter')sendVideoTo('Rabhot Frahot')" aria-label="Partager avec Rabhot Frahot">
+        <div class="sv-av" style="background:linear-gradient(135deg,#8a2be2,#b228FF);">RF</div>
+        <div class="sv-info">
+          <div class="sv-name">Rabhot Frahot</div>
+          <div class="sv-role">Co-aidant · Martin</div>
+        </div>
+        <div class="sv-send-btn" aria-hidden="true">Envoyer</div>
+      </div>
+      <div class="sv-contact" tabindex="0" role="button" onclick="sendVideoTo('Charbel Frangieh')"
+        onkeydown="if(event.key==='Enter')sendVideoTo('Charbel Frangieh')" aria-label="Partager avec Charbel Frangieh">
+        <div class="sv-av" style="background:linear-gradient(135deg,#27b6cc,#b228FF);">CF</div>
+        <div class="sv-info">
+          <div class="sv-name">Charbel Frangieh</div>
+          <div class="sv-role">Co-aidant · Martin</div>
+        </div>
+        <div class="sv-send-btn" aria-hidden="true">Envoyer</div>
+      </div>
+      <div class="sv-contact" tabindex="0" role="button" onclick="sendVideoTo('Antoinette Nakad')"
+        onkeydown="if(event.key==='Enter')sendVideoTo('Antoinette Nakad')" aria-label="Partager avec Antoinette Nakad">
+        <div class="sv-av" style="background:linear-gradient(135deg,#1e3a6e,#27b6cc);">AN</div>
+        <div class="sv-info">
+          <div class="sv-name">Antoinette Nakad</div>
+          <div class="sv-role">Co-aidante · Madeleine</div>
+        </div>
+        <div class="sv-send-btn" aria-hidden="true">Envoyer</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

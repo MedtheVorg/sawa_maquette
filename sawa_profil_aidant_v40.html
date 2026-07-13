@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sawa Care — Mon profil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{height:100%;-webkit-text-size-adjust:100%;}
+body{height:100%;font-family:'Nunito',sans-serif;background:#ddd5f8;display:flex;flex-direction:column;overflow:hidden;max-width:430px;margin:0 auto;}
+
+/* ── HEADER ── */
+.hdr{
+  background:linear-gradient(145deg,#b228FF 0%,#8a2be2 45%,#1e3a6e 80%,#0f5060 100%);
+  padding:calc(env(safe-area-inset-top,44px)+10px) 18px 28px;
+  flex-shrink:0;position:relative;overflow:hidden;
+}
+.hb1{position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.07);top:-55px;right:-40px;pointer-events:none;}
+.hb2{position:absolute;width:90px;height:90px;border-radius:50%;background:rgba(133,255,239,0.1);bottom:-25px;left:10px;pointer-events:none;}
+
+/* Barre top */
+.hdr-bar{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;margin-bottom:20px;}
+.icon-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.icon-btn:focus-visible{outline:2px solid #fff;}
+.hdr-title-top{font-size:17px;font-weight:900;color:#fff;}
+
+/* Zone profil centrée */
+.hdr-profile{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:2;}
+.avatar-wrap{position:relative;width:80px;height:80px;}
+.avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#c44dff,#27b6cc);border:3px solid rgba(255,255,255,0.9);overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(0,0,0,0.3);}
+.avatar-edit{position:absolute;bottom:0;right:0;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#8a2be2);border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
+
+.profile-name{font-size:22px;font-weight:900;color:#fff;text-align:center;line-height:1.2;}
+.profile-role{font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);text-align:center;}
+
+/* Badge abonnement */
+.plan-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#fcffad,#f5d800);border-radius:20px;padding:5px 14px;cursor:pointer;}
+.plan-badge span{font-size:11px;font-weight:900;color:#3d2e00;letter-spacing:0.05em;}
+
+/* Stats rapides */
+.hdr-stats{display:flex;align-items:center;justify-content:center;gap:0;margin-top:14px;background:rgba(255,255,255,0.12);border-radius:16px;overflow:hidden;position:relative;z-index:2;}
+.hstat{flex:1;display:flex;flex-direction:column;align-items:center;padding:12px 8px;cursor:pointer;transition:background 150ms;}
+.hstat:hover{background:rgba(255,255,255,0.08);}
+.hstat-val{font-size:28px;font-weight:900;color:#fff;line-height:1;}
+.hstat-lbl{font-size:11px;font-weight:700;color:rgba(255,255,255,0.78);margin-top:6px;text-align:center;line-height:1.4;}
+.hstat-sep{width:1px;background:rgba(255,255,255,0.2);align-self:stretch;}
+
+/* Care Manager chip dans le header */
+.cm-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.25);
+  border-radius:30px;padding:7px 14px 7px 7px;
+  margin-top:10px;cursor:pointer;position:relative;z-index:2;
+  transition:background 150ms;
+}
+.cm-chip:hover{background:rgba(255,255,255,0.2);}
+.cm-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#27b6cc,#b228FF);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0;}
+.cm-text{display:flex;flex-direction:column;}
+.cm-sub{font-size:9px;font-weight:700;color:rgba(255,255,255,0.65);}
+.cm-name{font-size:12px;font-weight:800;color:#fff;line-height:1.1;}
+.cm-arrow{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;margin-left:4px;}
+
+/* ── SCROLL BODY ── */
+.scroll-body{flex:1;overflow-y:auto;background:#ddd5f8;border-radius:22px 22px 0 0;margin-top:-4px;padding:18px 16px calc(env(safe-area-inset-bottom,0px)+90px);scrollbar-width:none;}
+.scroll-body::-webkit-scrollbar{display:none;}
+
+/* ── SECTION CARD ── */
+.sec{background:#fff;border-radius:18px;border:1.5px solid #e8e0ff;box-shadow:0 2px 12px rgba(178,40,255,0.06);margin-bottom:12px;overflow:hidden;animation:fadeUp 250ms ease-out both;}
+
+/* En-tête section */
+.sec-hdr{display:flex;align-items:center;gap:11px;padding:14px 16px;border-bottom:0.5px solid #ede9f5;cursor:pointer;}
+.sec-hdr:focus-visible{outline:2px solid #b228FF;border-radius:16px 16px 0 0;}
+.sec-ico{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#b228FF,#8a2be2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sec-info{flex:1;min-width:0;}
+.sec-right{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.chev-btn{background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;display:flex;align-items:center;flex-shrink:0;transition:background 130ms;}
+.chev-btn:hover{background:rgba(178,40,255,0.08);}
+.chev-btn:focus-visible{outline:2px solid #b228FF;border-radius:8px;}
+.sec-chevron{transition:transform 250ms;flex-shrink:0;}
+.sec-hdr[aria-expanded="false"] .sec-chevron{transform:rotate(-90deg);}
+.sec-hdr[aria-expanded="true"] .sec-chevron{transform:rotate(0deg);}
+.sec-title{font-size:14px;font-weight:900;color:#2d1060;line-height:1.2;}
+.sec-sub{font-size:11px;font-weight:600;color:#6b5b9e;margin-top:1px;}
+.sec-edit{width:32px;height:32px;border-radius:10px;background:#f5f3ff;border:1px solid #e8e0ff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.sec-edit:focus-visible{outline:2px solid #b228FF;}
+
+/* Corps section */
+.sec-body{padding:16px;}
+
+/* Grille champs 2 colonnes */
+.fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.field{display:flex;flex-direction:column;gap:3px;}
+.field.full{grid-column:1/-1;}
+.field-lbl{font-size:11px;font-weight:700;color:#6b5b9e;line-height:1;}
+.field-val{font-size:14px;font-weight:800;color:#2d1060;line-height:1.3;}
+.field-val.empty{color:#bbb4d8;font-weight:600;font-style:italic;}
+.field-val.clickable{color:#b228FF;cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+.field-sep{height:0.5px;background:#ede9f5;margin:12px 0;grid-column:1/-1;}
+
+/* Tags pills dans une section */
+.field-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.fpill{font-size:11px;font-weight:700;color:#8210cc;background:#f0e8ff;border-radius:8px;padding:3px 9px;}
+.fpill.cyan{color:#1e8fa0;background:#e0f5ff;}
+.fpill.green{color:#1D9E75;background:#e8f5ee;}
+
+/* Bandeau complétude section */
+.sec-progress{display:flex;align-items:center;gap:8px;padding:8px 16px;background:#fafafa;border-top:0.5px solid #ede9f5;}
+.sec-prog-bar{flex:1;height:5px;background:#ede9fe;border-radius:5px;overflow:hidden;}
+.sec-prog-fill{height:100%;border-radius:5px;transition:width 500ms ease;transition:width 400ms ease;}
+.sec-prog-fill.fill-full{background:linear-gradient(90deg,#0097cc,#0077a8);}
+.sec-prog-fill.fill-partial{background:linear-gradient(90deg,#f5d800,#d4a800);}
+.sec-prog-fill.fill-empty{background:#fca5a5;}
+.sec-prog-lbl{font-size:10px;font-weight:700;color:#6b5b9e;flex-shrink:0;}
+.sec-prog-lbl.lbl-full{color:#0077a8;}
+.sec-prog-lbl.lbl-partial{color:#9A6500;}
+.sec-prog-lbl.lbl-empty{color:#B91C1C;}
+
+/* ── CARE MANAGER SECTION ── */
+.cm-section{background:linear-gradient(135deg,#f5eeff,#eef5ff);border-color:#c9b6f5;}
+.cm-card-inner{display:flex;align-items:center;gap:14px;}
+.cm-avatar-lg{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#27b6cc,#b228FF);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 3px 12px rgba(178,40,255,0.3);}
+.cm-details{flex:1;}
+.cm-details h4{font-size:16px;font-weight:900;color:#2d1060;margin-bottom:4px;}
+.cm-details p{font-size:12px;font-weight:600;color:#5e5290;line-height:1.5;}
+.cm-contact-row{display:flex;gap:8px;margin-top:10px;}
+.cm-contact-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border-radius:12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;border:none;transition:opacity 150ms;}
+.cm-contact-btn:hover{opacity:0.85;}
+.cm-contact-btn:focus-visible{outline:2px solid #b228FF;}
+.btn-msg{background:linear-gradient(135deg,#b228FF,#8a2be2);color:#fff;}
+.btn-call{background:#f0e8ff;color:#8210cc;border:1.5px solid #b228FF!important;}
+
+/* Badge urgence */
+.urgence-badge{display:inline-flex;align-items:center;gap:5px;background:#FFF3CD;border:1px solid #FFC107;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;color:#7d5200;margin-top:8px;}
+
+/* Notification profil incomplet */
+.profile-alert{display:flex;align-items:flex-start;gap:10px;background:#FFF8E1;border:1.5px solid #FFD54F;border-radius:14px;padding:12px 14px;margin-bottom:14px;animation:fadeUp 200ms ease-out;}
+.profile-alert-ico{font-size:20px;flex-shrink:0;}
+.profile-alert-txt{flex:1;}
+.profile-alert-txt strong{font-size:13px;font-weight:800;color:#5d3a00;display:block;margin-bottom:2px;}
+.profile-alert-txt p{font-size:12px;font-weight:600;color:#7d5200;line-height:1.5;}
+.profile-alert-cta{font-size:11px;font-weight:800;color:#b228FF;cursor:pointer;margin-top:4px;display:inline-block;}
+
+/* ── NAV BAS ── */
+.nav-bar{flex-shrink:0;background:#fff;border-top:1.5px solid #cdc5f0;padding-bottom:env(safe-area-inset-bottom,0px);}
+.ai-r{display:flex;align-items:center;justify-content:flex-end;padding:7px 18px 4px;gap:8px;}
+.ai-lbl{font-size:10px;font-weight:700;color:#14233A;background:#fcffad;border-radius:7px;padding:4px 9px;}
+.ai-fab{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#7b2fff 45%,#27b6cc);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(178,40,255,0.4);overflow:hidden;position:relative;}
+.ai-fab::before{content:'';position:absolute;top:4px;left:8px;width:30px;height:12px;background:rgba(255,255,255,0.18);border-radius:50%;transform:rotate(-8deg);}
+.bnav{display:flex;align-items:center;padding:3px 0 7px;}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;min-height:44px;justify-content:center;}
+.nl{font-size:10px;font-weight:700;color:#9080c0;}
+.ni.act .nl{color:#b228FF;}
+.nc{flex:0 0 66px;display:flex;flex-direction:column;align-items:center;}
+.nfab{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#27b6cc);display:flex;align-items:center;justify-content:center;margin-top:-22px;border:3px solid #fff;box-shadow:0 4px 12px rgba(178,40,255,0.3);cursor:pointer;}
+.nfl{font-size:10px;font-weight:700;color:#b228FF;margin-top:1px;}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="sr" aria-live="polite" id="announce"></div>
+
+<!-- ═══════════════════════
+     HEADER PROFIL
+═══════════════════════ -->
+<div class="hdr" role="banner">
+  <div class="hb1"></div><div class="hb2"></div>
+
+  <!-- Barre top : retour + titre + éditer -->
+  <div class="hdr-bar">
+    <button class="icon-btn" onclick="history.back()" aria-label="Retour">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="hdr-title-top">Mon profil</span>
+    <button class="icon-btn" onclick="alert('Édition du profil — à connecter')" aria-label="Modifier le profil">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </button>
+  </div>
+
+  <!-- Profil centré -->
+  <div class="hdr-profile">
+    <!-- Avatar -->
+    <div class="avatar-wrap">
+      <div class="avatar" role="img" aria-label="Photo de profil d'Antoinette Thomas">
+        <svg width="38" height="38" viewBox="0 0 56 56" aria-hidden="true">
+          <defs><linearGradient id="avG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c44dff"/><stop offset="100%" stop-color="#27b6cc"/></linearGradient></defs>
+          <rect width="56" height="56" fill="url(#avG)"/>
+          <ellipse cx="28" cy="50" rx="19" ry="12" fill="rgba(255,255,255,0.22)"/>
+          <circle cx="28" cy="22" r="12" fill="rgba(255,255,255,0.92)"/>
+          <circle cx="23" cy="22" r="1.8" fill="#2d1060"/><circle cx="33" cy="22" r="1.8" fill="#2d1060"/>
+          <path d="M24 27 Q28 30 32 27" stroke="#2d1060" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="avatar-edit" role="button" tabindex="0" aria-label="Changer la photo de profil">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      </div>
+    </div>
+
+    <!-- Nom + rôle -->
+    <div style="text-align:center;">
+      <h1 class="profile-name">Antoinette Thomas</h1>
+      <p class="profile-role">Proche aidante · Membre depuis jan. 2024</p>
+    </div>
+
+    <!-- Badge abonnement -->
+    <button class="plan-badge" aria-label="Abonnement Premium — Licence entreprise">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="#3d2e00" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>PREMIUM · Licence entreprise</span>
+    </button>
+
+    <!-- Stats rapides -->
+    <div class="hdr-stats" role="group" aria-label="Statistiques du profil">
+      <div class="hstat" tabindex="0" aria-label="2 proches aidés" style="flex:1;">
+        <div class="hstat-val">2</div>
+        <div class="hstat-lbl">Proches<br>aidés</div>
+      </div>
+
+      <div class="hstat-sep" aria-hidden="true"></div>
+      <div class="hstat" tabindex="0" aria-label="Profil complété à 72%" style="flex:1;">
+        <div class="hstat-val">72<span style="font-size:12px;">%</span></div>
+        <div class="hstat-lbl">Profil<br>complété</div>
+      </div>
+    </div>
+
+    <!-- Care Manager chip -->
+    <div class="cm-chip" role="button" tabindex="0" aria-label="Care Manager : Basma Frangieh — appuyer pour contacter" onclick="document.getElementById('sec-cm').scrollIntoView({behavior:'smooth'})">
+      <div class="cm-av" aria-hidden="true">BF</div>
+      <div class="cm-text">
+        <span class="cm-sub">Care Manager</span>
+        <span class="cm-name">Basma Frangieh</span>
+      </div>
+      <div class="cm-arrow" aria-hidden="true">
+        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════
+     SCROLL CORPS
+═══════════════════════ -->
+<main class="scroll-body" id="scroll-body" style="padding-top:20px;">
+
+  <!-- Alerte profil incomplet -->
+  <div class="profile-alert" role="alert" aria-label="Profil incomplet">
+    <span class="profile-alert-ico" aria-hidden="true">💡</span>
+    <div class="profile-alert-txt">
+      <strong>Votre profil est complété à 72%</strong>
+      <p>Complétez vos informations professionnelles et d'aidant pour que votre Care Manager vous accompagne mieux.</p>
+      <span class="profile-alert-cta" role="button" tabindex="0" onclick="document.getElementById('sec-pro').scrollIntoView({behavior:'smooth'})">Compléter maintenant →</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════
+       1. INFORMATIONS PERSONNELLES
+  ══════════════════════ -->
+  <div class="sec" id="sec-perso" style="animation-delay:50ms;">
+    <div class="sec-hdr" role="button" tabindex="0" aria-expanded="true" onclick="toggleSec('body-perso',this)" onkeydown="if(event.key==='Enter')toggleSec('body-perso',this)">
+      <div class="sec-ico" aria-hidden="true">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title">Informations personnelles</div>
+      </div>
+      <div class="sec-right"><button class="sec-edit" onclick="event.stopPropagation();editSec('perso')" aria-label="Modifier les informations personnelles">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button><button class="chev-btn" onclick="event.stopPropagation();toggleSec('body-perso',this.closest('.sec-hdr'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.stopPropagation();toggleSec('body-perso',this.closest('.sec-hdr'));}" aria-label="Développer ou réduire Informations personnelles"><svg class="sec-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button></div>
+    </div>
+    <div class="sec-body" id="body-perso">
+      <div class="fields-grid">
+        <div class="field">
+          <span class="field-lbl">Civilité</span>
+          <span class="field-val">Mme</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Nom de naissance</span>
+          <span class="field-val">Thomas</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Prénom</span>
+          <span class="field-val">Antoinette</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Date de naissance</span>
+          <span class="field-val">07 janvier 1985</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Téléphone</span>
+          <span class="field-val clickable" role="link" tabindex="0" aria-label="Appeler le 07 60 87 35 11">07 60 87 35 11</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Nationalité</span>
+          <span class="field-val">Française</span>
+        </div>
+        <div class="field-sep"></div>
+        <div class="field full">
+          <span class="field-lbl">Adresse e-mail</span>
+          <span class="field-val clickable" role="link" tabindex="0" aria-label="Envoyer un email à antoinette.thomas@email.fr">antoinette.thomas@email.fr</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Situation familiale</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Nombre d'enfants</span>
+          <span class="field-val">0</span>
+        </div>
+      </div>
+    </div>
+    <div class="sec-progress" aria-label="Section complète à 100%">
+      <div class="sec-prog-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Section complète"><div class="sec-prog-fill fill-full" style="width:100%;"></div></div>
+      <span class="sec-prog-lbl lbl-full">&#10003;&nbsp;Complète</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════
+       2. ADRESSE
+  ══════════════════════ -->
+  <div class="sec" id="sec-adr" style="animation-delay:100ms;">
+    <div class="sec-hdr" role="button" tabindex="0" aria-expanded="true" onclick="toggleSec('body-adr',this)" onkeydown="if(event.key==='Enter')toggleSec('body-adr',this)">
+      <div class="sec-ico" aria-hidden="true">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title">Adresse</div>
+      </div>
+      <div class="sec-right"><button class="sec-edit" onclick="event.stopPropagation();editSec('adr')" aria-label="Modifier l'adresse">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button><button class="chev-btn" onclick="event.stopPropagation();toggleSec('body-adr',this.closest('.sec-hdr'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.stopPropagation();toggleSec('body-adr',this.closest('.sec-hdr'));}" aria-label="Développer ou réduire Adresse"><svg class="sec-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button></div>
+    </div>
+    <div class="sec-body" id="body-adr">
+      <div class="fields-grid">
+        <div class="field full">
+          <span class="field-lbl">Rue</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Code postal</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Ville</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Département</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Pays</span>
+          <span class="field-val">France</span>
+        </div>
+      </div>
+    </div>
+    <div class="sec-progress" aria-label="Section complétée à 20%">
+      <div class="sec-prog-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" aria-label="20% — Partielle"><div class="sec-prog-fill fill-partial" style="width:20%;"></div></div>
+      <span class="sec-prog-lbl lbl-partial">20% — Partielle</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════
+       3. INFORMATIONS PROFESSIONNELLES
+  ══════════════════════ -->
+  <div class="sec" id="sec-pro" style="animation-delay:150ms;">
+    <div class="sec-hdr" role="button" tabindex="0" aria-expanded="false" onclick="toggleSec('body-pro',this)" onkeydown="if(event.key==='Enter')toggleSec('body-pro',this)">
+      <div class="sec-ico" aria-hidden="true">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title">Informations professionnelles</div>
+      </div>
+      <div class="sec-right"><button class="sec-edit" onclick="event.stopPropagation();editSec('pro')" aria-label="Modifier les informations professionnelles">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button><button class="chev-btn" onclick="event.stopPropagation();toggleSec('body-pro',this.closest('.sec-hdr'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.stopPropagation();toggleSec('body-pro',this.closest('.sec-hdr'));}" aria-label="Développer ou réduire Informations professionnelles"><svg class="sec-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button></div>
+    </div>
+    <div class="sec-body" id="body-pro" style="display:none;">
+      <div class="fields-grid">
+        <div class="field full">
+          <span class="field-lbl">Situation professionnelle</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field full">
+          <span class="field-lbl">Profession / Intitulé du poste</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field full">
+          <span class="field-lbl">Employeur / Entreprise</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Type de contrat</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Temps de travail</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Aménagement du poste</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Congé aidant</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+      </div>
+    </div>
+    <div class="sec-progress" aria-label="Section complétée à 0%">
+      <div class="sec-prog-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="À compléter"><div class="sec-prog-fill fill-empty" style="width:0%;"></div></div>
+      <span class="sec-prog-lbl lbl-empty">À compléter</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════
+       4. INFORMATIONS D'AIDANT
+  ══════════════════════ -->
+  <div class="sec" id="sec-aidant" style="animation-delay:200ms;">
+    <div class="sec-hdr" role="button" tabindex="0" aria-expanded="false" onclick="toggleSec('body-aidant',this)" onkeydown="if(event.key==='Enter')toggleSec('body-aidant',this)">
+      <div class="sec-ico" aria-hidden="true">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title">Informations d'aidant</div>
+      </div>
+      <div class="sec-right"><button class="sec-edit" onclick="event.stopPropagation();editSec('aidant')" aria-label="Modifier les informations d'aidant">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button><button class="chev-btn" onclick="event.stopPropagation();toggleSec('body-aidant',this.closest('.sec-hdr'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.stopPropagation();toggleSec('body-aidant',this.closest('.sec-hdr'));}" aria-label="Développer ou réduire Informations aidant"><svg class="sec-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button></div>
+    </div>
+    <div class="sec-body" id="body-aidant" style="display:none;">
+      <div class="fields-grid">
+        <div class="field">
+          <span class="field-lbl">Statut d'aidant</span>
+          <span class="field-val">Aidant principal</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Aidant depuis</span>
+          <span class="field-val">Janvier 2023</span>
+        </div>
+        <div class="field full">
+          <span class="field-lbl">Nombre de proches aidés</span>
+          <span class="field-val">2</span>
+        </div>
+        <div class="field-sep"></div>
+        <div class="field full">
+          <span class="field-lbl">Types d'accompagnement</span>
+          <div class="field-pills">
+            <span class="fpill">Aide à la mobilité</span>
+            <span class="fpill">Gestion médicale</span>
+            <span class="fpill">Présence psychologique</span>
+            <span class="fpill cyan">Démarches administratives</span>
+          </div>
+        </div>
+        <div class="field-sep"></div>
+        <div class="field">
+          <span class="field-lbl">Heures d'aidance / semaine</span>
+          <span class="field-val">~25 h</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Aidant reconnu MDPH</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Bénéficiaire PCH / APA</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Accompagnement professionnel</span>
+          <span class="field-val">Oui — psychologue</span>
+        </div>
+        <div class="field-sep"></div>
+        <div class="field full">
+          <span class="field-lbl">Besoins prioritaires exprimés</span>
+          <div class="field-pills">
+            <span class="fpill green">Répit</span>
+            <span class="fpill green">Information juridique</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sec-progress" aria-label="Section complétée à 65%">
+      <div class="sec-prog-bar" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" aria-label="65% — Partielle"><div class="sec-prog-fill fill-partial" style="width:65%;"></div></div>
+      <span class="sec-prog-lbl lbl-partial">65% — Partielle</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════
+       5. RENSEIGNEMENTS SUPPLÉMENTAIRES
+  ══════════════════════ -->
+  <div class="sec" id="sec-sup" style="animation-delay:250ms;">
+    <div class="sec-hdr" role="button" tabindex="0" aria-expanded="false" onclick="toggleSec('body-sup',this)" onkeydown="if(event.key==='Enter')toggleSec('body-sup',this)">
+      <div class="sec-ico" aria-hidden="true">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title">Renseignements supplémentaires</div>
+      </div>
+      <div class="sec-right"><button class="sec-edit" onclick="event.stopPropagation();editSec('sup')" aria-label="Modifier les renseignements supplémentaires">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button><button class="chev-btn" onclick="event.stopPropagation();toggleSec('body-sup',this.closest('.sec-hdr'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.stopPropagation();toggleSec('body-sup',this.closest('.sec-hdr'));}" aria-label="Développer ou réduire Renseignements supplementaires"><svg class="sec-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button></div>
+    </div>
+    <div class="sec-body" id="body-sup" style="display:none;">
+      <div class="fields-grid">
+        <div class="field full">
+          <span class="field-lbl">Contact d'urgence</span>
+          <span class="field-val empty">Non renseigné</span>
+        </div>
+        <div class="field full">
+          <span class="field-lbl">Langue(s) parlée(s)</span>
+          <div class="field-pills">
+            <span class="fpill">Français</span>
+          </div>
+        </div>
+        <div class="field-sep"></div>
+        <div class="field full">
+          <span class="field-lbl">Notes libres</span>
+          <span class="field-val empty">Aucune note renseignée</span>
+        </div>
+        <div class="field full">
+          <span class="field-lbl">Préférences de communication</span>
+          <div class="field-pills">
+            <span class="fpill cyan">Email</span>
+            <span class="fpill cyan">Messagerie in-app</span>
+          </div>
+        </div>
+        <div class="field-sep"></div>
+        <div class="field">
+          <span class="field-lbl">Consentement données</span>
+          <span class="field-val" style="color:#1D9E75;">✓ Accepté</span>
+        </div>
+        <div class="field">
+          <span class="field-lbl">Date d'acceptation</span>
+          <span class="field-val">12 jan. 2024</span>
+        </div>
+      </div>
+    </div>
+    <div class="sec-progress" aria-label="Section complétée à 50%">
+      <div class="sec-prog-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="50% — Partielle"><div class="sec-prog-fill fill-partial" style="width:50%;"></div></div>
+      <span class="sec-prog-lbl lbl-partial">50% — Partielle</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════
+       6. CARE MANAGER
+  ══════════════════════ -->
+  <div class="sec cm-section" id="sec-cm" style="animation-delay:300ms;">
+    <div class="sec-hdr" style="cursor:default;">
+      <div class="sec-ico" style="background:linear-gradient(135deg,#27b6cc,#1e8fa0);" aria-hidden="true">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="sec-info">
+        <div class="sec-title" style="color:#1e8fa0;">Mon Care Manager</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="cm-card-inner">
+        <div class="cm-avatar-lg" role="img" aria-label="Photo de Basma Frangieh">BF</div>
+        <div class="cm-details">
+          <h4>Basma Frangieh</h4>
+          <p>Disponible lun–ven · 9h–18h</p>
+
+        </div>
+      </div>
+      <div class="cm-contact-row">
+        <button class="cm-contact-btn btn-msg" aria-label="Envoyer un message à Basma Frangieh">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Message
+        </button>
+        <button class="cm-contact-btn btn-call" aria-label="Prendre un rendez-vous avec Basma Frangieh">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Prendre un RDV
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════
+       ACTIONS DE COMPTE
+  ══════════════════════ -->
+  <div style="margin-top:8px;margin-bottom:8px;" role="group" aria-label="Actions du compte">
+
+    <!-- Séparateur -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <div style="flex:1;height:0.5px;background:#cdc5f0;"></div>
+      <span style="font-size:10px;font-weight:800;color:#6b5b9e;text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap;">Gestion du compte</span>
+      <div style="flex:1;height:0.5px;background:#cdc5f0;"></div>
+    </div>
+
+    <!-- Déconnexion -->
+    <button onclick="deconnexion()"
+      style="width:100%;background:#fff;border:1.5px solid #e8e0ff;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:10px;transition:border-color 150ms;"
+      aria-label="Se déconnecter de l'application">
+      <div style="width:36px;height:36px;border-radius:10px;background:#f5f3ff;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </div>
+      <span style="flex:1;text-align:left;font-size:14px;font-weight:800;color:#2d1060;">Se déconnecter</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#cdc5f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+
+    <!-- Suppression compte -->
+    <button onclick="supprimerCompte()"
+      style="width:100%;background:#fff;border:1.5px solid #e0dde8;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;font-family:'Nunito',sans-serif;transition:border-color 150ms;"
+      aria-label="Supprimer définitivement mon compte — action irréversible">
+      <div style="width:36px;height:36px;border-radius:10px;background:#f0eef5;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+      </div>
+      <div style="flex:1;text-align:left;">
+        <div style="font-size:14px;font-weight:800;color:#6b5b9e;">Supprimer mon compte</div>
+        <div style="font-size:11px;font-weight:600;color:#6b5b9e;margin-top:1px;">Action irréversible · Toutes vos données seront supprimées</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffd5d5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+
+    <!-- Mention légale discrète -->
+    <p style="font-size:10px;font-weight:600;color:#6b5b9e;text-align:center;margin-top:14px;line-height:1.5;">
+      Sawa Care v2.4.1 · <span style="cursor:pointer;color:#b228FF;">CGU</span> · <span style="cursor:pointer;color:#b228FF;">Politique de confidentialité</span>
+    </p>
+  </div>
+
+</main><!-- /scroll-body -->
+
+<!-- ═══ NAV BAS ═══ -->
+<div class="nav-bar">
+  <div class="ai-r">
+    <span class="ai-lbl" aria-hidden="true">Assistant IA</span>
+    <button class="ai-fab" aria-label="Assistant IA">
+      <svg width="24" height="24" viewBox="0 0 30 30" fill="none" aria-hidden="true"><circle cx="15" cy="11" r="5.5" stroke="#14233A" stroke-width="2"/><circle cx="15" cy="11" r="2" fill="#14233A"/><rect x="8" y="18" width="14" height="9" rx="3.5" stroke="#14233A" stroke-width="2"/><circle cx="11.5" cy="22" r="1.5" fill="#14233A"/><circle cx="18.5" cy="22" r="1.5" fill="#14233A"/></svg>
+    </button>
+  </div>
+  <nav class="bnav" aria-label="Navigation principale">
+    <div class="ni" role="button" tabindex="0" aria-label="Accueil"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl">Accueil</span></div>
+    <div class="ni" role="button" tabindex="0" aria-label="Messages"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="nl">Messages</span></div>
+    <div class="nc"><button class="nfab" aria-label="Appel"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="6" width="13" height="12" rx="2" fill="white"/><path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white"/></svg></button><span class="nfl">Appel</span></div>
+    <div class="ni" role="button" tabindex="0" aria-label="Agenda"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">Agenda</span></div>
+    <div class="ni act" role="button" tabindex="0" aria-current="page" aria-label="Profil"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl" style="color:#b228FF;">Profil</span></div>
+  </nav>
+</div>
+
+<script>
+/* Accordéon sections */
+function toggleSec(bodyId, hdr){
+  var body = document.getElementById(bodyId);
+  var open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  hdr.setAttribute('aria-expanded', open ? 'false' : 'true');
+}
+
+/* Déconnexion */
+function deconnexion(){
+  if(confirm('Êtes-vous sûr·e de vouloir vous déconnecter ?')){
+    alert('Déconnexion effectuée — redirection vers la page de connexion (production)');
+  }
+}
+
+/* Suppression compte */
+function supprimerCompte(){
+  var confirm1 = confirm('⚠️ Supprimer votre compte est définitif.\n\nToutes vos données (proches aidés, historique, documents) seront supprimées.\n\nVoulez-vous continuer ?');
+  if(!confirm1) return;
+  var mot = prompt('Pour confirmer, saisissez SUPPRIMER en majuscules :');
+  if(mot === 'SUPPRIMER'){
+    alert('Votre demande de suppression a été enregistrée. Vous recevrez un email de confirmation. (production)');
+  } else {
+    alert('Suppression annulée — le mot de confirmation ne correspond pas.');
+  }
+}
+
+/* Éditer une section */
+function editSec(sec){
+  var msg = {
+    perso:'Édition — Informations personnelles',
+    adr:'Édition — Adresse',
+    pro:'Édition — Informations professionnelles',
+    aidant:'Édition — Informations d\'aidant',
+    sup:'Édition — Renseignements supplémentaires'
+  };
+  alert((msg[sec]||'Édition') + '\n\n(À connecter au formulaire d\'édition en production)');
+}
+</script>
+</body>
+</html>

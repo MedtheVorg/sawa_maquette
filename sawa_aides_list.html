@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sawa Care — Mes proches aidés</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #faf8ff;
+      color: #2d1060;
+      line-height: 1.4;
+      padding-top: 130px;
+      padding-bottom: 24px;
+      position: relative;
+      max-width: 430px;
+      margin: 0 auto;
+    }
+
+    /* ── HEADER (IDENTIQUE AUX AUTRES PAGES DE SECOND NIVEAU) ── */
+    .hdr {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      height: 110px;
+      background: linear-gradient(135deg, #b228FF, #8a2be2);
+      border-radius: 0 0 32px 32px;
+      z-index: 100;
+      padding: 50px 24px 20px;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(138, 43, 226, 0.25);
+    }
+    .hb1, .hb2 {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      z-index: 0;
+    }
+    .hb1 { width: 140px; height: 140px; top: -50px; right: -30px; }
+    .hb2 { width: 80px; height: 80px; top: 20px; left: -20px; }
+    .hdr-top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      flex-shrink: 0;
+    }
+
+    /* ── CARTES DES PROCHES (STYLES DE L'ACCUEIL) ── */
+    .aides-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 0 20px;
+    }
+
+    .proche-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 14px 15px;
+      border: 1.5px solid #cdc5f0;
+      box-shadow: 0 2px 12px rgba(178, 40, 255, 0.08);
+      cursor: pointer;
+      transition: transform 150ms;
+      width: 100%;
+    }
+    .proche-card:active {
+      transform: scale(0.98);
+    }
+
+    .pc-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .pc-av {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 2px solid #e8e0ff;
+    }
+    .v1 { background: linear-gradient(135deg, #27b6cc, #8a2be2); }
+    .v2 { background: linear-gradient(135deg, #b228FF, #1D9E75); }
+    
+    .pc-info h4 {
+      font-size: 14px;
+      font-weight: 800;
+      color: #2d1060;
+      line-height: 1.2;
+    }
+    .pc-info p {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8a7ab0;
+      margin-top: 1px;
+    }
+    .pc-badge {
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 800;
+      border-radius: 8px;
+      padding: 3px 8px;
+      flex-shrink: 0;
+    }
+    .ba { background: #f0e8ff; color: #8210cc; }
+    .bs { background: #E1F5EE; color: #085041; }
+
+    .prog-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: #8210cc;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .prog-track {
+      height: 5px;
+      background: #ede9fe;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .prog-fill {
+      height: 100%;
+      border-radius: 10px;
+    }
+
+    .cercle-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding-top: 10px;
+      border-top: 0.5px solid #ede9f5;
+    }
+    .cercle-label-preom {
+      font-size: 10px;
+      font-weight: 800;
+      color: #8210cc;
+      background: #f0e8ff;
+      border-radius: 6px;
+      padding: 2px 7px;
+      flex-shrink: 0;
+    }
+
+    .av-stack {
+      display: flex;
+      align-items: center;
+    }
+    .av-mini {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      margin-left: -6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .av-mini:first-child { margin-left: 0; }
+    .am1 { background: #b228FF; }
+    .am2 { background: #27b6cc; }
+
+    .cercle-txt {
+      flex: 1;
+      min-width: 0;
+    }
+    .cercle-txt p {
+      font-size: 11px;
+      font-weight: 800;
+      color: #2d1060;
+      line-height: 1.3;
+    }
+    .cercle-txt.muted p { color: #8a7ab0; }
+    .cercle-txt span {
+      font-size: 10px;
+      font-weight: 600;
+      color: #8a7ab0;
+    }
+
+    .cdot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dg { background: #cdc5f0; }
+    .dv { background: #1D9E75; }
+
+    .chev {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #f0e8ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hb1"></div>
+    <div class="hb2"></div>
+    <div class="hdr-top">
+      <button class="back-btn" onclick="window.location.href='sawa_care_home_v41.html'" aria-label="Retour">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+      <h1 style="position:absolute;left:50%;transform:translateX(-50%);font-size:18px;font-weight:900;color:#fff;">
+        Mes proches aidés</h1>
+      <div style="width:36px;flex-shrink:0;"></div>
+    </div>
+  </div>
+
+  <!-- BARRE DE RECHERCHE -->
+  <div style="margin: 0 20px 16px 20px; position: relative;">
+    <svg style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+    <input type="text" placeholder="Rechercher un proche..." aria-label="Rechercher un proche" style="width: 100%; border: none; background: #fff; border-radius: 14px; padding: 14px 14px 14px 42px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; color: #2d1060; box-shadow: 0 2px 8px rgba(178, 40, 255, 0.05); outline: none;" />
+  </div>
+
+  <!-- LISTE DES PROCHES -->
+  <div class="aides-list">
+    
+    <!-- Martin -->
+    <div class="proche-card" onclick="alert('Redirection vers la fiche de Martin')" role="button" tabindex="0" aria-label="Fiche de Martin Dupont">
+      <div class="pc-top">
+        <div class="pc-av v1" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg></div>
+        <div class="pc-info">
+          <h4>Martin Dupont</h4>
+          <p>Père · 78 ans · Alzheimer modéré</p>
+        </div>
+        <span class="pc-badge ba">Suivi actif</span>
+      </div>
+      <div class="prog-lbl"><span>Plan d'accompagnement</span><span>72 %</span></div>
+      <div class="prog-track">
+        <div class="prog-fill" style="width:72%;background:linear-gradient(90deg,#b228FF,#8a2be2);"></div>
+      </div>
+      <div class="cercle-row">
+        <span class="cercle-label-preom" aria-hidden="true">Martin</span>
+        <div class="av-stack" aria-label="Cercle de Martin : vous êtes seul·e aidant·e">
+          <div class="av-mini am1" title="Antoinette — vous">AT</div>
+        </div>
+        <div class="cercle-txt muted">
+          <p>Seul·e aidant·e</p><span>Invitez depuis la fiche →</span>
+        </div>
+        <div class="cdot dg" aria-label="Aucun co-aidant"></div>
+        <div class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6" /></svg></div>
+      </div>
+    </div>
+
+    <!-- Madeleine -->
+    <div class="proche-card" onclick="alert('Redirection vers la fiche de Madeleine')" role="button" tabindex="0" aria-label="Fiche de Madeleine Thomas">
+      <div class="pc-top">
+        <div class="pc-av v2" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg></div>
+        <div class="pc-info">
+          <h4>Madeleine Thomas</h4>
+          <p>Mère · 74 ans · Diabète type 2</p>
+        </div>
+        <span class="pc-badge bs">Stable</span>
+      </div>
+      <div class="prog-lbl"><span>Plan d'accompagnement</span><span>45 %</span></div>
+      <div class="prog-track">
+        <div class="prog-fill" style="width:45%;background:linear-gradient(90deg,#27b6cc,#1D9E75);"></div>
+      </div>
+      <div class="cercle-row">
+        <span class="cercle-label-preom" aria-hidden="true">Madeleine</span>
+        <div class="av-stack" aria-label="Cercle de Madeleine : 2 co-aidants actifs — Antoinette et Pierre">
+          <div class="av-mini am1" title="Antoinette">AT</div>
+          <div class="av-mini am2" title="Pierre Dupont">PD</div>
+        </div>
+        <div class="cercle-txt">
+          <p>2 co-aidants actifs</p><span>Antoinette · Pierre</span>
+        </div>
+        <div class="cdot dv" aria-label="Co-aidants actifs"></div>
+        <div class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6" /></svg></div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

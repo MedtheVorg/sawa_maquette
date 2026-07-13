@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Sawa Care — Planifier un RDV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes checkPop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes shimmer{0%{background-position:-300px 0}100%{background-position:300px 0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{height:100%;height:100dvh;-webkit-text-size-adjust:100%;}
+body{height:100%;height:100dvh;font-family:'Nunito',sans-serif;background:#ddd5f8;display:flex;flex-direction:column;overflow:hidden;max-width:430px;margin:0 auto;position:relative;}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;background:#ddd5f8;overflow:hidden;}
+.screen.hidden{display:none!important;}
+
+/* ── HEADER COMMUN ── */
+.hdr{background:linear-gradient(145deg,#b228FF 0%,#8a2be2 45%,#1e3a6e 80%,#0f5060 100%);padding:calc(env(safe-area-inset-top,44px)+10px) 18px 20px;flex-shrink:0;position:relative;overflow:hidden;}
+.hb1{position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.07);top:-55px;right:-40px;pointer-events:none;}
+.hb2{position:absolute;width:90px;height:90px;border-radius:50%;background:rgba(133,255,239,0.1);bottom:-25px;left:10px;pointer-events:none;}
+.hdr-bar{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;}
+.back-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.back-btn:focus-visible{outline:2px solid #fff;}
+.hdr-title{font-size:17px;font-weight:900;color:#fff;text-align:center;flex:1;}
+.hdr-spacer{width:40px;flex-shrink:0;}
+
+/* Stepper étapes dans le header */
+.step-bar{display:flex;align-items:center;justify-content:center;gap:0;position:relative;z-index:2;margin-top:14px;}
+.step-item{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.step-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;transition:all 200ms;}
+.step-circle.done{background:#27b6cc;color:#fff;}
+.step-circle.active{background:#fff;color:#8210cc;box-shadow:0 2px 8px rgba(255,255,255,0.3);}
+.step-circle.todo{background:rgba(255,255,255,0.18);color:rgba(255,255,255,0.6);}
+.step-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.7);white-space:nowrap;text-align:center;max-width:56px;}
+.step-lbl.active{color:#fff;}
+.step-line{width:28px;height:2px;background:rgba(255,255,255,0.2);margin-bottom:16px;flex-shrink:0;}
+.step-line.done{background:#27b6cc;}
+
+/* ── SCROLL BODY ── */
+.body{flex:1;min-height:0;-webkit-overflow-scrolling:touch;overflow-y:auto;background:#ddd5f8;border-radius:22px 22px 0 0;margin-top:-2px;padding:18px 16px calc(env(safe-area-inset-bottom,0px)+110px);scrollbar-width:none;}
+.body::-webkit-scrollbar{display:none;}
+
+/* Section labels */
+.sec-lbl{font-size:11px;font-weight:800;color:#4e4280;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:9px;display:block;}
+
+/* CTA bar sticky */
+.cta-bar{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ede9f5;padding:12px 18px calc(env(safe-area-inset-bottom,0px)+12px);}
+.btn-primary{width:100%;background:linear-gradient(135deg,#b228FF 0%,#8a2be2 50%,#27b6cc 100%);border:none;border-radius:18px;padding:16px;display:flex;align-items:center;justify-content:center;gap:9px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;color:#fff;cursor:pointer;box-shadow:0 5px 18px rgba(178,40,255,0.38);position:relative;overflow:hidden;transition:opacity 150ms;}
+.btn-primary::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,0.1);border-radius:18px 18px 0 0;}
+.btn-primary span{position:relative;z-index:1;}
+.btn-primary:disabled{background:#cdc5f0;box-shadow:none;opacity:0.55;cursor:not-allowed;}
+.btn-primary:focus-visible{outline:2px solid #2d1060;outline-offset:3px;}
+
+/* ════════════════════════════════════
+   ÉCRAN 0 — AGENDA (liste + nouveau RDV)
+════════════════════════════════════ */
+/* Onglets Agenda */
+.agenda-tabs{display:flex;gap:4px;background:#c8bff0;border-radius:14px;padding:4px;margin-bottom:16px;}
+.atab{flex:1;padding:9px 6px;text-align:center;font-size:12px;font-weight:800;cursor:pointer;color:#5e5290;border-radius:10px;border:none;background:transparent;transition:all 180ms;font-family:'Nunito',sans-serif;}
+.atab.active{background:#fff;color:#8210cc;box-shadow:0 2px 8px rgba(178,40,255,0.14);}
+.atab:focus-visible{outline:2px solid #b228FF;}
+
+/* Filtres agenda */
+.agenda-filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;padding-bottom:2px;scrollbar-width:none;}
+.agenda-filters::-webkit-scrollbar{display:none;}
+.af-chip{flex:0 0 auto;background:#fff;border-radius:20px;padding:6px 13px;font-size:11.5px;font-weight:800;color:#5e5290;border:1.5px solid #e8e0ff;cursor:pointer;white-space:nowrap;transition:all 130ms;}
+.af-chip.active{background:#f0e8ff;border-color:#b228FF;color:#8210cc;}
+
+/* Carte RDV */
+.rdv-card{background:#fff;border-radius:16px;border:1.5px solid #e8e0ff;box-shadow:0 2px 10px rgba(178,40,255,0.06);margin-bottom:10px;overflow:hidden;cursor:pointer;transition:box-shadow 130ms;animation:fadeUp 250ms ease-out both;}
+.rdv-card:hover{box-shadow:0 4px 16px rgba(178,40,255,0.12);}
+.rdv-inner{display:flex;align-items:flex-start;gap:12px;padding:13px 14px;}
+.rdv-date-box{width:50px;border-radius:12px;overflow:hidden;flex-shrink:0;text-align:center;}
+.rdv-date-month{background:linear-gradient(135deg,#b228FF,#8a2be2);color:#fff;font-size:9px;font-weight:900;padding:4px 0;text-transform:uppercase;letter-spacing:0.06em;}
+.rdv-date-day{background:#f0e8ff;color:#2d1060;font-size:22px;font-weight:900;padding:5px 0 7px;}
+.rdv-info{flex:1;min-width:0;}
+.rdv-time{font-size:12px;font-weight:700;color:#8a7ab0;margin-bottom:3px;display:flex;align-items:center;gap:5px;}
+.rdv-name{font-size:14px;font-weight:900;color:#2d1060;margin-bottom:4px;}
+.rdv-proche{font-size:11.5px;font-weight:700;color:#5e5290;}
+.rdv-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:800;border-radius:7px;padding:2px 8px;margin-top:5px;}
+.status-confirmed{background:#e8f5ee;color:#1D9E75;}
+.status-pending{background:#FFF8E1;color:#9A6500;}
+.status-done{background:#f0e8ff;color:#8210cc;}
+.rdv-chev{color:#cdc5f0;flex-shrink:0;margin-top:2px;}
+
+/* Mois séparateur */
+.month-sep{font-size:12px;font-weight:800;color:#4e4280;padding:12px 0 7px;display:flex;align-items:center;gap:8px;}
+.month-line{flex:1;height:0.5px;background:#cdc5f0;}
+
+/* Vide */
+.empty-rdv{text-align:center;padding:32px 16px;display:none;}
+.empty-rdv.show{display:block;}
+
+/* FAB + */
+.fab{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px)+96px);right:18px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#8a2be2);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 20px rgba(178,40,255,0.45);z-index:40;}
+.fab:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+/* ════════════════════════════════════
+   ÉCRAN 1 — CHOISIR LE PROCHE AIDÉ
+════════════════════════════════════ */
+.proche-grid{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;padding-right:4px;scrollbar-width:none;}
+.proche-grid::-webkit-scrollbar{display:none;}
+.proche-card{flex:0 0 120px;background:#fff;border-radius:16px;border:2px solid #e8e0ff;padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 150ms;}
+.proche-card.sel{border-color:#b228FF;background:#f5eeff;box-shadow:0 3px 14px rgba(178,40,255,0.18);}
+.proche-card:focus-visible{outline:2px solid #b228FF;}
+.proche-card:active{transform:scale(0.97);}
+.pav-lg{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid #fff;box-shadow:0 2px 8px rgba(178,40,255,0.2);}
+.proche-pname{font-size:12px;font-weight:800;color:#2d1060;text-align:center;line-height:1.3;}
+.proche-pmeta{font-size:10px;font-weight:600;color:#8a7ab0;text-align:center;}
+.proche-check{width:20px;height:20px;border-radius:50%;border:2px solid #e8e0ff;display:flex;align-items:center;justify-content:center;}
+.proche-card.sel .proche-check{background:#b228FF;border-color:#b228FF;}
+
+/* ════════════════════════════════════
+   ÉCRAN 2 — CALENDRIER + CRÉNEAUX
+════════════════════════════════════ */
+/* Calendrier mini */
+.cal-wrap{background:#fff;border-radius:18px;border:1.5px solid #e8e0ff;box-shadow:0 2px 10px rgba(178,40,255,0.06);padding:16px;margin-bottom:16px;}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cal-month{font-size:15px;font-weight:900;color:#2d1060;}
+.cal-nav-btn{width:34px;height:34px;border-radius:10px;background:#f5f3ff;border:1.5px solid #e8e0ff;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.cal-nav-btn:focus-visible{outline:2px solid #b228FF;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-dow{font-size:10px;font-weight:800;color:#8a7ab0;text-align:center;padding:4px 0;}
+.cal-day{width:100%;aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:#2d1060;cursor:pointer;transition:all 130ms;border:none;background:transparent;font-family:'Nunito',sans-serif;position:relative;}
+.cal-day:hover:not(.empty):not(.past){background:#f0e8ff;color:#8210cc;}
+.cal-day.today{background:#ede9fe;color:#8210cc;font-weight:900;}
+.cal-day.sel{background:linear-gradient(135deg,#b228FF,#8a2be2);color:#fff;font-weight:900;box-shadow:0 2px 8px rgba(178,40,255,0.3);}
+.cal-day.has-slot{position:relative;}
+.cal-day.has-slot::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#27b6cc;}
+.cal-day.sel.has-slot::after{background:#fff;}
+.cal-day.past{color:#cdc5f0;cursor:not-allowed;}
+.cal-day.empty{cursor:default;}
+.cal-day:focus-visible{outline:2px solid #b228FF;}
+
+/* Créneaux horaires */
+.slots-wrap{margin-bottom:16px;}
+.slots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.slot{background:#fff;border-radius:12px;border:1.5px solid #e8e0ff;padding:11px 8px;text-align:center;cursor:pointer;transition:all 130ms;}
+.slot:hover{border-color:#b228FF;background:#f9f7ff;}
+.slot.sel{background:#f0e8ff;border-color:#b228FF;box-shadow:0 2px 10px rgba(178,40,255,0.15);}
+.slot.unavail{background:#fafafa;border-color:#f0eeff;cursor:not-allowed;}
+.slot-time{font-size:14px;font-weight:900;color:#2d1060;}
+.slot.sel .slot-time{color:#8210cc;}
+.slot.unavail .slot-time{color:#cdc5f0;}
+.slot-dur{font-size:10px;font-weight:600;color:#8a7ab0;margin-top:2px;}
+.slot.unavail .slot-dur{color:#e8e0ff;}
+.slot:focus-visible{outline:2px solid #b228FF;}
+
+/* Aucun créneau */
+.no-slot{text-align:center;padding:24px 16px;background:#fff;border-radius:14px;border:1.5px solid #e8e0ff;}
+.no-slot-ico{font-size:32px;margin-bottom:8px;}
+.no-slot-t{font-size:14px;font-weight:800;color:#2d1060;margin-bottom:4px;}
+.no-slot-s{font-size:12px;font-weight:600;color:#8a7ab0;}
+
+/* ════════════════════════════════════
+   ÉCRAN 3 — PAIEMENT
+════════════════════════════════════ */
+.pay-summary{background:linear-gradient(135deg,#f5eeff,#eef5ff);border:1.5px solid rgba(178,40,255,0.18);border-radius:16px;padding:16px;margin-bottom:18px;}
+.pay-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.pay-row:last-child{margin-bottom:0;padding-top:8px;border-top:0.5px solid rgba(178,40,255,0.15);}
+.pay-lbl{font-size:12px;font-weight:700;color:#5e5290;}
+.pay-val{font-size:13px;font-weight:800;color:#2d1060;}
+.pay-total-lbl{font-size:14px;font-weight:900;color:#2d1060;}
+.pay-total-val{font-size:18px;font-weight:900;color:#b228FF;}
+
+/* Carte bancaire */
+.card-field-wrap{background:#fff;border-radius:16px;border:1.5px solid #e8e0ff;box-shadow:0 2px 10px rgba(178,40,255,0.06);overflow:hidden;margin-bottom:14px;}
+.card-field{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:0.5px solid #ede9f5;}
+.card-field:last-child{border-bottom:none;}
+.card-field-ico{width:36px;height:36px;border-radius:10px;background:#f5f3ff;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.card-input{flex:1;border:none;outline:none;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#2d1060;background:transparent;}
+.card-input::placeholder{color:#9b91c8;font-weight:600;}
+.card-row-2{display:grid;grid-template-columns:1fr 1fr;}
+.card-row-2 .card-field:first-child{border-right:0.5px solid #ede9f5;border-bottom:none;}
+.card-row-2 .card-field:last-child{border-bottom:none;}
+
+/* Confiance paiement */
+.pay-trust{display:flex;align-items:center;gap:8px;background:#e8f5ee;border-radius:10px;padding:10px 13px;margin-bottom:14px;border:1px solid #9FE1CB;}
+.pay-trust p{font-size:11.5px;font-weight:700;color:#1D9E75;line-height:1.5;}
+
+/* ════════════════════════════════════
+   ÉCRAN 4 — CONFIRMATION EN ATTENTE
+════════════════════════════════════ */
+.confirm-center{display:flex;flex-direction:column;align-items:center;text-align:center;padding:20px 0 40px;}
+.confirm-ico{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#FFF8E1,#FFF3CD);border:3px solid #FFD54F;display:flex;align-items:center;justify-content:center;font-size:44px;margin-bottom:20px;box-shadow:0 4px 18px rgba(255,213,79,0.3);}
+.confirm-ico.success{background:linear-gradient(135deg,#E1F5EE,#9FE1CB);border-color:#1D9E75;box-shadow:0 4px 18px rgba(29,158,117,0.25);animation:checkPop 400ms ease-out;}
+.confirm-title{font-size:22px;font-weight:900;color:#2d1060;margin-bottom:10px;line-height:1.3;}
+.confirm-sub{font-size:14px;font-weight:600;color:#5e5290;line-height:1.7;max-width:300px;}
+.confirm-steps{width:100%;margin-top:24px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px;text-align:left;}
+.confirm-step{background:#fff;border-radius:14px;border:1.5px solid #e8e0ff;padding:13px 15px;display:flex;align-items:center;gap:12px;}
+.cs-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cs-txt h5{font-size:13px;font-weight:800;color:#2d1060;margin-bottom:2px;}
+.cs-txt p{font-size:11.5px;font-weight:600;color:#8a7ab0;line-height:1.5;}
+
+/* Récap RDV */
+.rdv-recap{background:linear-gradient(135deg,#f5eeff,#eef5ff);border:1.5px solid rgba(178,40,255,0.18);border-radius:16px;padding:16px;margin-top:20px;width:100%;text-align:left;}
+.recap-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.recap-row:last-child{margin-bottom:0;}
+.recap-ico{width:32px;height:32px;border-radius:9px;background:rgba(178,40,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.recap-txt .r-lbl{font-size:10px;font-weight:700;color:#8a7ab0;}
+.recap-txt .r-val{font-size:13px;font-weight:800;color:#2d1060;}
+
+/* ── NAV BAS ── */
+.nav-bar{flex-shrink:0;background:#fff;border-top:1.5px solid #cdc5f0;padding-bottom:env(safe-area-inset-bottom,0px);}
+.ai-r{display:flex;align-items:center;justify-content:flex-end;padding:7px 18px 4px;gap:8px;}
+.ai-lbl{font-size:10px;font-weight:700;color:#14233A;background:#fcffad;border-radius:7px;padding:4px 9px;}
+.ai-fab-nav{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#7b2fff 45%,#27b6cc);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(178,40,255,0.4);overflow:hidden;position:relative;}
+.ai-fab-nav::before{content:'';position:absolute;top:4px;left:8px;width:30px;height:12px;background:rgba(255,255,255,0.18);border-radius:50%;transform:rotate(-8deg);}
+.bnav{display:flex;align-items:center;padding:3px 0 7px;}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;min-height:44px;justify-content:center;}
+.nl{font-size:10px;font-weight:700;color:#9080c0;}
+.ni.act .nl{color:#b228FF;}
+.nc{flex:0 0 66px;display:flex;flex-direction:column;align-items:center;}
+.nfab{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#27b6cc);display:flex;align-items:center;justify-content:center;margin-top:-22px;border:3px solid #fff;box-shadow:0 4px 12px rgba(178,40,255,0.3);cursor:pointer;}
+.nfl{font-size:10px;font-weight:700;color:#b228FF;margin-top:1px;}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="sr" aria-live="polite" id="announce"></div>
+
+<!-- ══════════════════════════════════
+     ÉCRAN 0 — MON AGENDA
+══════════════════════════════════ -->
+<div class="screen" id="s0">
+  <div class="hdr">
+    <div class="hb1"></div><div class="hb2"></div>
+    <div class="hdr-bar">
+      <div class="hdr-spacer"></div>
+      <span class="hdr-title">Mon Agenda</span>
+      <button class="back-btn" onclick="goScreen('s1')" aria-label="Prendre un nouveau rendez-vous"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+    </div>
+  </div>
+
+  <div class="body" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+90px);">
+    <!-- Onglets -->
+    <div class="agenda-tabs" role="tablist" aria-label="Vue de l'agenda">
+      <button class="atab active" role="tab" aria-selected="true" onclick="setAgendaTab(this,'aVenir')">À venir</button>
+      <button class="atab" role="tab" aria-selected="false" onclick="setAgendaTab(this,'historique')">Historique</button>
+    </div>
+
+    <!-- Filtres -->
+    <div class="agenda-filters" role="group" aria-label="Filtrer les rendez-vous">
+      <button class="af-chip active" onclick="setAF(this)" aria-pressed="true">Tous</button>
+      <button class="af-chip" onclick="setAF(this)" aria-pressed="false">Care Manager</button>
+      <button class="af-chip" onclick="setAF(this)" aria-pressed="false">Martin</button>
+      <button class="af-chip" onclick="setAF(this)" aria-pressed="false">Madeleine</button>
+    </div>
+
+    <!-- RDV à venir -->
+    <div id="panel-avenir">
+      <div class="month-sep"><span>Juin 2026</span><div class="month-line"></div></div>
+
+      <!-- RDV confirmé -->
+      <div class="rdv-card" role="button" tabindex="0" aria-label="RDV avec Basma Frangieh le 5 juin à 10h00 — Confirmé" onclick="alert('Détail RDV')">
+        <div class="rdv-inner">
+          <div class="rdv-date-box" aria-hidden="true">
+            <div class="rdv-date-month">Juin</div>
+            <div class="rdv-date-day">05</div>
+          </div>
+          <div class="rdv-info">
+            <div class="rdv-time">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              10:00 · 45 min
+            </div>
+            <div class="rdv-name">Basma Frangieh</div>
+            <div class="rdv-proche">👨 Martin Dupont · Care Manager</div>
+            <span class="rdv-status status-confirmed">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+              Confirmé · Appel via l'app à l'heure du RDV
+            </span>
+          </div>
+          <svg class="rdv-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+
+      <!-- RDV confirmé -->
+      <div class="rdv-card" role="button" tabindex="0" aria-label="RDV avec Basma Frangieh le 18 juin à 14h30 — Confirmé" onclick="alert('Détail RDV')">
+        <div class="rdv-inner">
+          <div class="rdv-date-box" aria-hidden="true">
+            <div class="rdv-date-month">Juin</div>
+            <div class="rdv-date-day">18</div>
+          </div>
+          <div class="rdv-info">
+            <div class="rdv-time">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              14:30 · 45 min
+            </div>
+            <div class="rdv-name">Basma Frangieh</div>
+            <div class="rdv-proche">👩 Madeleine Thomas · Care Manager</div>
+            <span class="rdv-status status-confirmed">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+              Confirmé · Appel via l'app à l'heure du RDV
+            </span>
+          </div>
+          <svg class="rdv-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historique -->
+    <div id="panel-historique" style="display:none;">
+      <div class="month-sep"><span>Avril 2026</span><div class="month-line"></div></div>
+      <div class="rdv-card" role="button" tabindex="0" aria-label="RDV effectué le 20 avril avec Basma Frangieh" onclick="alert('Détail RDV passé')">
+        <div class="rdv-inner">
+          <div class="rdv-date-box" aria-hidden="true">
+            <div class="rdv-date-month">Avr</div>
+            <div class="rdv-date-day" style="background:#f5f3ff;color:#8a7ab0;">20</div>
+          </div>
+          <div class="rdv-info">
+            <div class="rdv-time">08:00 · 45 min</div>
+            <div class="rdv-name">Basma Frangieh</div>
+            <div class="rdv-proche">👨 Martin Dupont · Care Manager</div>
+            <span class="rdv-status status-done">✓ Effectué</span>
+          </div>
+          <svg class="rdv-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="ai-r"><span class="ai-lbl">Assistant IA</span><button class="ai-fab-nav" aria-label="IA"><svg width="24" height="24" viewBox="0 0 30 30" fill="none" aria-hidden="true"><circle cx="15" cy="11" r="5.5" stroke="#14233A" stroke-width="2"/><circle cx="15" cy="11" r="2" fill="#14233A"/><rect x="8" y="18" width="14" height="9" rx="3.5" stroke="#14233A" stroke-width="2"/><circle cx="11.5" cy="22" r="1.5" fill="#14233A"/><circle cx="18.5" cy="22" r="1.5" fill="#14233A"/></svg></button></div>
+    <nav class="bnav" aria-label="Navigation">
+      <div class="ni" role="button" tabindex="0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl">Accueil</span></div>
+      <div class="ni" role="button" tabindex="0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="nl">Messages</span></div>
+      <div class="nc"><button class="nfab" aria-label="Appel"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="6" width="13" height="12" rx="2" fill="white"/><path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white"/></svg></button><span class="nfl">Appel</span></div>
+      <div class="ni act" role="button" tabindex="0" aria-current="page"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl" style="color:#b228FF;">Agenda</span></div>
+      <div class="ni" role="button" tabindex="0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">Profil</span></div>
+    </nav>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     ÉCRAN 1 — PROCHE AIDÉ CONCERNÉ
+══════════════════════════════════ -->
+<div class="screen hidden" id="s1">
+  <div class="hdr">
+    <div class="hb1"></div><div class="hb2"></div>
+    <div class="hdr-bar">
+      <button class="back-btn" onclick="goScreen('s0')" aria-label="Retour"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <span class="hdr-title">Nouveau RDV</span>
+      <div class="hdr-spacer"></div>
+    </div>
+    <div class="step-bar" aria-label="Étape 1 sur 4 : Proche Aidé">
+      <div class="step-item"><div class="step-circle active">1</div><div class="step-lbl active">Proche Aidé</div></div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-circle todo">2</div><div class="step-lbl">Créneau</div></div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-circle todo">3</div><div class="step-lbl">Paiement</div></div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-circle todo">4</div><div class="step-lbl">Confirmation</div></div>
+    </div>
+  </div>
+
+  <div class="body">
+    <span class="sec-lbl" style="margin-top:12px;display:block;">Pour quel Proche Aidé ?</span>
+    <p style="font-size:13px;font-weight:600;color:#5e5290;margin-bottom:16px;line-height:1.6;">Choisissez le proche concerné par ce rendez-vous avec votre Care Manager.</p>
+
+    <div class="proche-grid" role="radiogroup" aria-label="Sélectionner un proche aidé">
+      <div class="proche-card" role="radio" aria-checked="false" tabindex="0" onclick="selectP(this,'Martin Dupont','Père · 78 ans','🧑','linear-gradient(135deg,#27b6cc,#8a2be2)')" onkeydown="if(event.key==='Enter')selectP(this,'Martin Dupont','Père · 78 ans','🧑','linear-gradient(135deg,#27b6cc,#8a2be2)')">
+        <div class="pav-lg" style="background:linear-gradient(135deg,#27b6cc,#8a2be2);">🧑</div>
+        <div class="proche-pname">Martin Dupont</div>
+        <div class="proche-pmeta">Père · 78 ans</div>
+        <div class="proche-check" id="pcheck-0"></div>
+      </div>
+      <div class="proche-card" role="radio" aria-checked="false" tabindex="0" onclick="selectP(this,'Madeleine Thomas','Mère · 74 ans','👩','linear-gradient(135deg,#b228FF,#1D9E75)')" onkeydown="if(event.key==='Enter')selectP(this,'Madeleine Thomas','Mère · 74 ans','👩','linear-gradient(135deg,#b228FF,#1D9E75)')">
+        <div class="pav-lg" style="background:linear-gradient(135deg,#b228FF,#1D9E75);">👩</div>
+        <div class="proche-pname">Madeleine Thomas</div>
+        <div class="proche-pmeta">Mère · 74 ans</div>
+        <div class="proche-check" id="pcheck-1"></div>
+      </div>
+    </div>
+
+    <!-- Info Care Manager -->
+    <div style="background:#fff;border-radius:16px;border:1.5px solid #e8e0ff;padding:14px 16px;margin-top:20px;display:flex;align-items:center;gap:13px;" role="note">
+      <div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#27b6cc,#1e8fa0);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0;">BF</div>
+      <div>
+        <div style="font-size:14px;font-weight:900;color:#2d1060;margin-bottom:2px;">Basma Frangieh</div>
+        <div style="font-size:12px;font-weight:600;color:#5e5290;">Votre Care Manager</div>
+        <div style="font-size:11px;font-weight:700;color:#27b6cc;margin-top:3px;">Disponible lun–ven · Séances de 45 min</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-bar">
+    <button class="btn-primary" id="btn-s1" onclick="goScreen('s2')" disabled aria-disabled="true" aria-label="Continuer vers le choix du créneau">
+      <span>Choisir un créneau →</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     ÉCRAN 2 — CALENDRIER + CRÉNEAUX
+══════════════════════════════════ -->
+<div class="screen hidden" id="s2">
+  <div class="hdr">
+    <div class="hb1"></div><div class="hb2"></div>
+    <div class="hdr-bar">
+      <button class="back-btn" onclick="goScreen('s1')" aria-label="Retour"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <span class="hdr-title">Choisir un créneau</span>
+      <div class="hdr-spacer"></div>
+    </div>
+    <div class="step-bar" aria-label="Étape 2 sur 4 : Créneau">
+      <div class="step-item"><div class="step-circle done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div><div class="step-lbl">Proche Aidé</div></div>
+      <div class="step-line done"></div>
+      <div class="step-item"><div class="step-circle active">2</div><div class="step-lbl active">Créneau</div></div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-circle todo">3</div><div class="step-lbl">Paiement</div></div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-circle todo">4</div><div class="step-lbl">Confirmation</div></div>
+    </div>
+  </div>
+
+  <div class="body" style="padding-bottom:calc(env(safe-area-inset-bottom,0px)+140px);">
+    <!-- Calendrier -->
+    <span class="sec-lbl" style="margin-top:12px;display:block;">Choisissez une date</span>
+    <div class="cal-wrap" aria-label="Calendrier de juin 2026">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="prevMonth()" aria-label="Mois précédent"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5e5290" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <span class="cal-month" id="cal-month-lbl" aria-live="polite">Juin 2026</span>
+        <button class="cal-nav-btn" onclick="nextMonth()" aria-label="Mois suivant"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5e5290" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+      </div>
+      <div class="cal-grid" role="grid" aria-label="Calendrier">
+        <div class="cal-dow" aria-label="Lundi">L</div><div class="cal-dow" aria-label="Mardi">M</div><div class="cal-dow" aria-label="Mercredi">M</div><div class="cal-dow" aria-label="Jeudi">J</div><div class="cal-dow" aria-label="Vendredi">V</div><div class="cal-dow" aria-label="Samedi">S</div><div class="cal-dow" aria-label="Dimanche">D</div>
+        <!-- Juin 2026 — commence lundi 1er -->
+        <button class="cal-day has-slot" onclick="selectDay(this,'Lundi 1 juin')" aria-label="1 juin — créneaux disponibles">1</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Mardi 2 juin')" aria-label="2 juin">2</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Mercredi 3 juin')" aria-label="3 juin">3</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Jeudi 4 juin')" aria-label="4 juin">4</button>
+        <button class="cal-day has-slot today" onclick="selectDay(this,'Vendredi 5 juin')" aria-label="5 juin — aujourd'hui">5</button>
+        <button class="cal-day past" disabled aria-label="6 juin — week-end, indisponible" aria-disabled="true">6</button>
+        <button class="cal-day past" disabled aria-label="7 juin — week-end, indisponible" aria-disabled="true">7</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Lundi 8 juin')">8</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Mardi 9 juin')">9</button>
+        <button class="cal-day" onclick="selectDay(this,'Mercredi 10 juin')">10</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Jeudi 11 juin')">11</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Vendredi 12 juin')">12</button>
+        <button class="cal-day past" disabled>13</button>
+        <button class="cal-day past" disabled>14</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Lundi 15 juin')">15</button>
+        <button class="cal-day" onclick="selectDay(this,'Mardi 16 juin')">16</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Mercredi 17 juin')">17</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Jeudi 18 juin')">18</button>
+        <button class="cal-day" onclick="selectDay(this,'Vendredi 19 juin')">19</button>
+        <button class="cal-day past" disabled>20</button>
+        <button class="cal-day past" disabled>21</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Lundi 22 juin')">22</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Mardi 23 juin')">23</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Mercredi 24 juin')">24</button>
+        <button class="cal-day" onclick="selectDay(this,'Jeudi 25 juin')">25</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Vendredi 26 juin')">26</button>
+        <button class="cal-day past" disabled>27</button>
+        <button class="cal-day past" disabled>28</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Lundi 29 juin')">29</button>
+        <button class="cal-day has-slot" onclick="selectDay(this,'Mardi 30 juin')">30</button>
+      </div>
+      <!-- Légende -->
+      <div style="display:flex;gap:16px;margin-top:12px;padding-top:10px;border-top:0.5px solid #ede9f5;">
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:#8a7ab0;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#27b6cc;"></div>Créneaux disponibles
+        </div>
+      </div>
+    </div>
+
+    <!-- Créneaux horaires -->
+    <span class="sec-lbl" id="slots-lbl">Créneaux disponibles</span>
+    <div id="slots-zone" class="slots-wrap" aria-live="polite" aria-label="Créneaux disponibles" style="margin-bottom:8px;">
+      <div class="no-slot">
+        <div class="no-slot-ico" aria-hidden="true">📅</div>
+        <p class="no-slot-t">Sélectionnez une date</p>
+        <p class="no-slot-s">Choisissez un jour dans le calendrier pour voir les créneaux disponibles</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-bar">
+    <button class="btn-primary" id="btn-s2" onclick="goScreen('s3')" disabled aria-disabled="true">
+      <span>Confirmer le créneau →</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     ÉCRAN 3 — PAIEMENT
+══════════════════════════════════ -->
+<div class="screen hidden" id="s3">
+  <div class="hdr">
+    <div class="hb1"></div><div class="hb2"></div>
+    <div class="hdr-bar">
+      <button class="back-btn" onclick="goScreen('s2')" aria-label="Retour"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <span class="hdr-title">Paiement</span>
+      <div class="hdr-spacer"></div>
+    </div>
+    <div class="step-bar" aria-label="Étape 3 sur 4 : Paiement">
+      <div class="step-item"><div class="step-circle done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div><div class="step-lbl">Proche Aidé</div></div>
+      <div class="step-line done"></div>
+      <div class="step-item"><div class="step-circle done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div><div class="step-lbl">Créneau</div></div>
+      <div class="step-line done"></div>
+      <div class="step-item"><div class="step-circle active">3</div><div class="step-lbl active">Paiement</div></div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-circle todo">4</div><div class="step-lbl">Confirmation</div></div>
+    </div>
+  </div>
+
+  <div class="body">
+    <!-- Récap RDV -->
+    <span class="sec-lbl" style="margin-top:12px;display:block;">Récapitulatif</span>
+    <div class="pay-summary" aria-label="Récapitulatif du rendez-vous">
+      <div class="pay-row"><span class="pay-lbl">Care Manager</span><span class="pay-val">Basma Frangieh</span></div>
+      <div class="pay-row"><span class="pay-lbl">Proche aidé</span><span class="pay-val" id="pay-proche">Martin Dupont</span></div>
+      <div class="pay-row"><span class="pay-lbl">Date</span><span class="pay-val" id="pay-date">Lun. 8 juin 2026</span></div>
+      <div class="pay-row"><span class="pay-lbl">Heure</span><span class="pay-val" id="pay-heure">10:00 · 45 min</span></div>
+      <div class="pay-row"><span class="pay-total-lbl">Total</span><span class="pay-total-val">75,00 €</span></div>
+    </div>
+
+    <!-- Confiance paiement -->
+    <div class="pay-trust" role="note" aria-label="Sécurité du paiement">
+      <span style="font-size:18px;" aria-hidden="true">🔒</span>
+      <p><strong>Paiement sécurisé.</strong> Votre carte ne sera débitée qu'après la tenue du rendez-vous. Aucun frais en cas d'annulation 24h avant.</p>
+    </div>
+
+    <!-- Champs carte bancaire -->
+    <span class="sec-lbl">Informations de paiement</span>
+    <div class="card-field-wrap" aria-label="Formulaire de paiement">
+      <div class="card-field">
+        <div class="card-field-ico" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <input class="card-input" type="text" placeholder="Numéro de carte" inputmode="numeric" maxlength="19" autocomplete="cc-number" aria-label="Numéro de carte bancaire" aria-required="true" oninput="formatCard(this)">
+      </div>
+      <div class="card-field">
+        <div class="card-field-ico" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <input class="card-input" type="text" placeholder="Nom sur la carte" autocomplete="cc-name" aria-label="Nom du titulaire" aria-required="true">
+      </div>
+      <div class="card-row-2">
+        <div class="card-field">
+          <div class="card-field-ico" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <input class="card-input" type="text" placeholder="MM/AA" inputmode="numeric" maxlength="5" autocomplete="cc-exp" aria-label="Date d'expiration" aria-required="true" oninput="formatExp(this)">
+        </div>
+        <div class="card-field">
+          <div class="card-field-ico" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <input class="card-input" type="text" placeholder="CVV" inputmode="numeric" maxlength="3" autocomplete="cc-csc" aria-label="Code de sécurité CVV" aria-required="true">
+        </div>
+      </div>
+    </div>
+    <p style="font-size:11px;font-weight:600;color:#8a7ab0;text-align:center;line-height:1.6;">Vos données bancaires sont chiffrées et ne sont jamais stockées sur nos serveurs.</p>
+  </div>
+
+  <div class="cta-bar">
+    <button class="btn-primary" onclick="goScreen('s4')" aria-label="Valider et envoyer la demande de rendez-vous">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span>Confirmer &amp; payer</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     ÉCRAN 4 — CONFIRMATION EN ATTENTE
+══════════════════════════════════ -->
+<div class="screen hidden" id="s4">
+  <div class="hdr">
+    <div class="hb1"></div><div class="hb2"></div>
+    <div class="hdr-bar">
+      <div class="hdr-spacer"></div>
+      <span class="hdr-title">RDV confirmé</span>
+      <div class="hdr-spacer"></div>
+    </div>
+    <div class="step-bar" aria-label="Toutes les étapes complétées">
+      <div class="step-item"><div class="step-circle done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div><div class="step-lbl">Proche Aidé</div></div>
+      <div class="step-line done"></div>
+      <div class="step-item"><div class="step-circle done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div><div class="step-lbl">Créneau</div></div>
+      <div class="step-line done"></div>
+      <div class="step-item"><div class="step-circle done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div><div class="step-lbl">Paiement</div></div>
+      <div class="step-line done"></div>
+      <div class="step-item"><div class="step-circle done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div><div class="step-lbl active">Confirmé</div></div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="confirm-center">
+      <div class="confirm-ico success" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h1 class="confirm-title">Votre RDV est confirmé !</h1>
+      <p class="confirm-sub">Votre rendez-vous avec Basma Frangieh est réservé. Vous recevrez un rappel avant le RDV, et pourrez appeler directement depuis l'app le jour J.</p>
+
+      <!-- Récap -->
+      <div class="rdv-recap" aria-label="Récapitulatif de votre rendez-vous">
+        <div class="recap-row">
+          <div class="recap-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <div class="recap-txt"><div class="r-lbl">Date et heure du RDV</div><div class="r-val" id="conf-date">Lun. 8 juin 2026 · 10:00 → 10:45</div></div>
+        </div>
+        <div class="recap-row">
+          <div class="recap-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="recap-txt"><div class="r-lbl">Proche Aidé concerné</div><div class="r-val" id="conf-proche">Martin Dupont</div></div>
+        </div>
+        <div class="recap-row">
+          <div class="recap-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8210cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+          <div class="recap-txt"><div class="r-lbl">Paiement</div><div class="r-val">75,00 € · Débit après le RDV</div></div>
+        </div>
+      </div>
+
+      <!-- Étapes suivantes -->
+      <span class="sec-lbl" style="margin-top:24px;width:100%;text-align:left;">Prochaines étapes</span>
+      <div class="confirm-steps" aria-label="Étapes suivantes" style="margin-top:10px;">
+        <div class="confirm-step">
+          <div class="cs-ico" style="background:#e0f5ff;">🔔</div>
+          <div class="cs-txt"><h5>Rappel avant le RDV</h5><p>Vous recevrez une notification pour ne pas oublier votre rendez-vous.</p></div>
+        </div>
+        <div class="confirm-step">
+          <div class="cs-ico" style="background:#f0e8ff;">📞</div>
+          <div class="cs-txt"><h5>Appel via l'app le jour J</h5><p>Le bouton "Appel" sera disponible avec Basma Frangieh à l'heure du RDV — aucun lien externe à ouvrir.</p></div>
+        </div>
+        <div class="confirm-step">
+          <div class="cs-ico" style="background:#fff8e1;">💳</div>
+          <div class="cs-txt"><h5>Prélèvement après le RDV</h5><p>Les 75,00 € sont prélevés uniquement après la tenue du rendez-vous.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-bar" style="display:flex;gap:10px;">
+    <button class="btn-primary" style="flex:1;background:#f0e8ff;color:#8210cc;box-shadow:none;border:1.5px solid #b228FF;" onclick="goScreen('s0')" aria-label="Retourner à l'agenda">
+      <span>Mon agenda</span>
+    </button>
+    <button class="btn-primary" style="flex:1;" onclick="goScreen('s0')" aria-label="Retour à l'accueil">
+      <span>Accueil</span>
+    </button>
+  </div>
+</div>
+
+<script>
+/* ── NAVIGATION ── */
+function goScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.add('hidden'); });
+  document.getElementById(id).classList.remove('hidden');
+  document.getElementById(id).scrollTop = 0;
+  /* Auto-sélectionner la prochaine date disponible à l'ouverture du calendrier */
+  if(id === 's2'){
+    var firstDay = document.querySelector('#s2 .cal-day.has-slot:not(.past)');
+    if(firstDay && !selDay){
+      firstDay.click();
+    }
+  }
+  say('Navigation vers ' + id);
+}
+
+/* ── ONGLETS AGENDA ── */
+function setAgendaTab(el, panel){
+  document.querySelectorAll('.atab').forEach(function(t){ t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+  el.classList.add('active'); el.setAttribute('aria-selected','true');
+  document.getElementById('panel-avenir').style.display = panel === 'aVenir' ? 'block' : 'none';
+  document.getElementById('panel-historique').style.display = panel === 'historique' ? 'block' : 'none';
+}
+function setAF(el){
+  document.querySelectorAll('.af-chip').forEach(function(c){ c.classList.remove('active'); c.setAttribute('aria-pressed','false'); });
+  el.classList.add('active'); el.setAttribute('aria-pressed','true');
+}
+
+/* ── SÉLECTION PROCHE ── */
+var selProche = null;
+function selectP(card, name, meta, emoji, bg){
+  selProche = {name, meta, emoji, bg};
+  document.querySelectorAll('.proche-card').forEach(function(c){
+    c.classList.remove('sel'); c.setAttribute('aria-checked','false');
+    c.querySelector('.proche-check').innerHTML = '';
+  });
+  card.classList.add('sel'); card.setAttribute('aria-checked','true');
+  card.querySelector('.proche-check').innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var btn = document.getElementById('btn-s1');
+  btn.disabled = false; btn.setAttribute('aria-disabled','false');
+  document.getElementById('pay-proche').textContent = name;
+  document.getElementById('conf-proche').textContent = name;
+  say(name + ' sélectionné·e');
+}
+
+/* ── CALENDRIER ── */
+var selDay = null; var selSlot = null;
+function selectDay(btn, label){
+  document.querySelectorAll('.cal-day').forEach(function(d){ d.classList.remove('sel'); });
+  btn.classList.add('sel');
+  selDay = label;
+  document.getElementById('slots-lbl').textContent = 'Créneaux disponibles — ' + label;
+  renderSlots(label);
+  /* Scroller vers les créneaux */
+  setTimeout(function(){
+    var zone = document.getElementById('slots-zone');
+    zone.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }, 100);
+  say('Date sélectionnée : ' + label + '. Créneaux disponibles affichés.');
+}
+function prevMonth(){ say('Mois précédent — navigation calendrier'); }
+function nextMonth(){ say('Mois suivant — navigation calendrier'); }
+
+var SLOTS = {
+  'Lundi 1 juin':['09:00','10:00','11:00','14:00','15:00','16:00'],
+  'Mardi 2 juin':['09:00','10:00','14:30','16:00'],
+  'Mercredi 3 juin':['10:00','11:00','15:00'],
+  'Jeudi 4 juin':['09:00','11:00','14:00','15:00','16:30'],
+  'Vendredi 5 juin':['09:00','10:00'],
+  'Lundi 8 juin':['10:00','14:00','16:00'],
+  'Mardi 9 juin':['09:30','11:00','15:00','16:30'],
+  'Jeudi 11 juin':['09:00','10:30','14:00'],
+  'Vendredi 12 juin':['09:00','11:00','14:00','15:30'],
+  'Lundi 15 juin':['10:00','14:00'],
+  'Mercredi 17 juin':['09:00','10:00','11:00','14:00','15:00','16:00','16:30'],
+  'Jeudi 18 juin':['09:30','14:30'],
+  'Lundi 22 juin':['09:00','10:00','11:00'],
+  'Mardi 23 juin':['10:00','14:00','16:00'],
+  'Mercredi 24 juin':['09:00','11:00','14:30','16:00'],
+  'Vendredi 26 juin':['09:00','10:00','14:00'],
+  'Lundi 29 juin':['10:00','11:00','15:00'],
+  'Mardi 30 juin':['09:00','14:00','16:00'],
+};
+
+function renderSlots(day){
+  selSlot = null;
+  var zone = document.getElementById('slots-zone');
+  var btn2 = document.getElementById('btn-s2');
+  btn2.disabled = true; btn2.setAttribute('aria-disabled','true');
+  var times = SLOTS[day];
+  if(!times || times.length === 0){
+    zone.innerHTML = '<div class="no-slot"><div class="no-slot-ico" aria-hidden="true">📅</div><p class="no-slot-t">Aucun créneau disponible</p><p class="no-slot-s">Votre Care Manager n\'est pas disponible ce jour. Choisissez une autre date.</p></div>';
+    return;
+  }
+  var html = '<div class="slots-grid" role="radiogroup" aria-label="Créneaux disponibles">';
+  times.forEach(function(t){
+    html += '<button class="slot" role="radio" aria-checked="false" onclick="selectSlot(this,\''+t+'\')" aria-label="Créneau de '+t+' — 45 minutes"><div class="slot-time">'+t+'</div><div class="slot-dur">45 min</div></button>';
+  });
+  html += '</div>';
+  zone.innerHTML = html;
+}
+
+function addMinutes(time, mins){
+  var parts = time.split(':');
+  var d = new Date(2000,0,1, parseInt(parts[0]), parseInt(parts[1]) + mins);
+  var hh = d.getHours() < 10 ? '0'+d.getHours() : ''+d.getHours();
+  var mm = d.getMinutes() < 10 ? '0'+d.getMinutes() : ''+d.getMinutes();
+  return hh + ':' + mm;
+}
+
+function selectSlot(btn, time){
+  document.querySelectorAll('.slot').forEach(function(s){ s.classList.remove('sel'); s.setAttribute('aria-checked','false'); });
+  btn.classList.add('sel'); btn.setAttribute('aria-checked','true');
+  selSlot = time;
+  var endTime = addMinutes(time, 45);
+  var btn2 = document.getElementById('btn-s2');
+  btn2.disabled = false; btn2.setAttribute('aria-disabled','false');
+  document.getElementById('pay-date').textContent = selDay;
+  document.getElementById('pay-heure').textContent = time + ' → ' + endTime + ' · 45 min';
+  document.getElementById('conf-date').textContent = selDay + ' · ' + time + ' → ' + endTime;
+  say('Créneau sélectionné : ' + selDay + ' de ' + time + ' à ' + endTime);
+}
+
+/* ── FORMAT CARTE ── */
+function formatCard(input){
+  var v = input.value.replace(/\D/g,'').substring(0,16);
+  input.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+function formatExp(input){
+  var v = input.value.replace(/\D/g,'');
+  if(v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2,4);
+  input.value = v;
+}
+
+function say(msg){
+  var z = document.getElementById('announce');
+  z.textContent = '';
+  setTimeout(function(){ z.textContent = msg; }, 50);
+}
+</script>
+</body>
+</html>

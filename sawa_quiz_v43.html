@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Sawa Care — Quiz v41</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideRight{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideLeft{from{opacity:0;transform:translateX(-32px)}to{opacity:1;transform:translateX(0)}}
+/* prefers-reduced-motion — animation désactivée pour utilisateurs sensibles */
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;font-family:'Nunito',system-ui,sans-serif;background:#ddd5f8;overflow:hidden;}
+
+/* ── ÉCRANS ── */
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;}
+.screen.hidden{display:none!important;}
+.screen.anim-right{animation:slideRight 260ms cubic-bezier(.32,.72,0,1);}
+.screen.anim-left{animation:slideLeft 260ms cubic-bezier(.32,.72,0,1);}
+
+/* ── HEADER identique v40 ── */
+.hdr{background:linear-gradient(145deg,#b228FF 0%,#8a2be2 42%,#27b6cc 100%);padding:calc(env(safe-area-inset-top,44px)+12px) 20px 16px;position:relative;overflow:hidden;flex-shrink:0;}
+.hb1{position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.08);top:-55px;right:-40px;pointer-events:none;}
+.hb2{position:absolute;width:90px;height:90px;border-radius:50%;background:rgba(133,255,239,0.1);bottom:-25px;left:12px;pointer-events:none;}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;margin-bottom:12px;}
+
+/* ── BACK BTN — rond plein, identique v40 fiche proche ── */
+.back-btn{
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.3);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
+}
+.hdr-badge{font-size:11px;font-weight:800;color:#d08aff;background:rgba(178,40,255,0.25);border-radius:20px;padding:4px 11px;flex-shrink:0;}
+.hdr-title{font-size:14px;font-weight:800;color:#fff;line-height:1.4;position:relative;z-index:2;padding-left:2px;}
+
+/* ── SCROLL BODY ── */
+.body{flex:1;overflow-y:auto;background:#ddd5f8;scrollbar-width:none;padding:20px 20px calc(env(safe-area-inset-bottom,0px)+160px);}
+.body::-webkit-scrollbar{display:none;}
+
+/* ── BARRE NAV BAS identique v40 ── */
+.bottom-bar{flex-shrink:0;background:#fff;border-top:1.5px solid #cdc5f0;padding-bottom:env(safe-area-inset-bottom,0px);}
+.ai-row{display:flex;align-items:center;justify-content:flex-end;padding:9px 20px 5px;gap:10px;}
+.ai-lbl{font-size:11px;font-weight:700;color:#14233A;background:#fcffad;border-radius:8px;padding:5px 11px;}
+.ai-fab{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#7b2fff 45%,#27b6cc);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 5px 18px rgba(178,40,255,0.42);overflow:hidden;position:relative;}
+.ais{position:absolute;top:5px;left:9px;width:36px;height:14px;background:rgba(255,255,255,0.2);border-radius:50%;transform:rotate(-8deg);}
+.bnav{display:flex;align-items:center;padding:4px 0 8px;}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:3px 0;min-height:48px;justify-content:center;}
+.nl{font-size:11px;font-weight:700;color:#9080c0;}
+.ni.act .nl{color:#b228FF;}
+.nc{flex:0 0 72px;display:flex;flex-direction:column;align-items:center;}
+.nfab{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#b228FF,#27b6cc);display:flex;align-items:center;justify-content:center;margin-top:-26px;border:3px solid #fff;box-shadow:0 4px 14px rgba(178,40,255,0.32);cursor:pointer;}
+.nfl{font-size:11px;font-weight:700;color:#b228FF;margin-top:2px;}
+
+/* ── EYEBROW 12px — confort 50+ ── */
+.eyebrow{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.09em;display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.eyebrow.mauve{color:#8210cc;}
+.eyebrow.blue{color:#1a9ab0;}
+.eyebrow.amber{color:#854F0B;}
+
+/* ── STEP DOTS résultats ── */
+.steps-bar{padding:14px 18px 12px;background:#fff;border-bottom:0.5px solid #ede9f5;flex-shrink:0;}
+.steps-dots{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.sdot{height:5px;border-radius:3px;transition:all 300ms;}
+.sdot.done{background:rgba(178,40,255,0.3);flex:1;}
+.sdot.active-m{background:#b228FF;flex:2;}
+.sdot.active-b{background:#27b6cc;flex:2;}
+.sdot.active-a{background:#EF9F27;flex:2;}
+.sdot.idle{background:#ede9f5;flex:1;}
+.step-label{font-size:11px;color:#8a7ab0;text-align:center;font-weight:600;}
+
+/* ── BOUTONS CTA ── */
+.btn-primary{width:100%;background:linear-gradient(135deg,#b228FF 0%,#8a2be2 50%,#27b6cc 100%);border:none;border-radius:17px;padding:16px;display:flex;align-items:center;justify-content:center;gap:9px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;color:#fff;cursor:pointer;box-shadow:0 4px 18px rgba(178,40,255,0.38);position:relative;overflow:hidden;}
+.btn-primary::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,0.1);border-radius:17px 17px 0 0;}
+.btn-primary span{position:relative;z-index:1;}
+.btn-blue{width:100%;background:linear-gradient(135deg,#27b6cc,#1a9ab0);border:none;border-radius:17px;padding:16px;display:flex;align-items:center;justify-content:center;gap:9px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(39,182,204,0.38);position:relative;overflow:hidden;}
+.btn-blue::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,0.1);border-radius:17px 17px 0 0;}
+.btn-blue span{position:relative;z-index:1;}
+.cta-bar{position:sticky;bottom:0;background:#fff;border-top:1px solid #ede9f5;padding:14px 18px calc(env(safe-area-inset-bottom,0px)+14px);flex-shrink:0;}
+
+/* ── DIALOG CONFIRMATION ABANDON ── */
+.overlay{position:absolute;inset:0;background:rgba(20,35,58,0.6);z-index:200;display:flex;align-items:flex-end;justify-content:center;}
+.overlay.hidden{display:none!important;}
+.dialog{background:#fff;border-radius:24px 24px 0 0;padding:24px 20px calc(env(safe-area-inset-bottom,0px)+20px);width:100%;animation:fadeUp 250ms ease-out;}
+.dialog h3{font-size:18px;font-weight:900;color:#2d1060;margin-bottom:8px;text-align:center;}
+.dialog p{font-size:14px;font-weight:600;color:#8a7ab0;line-height:1.5;text-align:center;margin-bottom:20px;}
+.dialog-actions{display:flex;flex-direction:column;gap:10px;}
+.btn-dialog-quit{width:100%;background:#fff;border:1.5px solid #F09595;border-radius:15px;padding:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#791F1F;cursor:pointer;}
+.btn-dialog-stay{width:100%;background:linear-gradient(135deg,#b228FF,#8a2be2);border:none;border-radius:15px;padding:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:900;color:#fff;cursor:pointer;}
+
+/* ── PROGRESSION GLOBALE ── */
+.global-progress{background:#fff;border-radius:16px;padding:13px 16px;margin-bottom:16px;border:1.5px solid #e8e0ff;box-shadow:0 2px 8px rgba(178,40,255,0.06);}
+.global-progress-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.global-progress-lbl{font-size:12px;font-weight:800;color:#4e4280;}
+.global-progress-count{font-size:12px;font-weight:700;color:#8210cc;}
+.global-progress-track{height:8px;background:#ede9fe;border-radius:10px;overflow:hidden;}
+.global-progress-fill{height:100%;background:linear-gradient(90deg,#b228FF,#8a2be2 60%,#27b6cc);border-radius:10px;transition:width 600ms ease;}
+
+/* ── BADGE REPRENDRE ── */
+.badge-resume{font-size:10px;font-weight:800;background:linear-gradient(135deg,#b228FF,#8a2be2);color:#fff;border-radius:9px;padding:4px 10px;white-space:nowrap;}
+.qi-resume{border-left:3px solid #b228FF;background:#faf7ff;}
+
+/* ── QUIZ PREMIUM — verrouillé ── */
+.qi-locked{opacity:0.72;cursor:default;}
+.qi-locked:active{background:transparent;}
+.badge-premium{font-size:16px;line-height:1;}
+
+/* ── BANNIÈRE PREMIUM ── */
+.premium-banner{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#f5eeff,#e8f8ff);border:1.5px solid rgba(178,40,255,0.2);border-radius:16px;padding:14px 16px;margin-top:16px;box-shadow:0 2px 10px rgba(178,40,255,0.08);}
+.premium-banner-ico{font-size:24px;flex-shrink:0;}
+.premium-banner-text{flex:1;min-width:0;}
+.premium-banner-text strong{display:block;font-size:13px;font-weight:900;color:#2d1060;margin-bottom:2px;}
+.premium-banner-text span{font-size:11px;font-weight:600;color:#8a7ab0;line-height:1.4;}
+.premium-banner-btn{flex-shrink:0;background:linear-gradient(135deg,#b228FF,#8a2be2);border:none;border-radius:11px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;color:#fff;cursor:pointer;}
+
+/* ── BOUTON PARTAGER RÉSULTATS ── */
+.btn-share-results{width:100%;background:#fff;border:1.5px solid #e8e0ff;border-radius:16px;padding:14px;display:flex;align-items:center;justify-content:center;gap:9px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#5e5290;cursor:pointer;margin-top:12px;transition:all 130ms;}
+.btn-share-results:hover{border-color:#b228FF;color:#8210cc;}
+.btn-share-results:focus-visible{outline:2px solid #b228FF;}
+
+/* ── CONTACTS PARTAGE RÉSULTATS ── */
+.sr-contact{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:0.5px solid #f0ecff;cursor:pointer;transition:background 120ms;border-radius:10px;}
+.sr-contact:last-of-type{border-bottom:none;}
+.sr-contact:hover{background:#faf8ff;}
+.sr-contact:active{background:#f0e8ff;}
+.sr-contact:focus-visible{outline:2px solid #b228FF;outline-offset:2px;}
+.sr-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0;}
+.sr-info{flex:1;}
+.sr-name{font-size:13.5px;font-weight:800;color:#2d1060;}
+.sr-role{font-size:11px;font-weight:600;color:#8a7ab0;margin-top:1px;}
+.sr-send{font-size:11.5px;font-weight:800;color:#b228FF;white-space:nowrap;}
+.intro-card{background:#fff;border-radius:0 18px 18px 0;padding:15px 16px;border:1.5px solid #cdc5f0;border-left:4px solid #b228FF;margin-bottom:18px;box-shadow:0 2px 10px rgba(178,40,255,0.07);}
+.intro-card-title{font-size:13px;font-weight:800;color:#2d1060;margin-bottom:5px;}
+.intro-card-text{font-size:12px;font-weight:600;color:#8a7ab0;line-height:1.6;}
+.intro-toggle{display:inline;font-size:12px;font-weight:800;color:#b228FF;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px;font-family:'Nunito',sans-serif;}
+.intro-more{font-size:12px;font-weight:600;color:#8a7ab0;line-height:1.6;max-height:0;overflow:hidden;opacity:0;transition:max-height 400ms,opacity 300ms;}
+.intro-more.open{max-height:200px;opacity:1;}
+.intro-more p{margin-top:5px;}
+.intro-more em{color:#b228FF;font-style:normal;font-weight:700;}
+
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.sec-label{font-size:12px;font-weight:800;color:#4e4280;text-transform:uppercase;letter-spacing:0.09em;}
+.sec-count{font-size:12px;font-weight:700;color:#8a7ab0;}
+
+.quiz-list{background:#fff;border-radius:18px;border:1.5px solid #cdc5f0;overflow:hidden;box-shadow:0 2px 10px rgba(178,40,255,0.06);}
+.qi{display:flex;align-items:center;gap:12px;padding:13px 15px;border-bottom:0.5px solid #f0ecfc;cursor:pointer;transition:background 120ms;}
+.qi:last-child{border-bottom:none;}
+.qi:active{background:#f9f5ff;}
+.qi-num{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+.num-blue{background:rgba(39,182,204,0.15);color:#1a9ab0;}
+.num-mauve{background:rgba(178,40,255,0.15);color:#8210cc;}
+.num-teal{background:rgba(29,158,117,0.15);color:#0F6E56;}
+.num-amber{background:rgba(239,159,39,0.15);color:#854F0B;}
+.qi-emoji{font-size:20px;flex-shrink:0;}
+.qi-info{flex:1;min-width:0;}
+.qi-title{font-size:13px;font-weight:800;color:#2d1060;line-height:1.2;margin-bottom:2px;}
+.qi-sub{font-size:11px;font-weight:600;color:#8a7ab0;line-height:1.4;}
+
+/* ── ÉTAT EN COURS — mini barre + label ── */
+.qi-progress-wrap{margin-top:5px;}
+.qi-progress-label{font-size:10px;font-weight:700;color:#8210cc;margin-bottom:3px;}
+.qi-progress-track{height:3px;background:#ede9fe;border-radius:3px;overflow:hidden;}
+.qi-progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#b228FF,#8a2be2);}
+
+/* ── BADGES STATUS — différenciés ── */
+.qi-status{flex-shrink:0;display:flex;align-items:center;}
+/* Vert = complété, gris = commencé */
+.badge-done{font-size:10px;font-weight:800;background:#E1F5EE;color:#085041;border-radius:7px;padding:2px 8px;}
+.badge-started{font-size:10px;font-weight:800;background:#f0e8ff;color:#8210cc;border-radius:7px;padding:2px 8px;}
+.qi-chevron{color:#cdc5f0;}
+
+/* ── ÉCRAN 2 — QUESTION ── */
+.prog-bar-zone{padding:14px 18px 12px;background:#fff;border-bottom:0.5px solid #ede9f5;flex-shrink:0;}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.prog-lbl{font-size:12px;font-weight:700;color:#8a7ab0;}
+.prog-num{font-size:12px;font-weight:800;color:#2d1060;}
+.prog-track{height:7px;background:#ede9fe;border-radius:10px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#b228FF,#8a2be2 60%,#27b6cc);}
+
+/* q-body scroll pour éviter masquage option 4 sur petits écrans */
+.q-body{flex:1;overflow-y:auto;padding:24px 18px 16px;display:flex;flex-direction:column;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.q-body::-webkit-scrollbar{display:none;}
+.q-num-lbl{font-size:11px;font-weight:800;color:#b228FF;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:9px;flex-shrink:0;}
+.q-text{font-size:17px;font-weight:800;color:#2d1060;line-height:1.5;margin-bottom:22px;flex-shrink:0;}
+
+/* ── OPTIONS avec emoji — Headspace pattern ── */
+.options{display:flex;flex-direction:column;gap:10px;}
+.opt{
+  background:#f5f3ff;border-radius:16px;padding:14px 16px;
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#5e5290;
+  border:1.5px solid #e8e0ff;cursor:pointer;
+  display:flex;align-items:center;gap:12px;
+  transition:all 150ms;flex-shrink:0;
+}
+.opt:focus-visible{outline:2px solid #b228FF;outline-offset:2px;}
+.opt.sel{background:#f0e8ff;border-color:#b228FF;color:#2d1060;}
+.opt-emoji{font-size:20px;flex-shrink:0;width:28px;text-align:center;}
+.opt-radio{width:20px;height:20px;border-radius:50%;border:2px solid #cdc5f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 150ms;margin-left:auto;}
+.opt.sel .opt-radio{background:#b228FF;border-color:#b228FF;}
+.opt-radio-dot{width:8px;height:8px;border-radius:50%;background:#fff;display:none;}
+.opt.sel .opt-radio-dot{display:block;}
+
+/* ── ÉCRAN 3A — PROFIL ── */
+.profil-body{flex:1;padding:24px 18px 16px;display:flex;flex-direction:column;align-items:center;overflow-y:auto;scrollbar-width:none;}
+.profil-body::-webkit-scrollbar{display:none;}
+/* Animation respectant prefers-reduced-motion */
+.profil-icon{width:80px;height:80px;border-radius:50%;background:#f0e8ff;border:2px solid rgba(178,40,255,0.25);display:flex;align-items:center;justify-content:center;font-size:38px;margin-bottom:20px;animation:pulse 2.5s ease-in-out infinite;}
+.profil-title{font-size:22px;font-weight:900;color:#2d1060;text-align:center;line-height:1.3;margin-bottom:16px;}
+.profil-divider{height:1px;background:#ede9f5;width:100%;margin-bottom:18px;}
+.profil-desc{font-size:14px;font-weight:600;color:#5e5290;line-height:1.8;text-align:left;flex:1;}
+.profil-desc em{color:#b228FF;font-style:normal;font-weight:800;}
+
+/* ── ÉCRAN 3B — CONSEILS ── */
+.conseils-body{flex:1;overflow-y:auto;padding:20px 18px 16px;scrollbar-width:none;}
+.conseils-body::-webkit-scrollbar{display:none;}
+.intro-conseils{font-size:13px;font-weight:600;color:#5e5290;line-height:1.6;margin-bottom:18px;padding-bottom:16px;border-bottom:0.5px solid #ede9f5;}
+.intro-conseils strong{color:#2d1060;font-weight:800;}
+.tips{display:flex;flex-direction:column;gap:11px;}
+.tip-card{background:#fff;border-radius:16px;padding:14px 15px;display:flex;align-items:flex-start;gap:13px;border:1.5px solid #cdc5f0;box-shadow:0 2px 8px rgba(178,40,255,0.06);}
+.tip-icon{width:38px;height:38px;border-radius:12px;background:#f0e8ff;border:1px solid rgba(178,40,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.tip-text{font-size:13px;font-weight:700;color:#2d1060;line-height:1.6;padding-top:6px;}
+
+/* ── ÉCRAN 3C — RESSOURCES ── */
+.ressources-body{flex:1;overflow-y:auto;padding:20px 18px 16px;scrollbar-width:none;}
+.ressources-body::-webkit-scrollbar{display:none;}
+.intro-ress{font-size:13px;font-weight:600;color:#5e5290;line-height:1.6;margin-bottom:18px;}
+.res-list{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}
+.res-card{background:#fff;border-radius:16px;padding:14px 15px;display:flex;align-items:center;gap:14px;border:1.5px solid #cdc5f0;cursor:pointer;box-shadow:0 2px 8px rgba(178,40,255,0.06);transition:background 120ms;}
+.res-card:active{background:#f9f5ff;}
+.res-ico{font-size:26px;flex-shrink:0;}
+.res-info{flex:1;}
+.res-label{font-size:14px;font-weight:800;color:#2d1060;margin-bottom:2px;}
+.res-sub{font-size:12px;font-weight:600;color:#8a7ab0;}
+.res-arr{flex-shrink:0;color:#b228FF;}
+.divider-section{height:1px;background:#ede9f5;margin-bottom:18px;}
+.next-label{font-size:11px;font-weight:800;color:#8a7ab0;text-transform:uppercase;letter-spacing:0.09em;display:flex;align-items:center;gap:6px;margin-bottom:11px;}
+.next-card{background:#fff;border-radius:18px;padding:16px;border:1.5px solid #cdc5f0;box-shadow:0 2px 10px rgba(178,40,255,0.07);}
+.next-title{font-size:16px;font-weight:800;color:#2d1060;margin-bottom:14px;line-height:1.3;}
+</style>
+</head>
+<body>
+
+<!-- ══ DIALOG CONFIRMATION ABANDON (partagé) ══ -->
+<div class="overlay hidden" id="abandon-overlay" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+  <div class="dialog">
+    <h3 id="dialog-title">Quitter le quiz ?</h3>
+    <p>Votre progression sera perdue si vous quittez maintenant. Vous pourrez le reprendre depuis le début.</p>
+    <div class="dialog-actions">
+      <button class="btn-dialog-stay" onclick="stayInQuiz()" aria-label="Continuer le quiz">Continuer le quiz</button>
+      <button class="btn-dialog-quit" onclick="confirmQuit()" aria-label="Quitter et perdre ma progression">Quitter quand même</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     ÉCRAN 1 — LISTE DES QUIZ
+════════════════════════════════ -->
+<div class="screen" id="s-liste">
+  <div class="hdr">
+    <div class="hb1"></div><div class="hb2"></div>
+    <div class="hdr-top">
+      <button class="back-btn" onclick="goHome()" aria-label="Retour à l'accueil">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span style="position:absolute;left:50%;transform:translateX(-50%);font-size:17px;font-weight:900;color:#fff;">Quiz</span>
+      <div style="width:38px;"></div>
+    </div>
+    <div class="hdr-title" style="margin-top:6px;">Mieux me connaître &amp; m'informer</div>
+  </div>
+
+  <div class="body">
+    <!-- Intro -->
+    <div class="intro-card" role="note">
+      <div class="intro-card-title">💛 Ces quiz sont faits pour vous, pas pour vous juger</div>
+      <div class="intro-card-text">
+        Conçus avec des psychologues pour vous aider à mieux vous connaître et trouver des ressources adaptées.
+        <button class="intro-toggle" id="toggle-intro" onclick="toggleIntro()">En savoir plus</button>
+      </div>
+      <div class="intro-more" id="intro-more">
+        <p>Être proche aidant·e, ça s'apprend rarement. On s'y retrouve souvent sans l'avoir choisi, sans vraiment savoir où on en est ni ce dont on a besoin.</p>
+        <p>Il n'y a pas de bonne ou de mauvaise réponse. Juste votre vécu — et des pistes pour aller mieux.</p>
+      </div>
+    </div>
+
+    <!-- Barre de progression globale -->
+    <div class="global-progress" aria-label="Votre progression globale">
+      <div class="global-progress-top">
+        <span class="global-progress-lbl">Votre progression</span>
+        <span class="global-progress-count">2 / 10 quiz complétés</span>
+      </div>
+      <div class="global-progress-track" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="10" aria-label="2 quiz sur 10 complétés">
+        <div class="global-progress-fill" style="width:20%;"></div>
+      </div>
+    </div>
+
+    <!-- Section REPRENDRE (quiz en cours épinglé) -->
+    <div class="sec-header" style="margin-top:4px;">
+      <span class="sec-label" style="color:#8210cc;">⏸ En cours</span>
+    </div>
+    <div class="quiz-list" role="list" style="margin-bottom:16px;">
+      <div class="qi qi-resume" role="listitem" onclick="startQuiz()" aria-label="Reprendre Mon niveau de stress — 5 questions sur 8">
+        <div class="qi-num num-mauve" aria-hidden="true">2</div>
+        <span class="qi-emoji" aria-hidden="true">⚡</span>
+        <div class="qi-info">
+          <p class="qi-title">Mon niveau de stress</p>
+          <p class="qi-sub">Comment je me sens vraiment en ce moment ?</p>
+          <div class="qi-progress-wrap">
+            <p class="qi-progress-label">5 / 8 questions</p>
+            <div class="qi-progress-track" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="8" aria-label="5 questions sur 8">
+              <div class="qi-progress-fill" style="width:62%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="qi-status">
+          <span class="badge-resume">Reprendre →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tous les quiz -->
+    <div class="sec-header">
+      <span class="sec-label">Les thématiques</span>
+      <span class="sec-count">10 quiz</span>
+    </div>
+
+    <div class="quiz-list" role="list">
+
+      <!-- Quiz 1 : Gratuit — Complété -->
+      <div class="qi" role="listitem" onclick="startQuiz()" aria-label="Suis-je aidant·e ? — Complété">
+        <div class="qi-num num-blue" aria-hidden="true">1</div>
+        <span class="qi-emoji" aria-hidden="true">🤝</span>
+        <div class="qi-info">
+          <p class="qi-title">Suis-je aidant·e ?</p>
+          <p class="qi-sub">Est-ce que j'accompagne un proche en perte d'autonomie ?</p>
+        </div>
+        <div class="qi-status"><span class="badge-done" role="status" aria-label="Quiz complété">✓ Fait</span></div>
+      </div>
+
+      <!-- Quiz 2 : Gratuit — En cours -->
+      <div class="qi" role="listitem" onclick="startQuiz()" aria-label="Mon niveau de stress — En cours">
+        <div class="qi-num num-mauve" aria-hidden="true">2</div>
+        <span class="qi-emoji" aria-hidden="true">⚡</span>
+        <div class="qi-info">
+          <p class="qi-title">Mon niveau de stress</p>
+          <p class="qi-sub">Comment je me sens vraiment en ce moment ?</p>
+        </div>
+        <div class="qi-status"><span class="badge-started" role="status">En cours</span></div>
+      </div>
+
+      <!-- Quiz 3–10 : Premium (cadenas) -->
+      <div class="qi qi-locked" role="listitem" aria-label="Prendre soin de moi — Accès Premium">
+        <div class="qi-num num-teal" aria-hidden="true">3</div>
+        <span class="qi-emoji" aria-hidden="true">🌿</span>
+        <div class="qi-info"><p class="qi-title">Prendre soin de moi</p><p class="qi-sub">Est-ce que je prends vraiment soin de moi ?</p></div>
+        <div class="qi-status"><span class="badge-premium" aria-label="Contenu Premium">🔒</span></div>
+      </div>
+
+      <div class="qi qi-locked" role="listitem" aria-label="Mes signaux d'alerte — Accès Premium">
+        <div class="qi-num num-amber" aria-hidden="true">4</div>
+        <span class="qi-emoji" aria-hidden="true">🔍</span>
+        <div class="qi-info"><p class="qi-title">Mes signaux d'alerte</p><p class="qi-sub">Est-ce que je reconnais les signaux quand je ne vais pas bien ?</p></div>
+        <div class="qi-status"><span class="badge-premium" aria-label="Contenu Premium">🔒</span></div>
+      </div>
+
+      <div class="qi qi-locked" role="listitem" aria-label="Ce que ce rôle m'apporte — Accès Premium">
+        <div class="qi-num num-mauve" aria-hidden="true">5</div>
+        <span class="qi-emoji" aria-hidden="true">⚖️</span>
+        <div class="qi-info"><p class="qi-title">Ce que ce rôle m'apporte</p><p class="qi-sub">Ce que mon rôle me coûte et m'apporte</p></div>
+        <div class="qi-status"><span class="badge-premium" aria-label="Contenu Premium">🔒</span></div>
+      </div>
+
+      <div class="qi qi-locked" role="listitem" aria-label="Aidance et travail — Accès Premium">
+        <div class="qi-num num-blue" aria-hidden="true">6</div>
+        <span class="qi-emoji" aria-hidden="true">💼</span>
+        <div class="qi-info"><p class="qi-title">Aidance &amp; travail</p><p class="qi-sub">Comment je vis la double vie d'aidant·e et de salarié·e ?</p></div>
+        <div class="qi-status"><span class="badge-premium" aria-label="Contenu Premium">🔒</span></div>
+      </div>
+
+      <div class="qi qi-locked" role="listitem" aria-label="Demander de l'aide — Accès Premium">
+        <div class="qi-num num-amber" aria-hidden="true">7</div>
+        <span class="qi-emoji" aria-hidden="true">🙋</span>
+        <div class="qi-info"><p class="qi-title">Demander de l'aide</p><p class="qi-sub">Est-ce que j'arrive à demander de l'aide ?</p></div>
+        <div class="qi-status"><span class="badge-premium" aria-label="Contenu Premium">🔒</span></div>
+      </div>
+
+      <div class="qi qi-locked" role="listitem" aria-label="Poser mes limites — Accès Premium">
+        <div class="qi-num num-teal" aria-hidden="true">8</div>
+        <span class="qi-emoji" aria-hidden="true">🚧</span>
+        <div class="qi-info"><p class="qi-title">Poser mes limites</p><p class="qi-sub">Est-ce que j'arrive à dire non sans culpabiliser ?</p></div>
+        <div class="qi-status"><span class="badge-premium" aria-label="Contenu Premium">🔒</span></div>
+      </div>
+
+      <div class="qi qi-locked" role="listitem" aria-label="Mon organisation — Accès Premium">
+        <div class="qi-num num-blue" aria-hidden="true">9</div>
+        <span class="qi-emoji" aria-hidden="true">🗓️</span>
+        <div class="qi-info"><p class="qi-title">Mon organisation</p><p class="qi-sub">Comment je m'organise au quotidien ?</p></div>
+        <div class="qi-status"><span class="badge-premium" aria-label="Contenu Premium">🔒</span></div>
+      </div>
+
+      <div class="qi qi-locked" role="listitem" aria-label="Ma relation avec mon proche — Accès Premium">
+        <div class="qi-num num-mauve" aria-hidden="true">10</div>
+        <span class="qi-emoji" aria-hidden="true">💞</span>
+        <div class="qi-info"><p class="qi-title">Ma relation avec mon proche</p><p class="qi-sub">Comment je vis ma relation avec la personne que j'aide ?</p></div>
+        <div class="qi-status"><span class="badge-premium" aria-label="Contenu Premium">🔒</span></div>
+      </div>
+
+    </div>
+
+    <!-- Bannière Premium -->
+    <div class="premium-banner" role="note" aria-label="Débloquer tous les quiz avec l'abonnement Premium">
+      <div class="premium-banner-ico" aria-hidden="true">✨</div>
+      <div class="premium-banner-text">
+        <strong>Accédez aux 8 quiz Premium</strong>
+        <span>Passez à l'abonnement Sawa Care pour débloquer tout votre parcours.</span>
+      </div>
+      <button class="premium-banner-btn" onclick="window.open('https://app.sawa-care.io/settings/billing','_blank')" aria-label="Découvrir l'abonnement Premium">Voir</button>
+    </div>
+
+  </div><!-- /body -->
+
+  <div class="bottom-bar">
+    <div class="ai-row"><span class="ai-lbl" aria-hidden="true">Assistant IA</span><button class="ai-fab" aria-label="Assistant IA"><div class="ais" aria-hidden="true"></div><svg width="26" height="26" viewBox="0 0 30 30" fill="none" aria-hidden="true"><circle cx="15" cy="11" r="5.5" stroke="#14233A" stroke-width="2"/><circle cx="15" cy="11" r="2" fill="#14233A"/><rect x="8" y="18" width="14" height="9" rx="3.5" stroke="#14233A" stroke-width="2"/><circle cx="11.5" cy="22" r="1.5" fill="#14233A"/><circle cx="18.5" cy="22" r="1.5" fill="#14233A"/><line x1="15" y1="5.5" x2="15" y2="3" stroke="#14233A" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="2.5" r="1.5" fill="#14233A"/></svg></button></div>
+    <nav class="bnav" aria-label="Navigation principale">
+      <div class="ni" onclick="goHome()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nl">Accueil</span></div>
+      <div class="ni"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="nl">Messages</span></div>
+      <div class="nc"><button class="nfab" aria-label="Appel"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="6" width="13" height="12" rx="2" fill="white"/><path d="M16 8.5l6-3.5v14l-6-3.5V8.5z" fill="white"/></svg></button><span class="nfl">Appel</span></div>
+      <div class="ni"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nl">Agenda</span></div>
+      <div class="ni"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9080c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nl">Profil</span></div>
+    </nav>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     ÉCRAN 2 — QUESTION EN COURS
+════════════════════════════════ -->
+<div class="screen hidden" id="s-question">
+  <div class="hdr">
+    <div class="hb1"></div><div class="hb2"></div>
+    <div class="hdr-top">
+      <!-- Retour déclenche dialog de confirmation -->
+      <button class="back-btn" onclick="askAbandon()" aria-label="Retour aux quiz">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div style="width:38px;"></div>
+    </div>
+    <div class="hdr-title">Suis-je aidant·e ?</div>
+  </div>
+
+  <div class="prog-bar-zone">
+    <div class="prog-top"><span class="prog-lbl">Progression</span><span class="prog-num" id="q-counter">5 / 8</span></div>
+    <div class="prog-track" role="progressbar" aria-valuenow="5" aria-valuemin="1" aria-valuemax="8" aria-label="Question 5 sur 8">
+      <div class="prog-fill" id="prog-fill" style="width:62%;"></div>
+    </div>
+  </div>
+
+  <!-- Scroll activé sur q-body pour éviter masquage option 4 sur iPhone SE -->
+  <div class="q-body">
+    <div class="q-num-lbl" id="q-num-lbl">Question 5</div>
+    <div class="q-text" id="q-text">Vous vous sentez responsable de la sécurité ou du bien-être de cette personne ?</div>
+
+    <!-- Options avec emoji — 3 choix Jamais / Parfois / Toujours -->
+    <div class="options" role="radiogroup" aria-label="Choisissez une réponse" id="options-list">
+      <div class="opt" role="radio" aria-checked="false" onclick="selectOpt(this)" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')selectOpt(this)">
+        <span class="opt-emoji" aria-hidden="true">🙅</span>Jamais
+        <div class="opt-radio" aria-hidden="true"><div class="opt-radio-dot"></div></div>
+      </div>
+      <div class="opt sel" role="radio" aria-checked="true" onclick="selectOpt(this)" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')selectOpt(this)">
+        <span class="opt-emoji" aria-hidden="true">🤔</span>Parfois
+        <div class="opt-radio" aria-hidden="true"><div class="opt-radio-dot"></div></div>
+      </div>
+      <div class="opt" role="radio" aria-checked="false" onclick="selectOpt(this)" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')selectOpt(this)">
+        <span class="opt-emoji" aria-hidden="true">😔</span>Toujours
+        <div class="opt-radio" aria-hidden="true"><div class="opt-radio-dot"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-bar">
+    <button class="btn-primary" onclick="go('s-profil')" aria-label="Question suivante">
+      <span>Suivant</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     ÉCRAN 3A — PROFIL
+════════════════════════════════ -->
+<div class="screen hidden" id="s-profil">
+  <div class="hdr">
+    <div class="hb1"></div><div class="hb2"></div>
+    <div class="hdr-top">
+      <button class="back-btn" onclick="go('s-question')" aria-label="Retour aux questions">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="hdr-badge">Quiz 1 · Résultats</span>
+    </div>
+  </div>
+  <div class="steps-bar">
+    <div class="steps-dots">
+      <div class="sdot active-m" role="tab" aria-label="Étape 1 sur 3 : Votre profil — en cours" aria-selected="true"></div>
+      <div class="sdot idle" role="tab" aria-label="Étape 2 sur 3 : Nos conseils — à venir" aria-selected="false"></div>
+      <div class="sdot idle" role="tab" aria-label="Étape 3 sur 3 : Pour aller plus loin — à venir" aria-selected="false"></div>
+    </div>
+    <div class="step-label">Étape 1 sur 3 · Votre profil</div>
+  </div>
+  <div class="profil-body">
+    <div class="eyebrow mauve" style="align-self:flex-start;margin-bottom:20px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Votre profil
+    </div>
+    <div class="profil-icon" aria-hidden="true">🌱</div>
+    <div class="profil-title">Rôle d'aidant·e ponctuel ou modéré</div>
+    <div class="profil-divider"></div>
+    <div class="profil-desc">Vous êtes engagé·e dans un rôle d'aide, même si ce n'est pas encore constant. Cette implication mérite d'être reconnue — <em>elle compte, pour vous comme pour votre proche.</em> Avec le temps, elle peut s'intensifier : mieux vaut s'y préparer.</div>
+  </div>
+  <div class="cta-bar">
+    <button class="btn-primary" onclick="go('s-conseils')" aria-label="Voir mes conseils">
+      <span>Voir mes conseils</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     ÉCRAN 3B — CONSEILS
+════════════════════════════════ -->
+<div class="screen hidden" id="s-conseils">
+  <div class="hdr">
+    <div class="hb1"></div><div class="hb2"></div>
+    <div class="hdr-top">
+      <button class="back-btn" onclick="go('s-profil')" aria-label="Retour à votre profil">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="hdr-badge">Quiz 1 · Résultats</span>
+    </div>
+  </div>
+  <div class="steps-bar">
+    <div class="steps-dots">
+      <div class="sdot done" role="tab" aria-label="Étape 1 sur 3 : Votre profil — complétée" aria-selected="false"></div>
+      <div class="sdot active-b" role="tab" aria-label="Étape 2 sur 3 : Nos conseils — en cours" aria-selected="true"></div>
+      <div class="sdot idle" role="tab" aria-label="Étape 3 sur 3 : Pour aller plus loin — à venir" aria-selected="false"></div>
+    </div>
+    <div class="step-label">Étape 2 sur 3 · Nos conseils</div>
+  </div>
+  <div class="conseils-body">
+    <div class="eyebrow blue" style="margin-top:4px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Nos conseils
+    </div>
+    <div class="intro-conseils" style="margin-top:8px;">Quelques pistes <strong>adaptées à votre profil</strong> pour prendre soin de vous et mieux vous préparer à la suite.</div>
+    <div class="tips">
+      <div class="tip-card"><div class="tip-icon" aria-hidden="true">🗣️</div><div class="tip-text">Parlez de votre situation à un professionnel de santé ou à un proche de confiance</div></div>
+      <div class="tip-card"><div class="tip-icon" aria-hidden="true">🌿</div><div class="tip-text">Préservez du temps pour vous — même en petites doses</div></div>
+      <div class="tip-card"><div class="tip-icon" aria-hidden="true">📖</div><div class="tip-text">Renseignez-vous sur les aides disponibles dans votre territoire</div></div>
+      <div class="tip-card"><div class="tip-icon" aria-hidden="true">🤝</div><div class="tip-text">Rejoignez un groupe d'aidants près de chez vous — vous n'êtes pas seul·e</div></div>
+    </div>
+  </div>
+  <div class="cta-bar">
+    <button class="btn-blue" onclick="go('s-ressources')" aria-label="Pour aller plus loin">
+      <span>Pour aller plus loin</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     ÉCRAN 3C — RESSOURCES
+════════════════════════════════ -->
+<div class="screen hidden" id="s-ressources">
+  <div class="hdr">
+    <div class="hb1"></div><div class="hb2"></div>
+    <div class="hdr-top">
+      <button class="back-btn" onclick="go('s-conseils')" aria-label="Retour aux conseils">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="hdr-badge">Quiz 1 · Résultats</span>
+    </div>
+  </div>
+  <div class="steps-bar">
+    <div class="steps-dots">
+      <div class="sdot done" role="tab" aria-label="Étape 1 complétée" aria-selected="false"></div>
+      <div class="sdot done" role="tab" aria-label="Étape 2 complétée" aria-selected="false"></div>
+      <div class="sdot active-a" role="tab" aria-label="Étape 3 sur 3 : Pour aller plus loin — en cours" aria-selected="true"></div>
+    </div>
+    <div class="step-label">Étape 3 sur 3 · Pour aller plus loin</div>
+  </div>
+  <div class="ressources-body">
+    <div class="eyebrow amber" style="margin-top:4px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Pour aller plus loin
+    </div>
+    <div class="intro-ress" style="margin-top:8px;">Accédez aux ressources associées à ce quiz, à votre rythme.</div>
+    <div class="res-list">
+      <div class="res-card" role="button" tabindex="0" aria-label="Fiche pratique — Suis-je un·e proche aidant·e ?">
+        <span class="res-ico" aria-hidden="true">📄</span>
+        <div class="res-info"><div class="res-label">Fiche pratique</div><div class="res-sub">Suis-je un·e proche aidant·e ?</div></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="res-arr" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="res-card" role="button" tabindex="0" aria-label="Vidéo — Suis-je un·e proche aidant·e ?">
+        <span class="res-ico" aria-hidden="true">🎬</span>
+        <div class="res-info"><div class="res-label">Vidéo</div><div class="res-sub">Suis-je un·e proche aidant·e ?</div></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="res-arr" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="res-card" role="button" tabindex="0" aria-label="Article — Les droits des proches aidants">
+        <span class="res-ico" aria-hidden="true">📰</span>
+        <div class="res-info"><div class="res-label">Article</div><div class="res-sub">Les droits des proches aidants en France</div></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b228FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="res-arr" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+    <div class="divider-section"></div>
+    <div class="next-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Quiz suivant
+    </div>
+    <div class="next-card">
+      <div class="next-title">Mon niveau de stress</div>
+      <button class="btn-primary" onclick="go('s-liste')" aria-label="Démarrer le quiz Mon niveau de stress">
+        <span>Démarrer</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
+    <!-- Partager les résultats -->
+    <button class="btn-share-results" onclick="openShareResults()" aria-label="Partager mes résultats">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      <span>Partager mes résultats</span>
+    </button>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     BOTTOM SHEET — PARTAGER RÉSULTATS
+════════════════════════════════ -->
+<div class="overlay hidden" id="share-results-overlay" role="dialog" aria-modal="true" aria-labelledby="sr-title" onclick="closeShareResults()">
+  <div class="dialog" onclick="event.stopPropagation()" style="border-radius:26px 26px 0 0;padding:0 20px calc(env(safe-area-inset-bottom,0px)+24px);max-height:80vh;overflow-y:auto;">
+    <div style="width:38px;height:4px;border-radius:2px;background:#e4ddf7;margin:12px auto 16px;"></div>
+    <h3 id="sr-title" style="font-size:17px;text-align:left;margin-bottom:4px;">Partager mes résultats</h3>
+    <p style="font-size:13px;font-weight:600;color:#8a7ab0;text-align:left;margin-bottom:18px;line-height:1.5;">Partagez votre profil de quiz avec un membre de votre réseau Sawa Care.</p>
+
+    <!-- Contacts réseau -->
+    <div style="font-size:10px;font-weight:800;color:#4e4280;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:10px;">Mon réseau</div>
+
+    <div class="sr-contact" tabindex="0" role="button" onclick="sendResults('Basma Frangieh','Care Manager')" onkeydown="if(event.key==='Enter')sendResults('Basma Frangieh','Care Manager')" aria-label="Partager avec Basma Frangieh — Care Manager">
+      <div class="sr-av" style="background:linear-gradient(135deg,#27b6cc,#1e8fa0);">BF</div>
+      <div class="sr-info"><div class="sr-name">Basma Frangieh</div><div class="sr-role">Care Manager</div></div>
+      <span class="sr-send">Envoyer</span>
+    </div>
+    <div class="sr-contact" tabindex="0" role="button" onclick="sendResults('Rabhot Frahot','Co-aidant')" onkeydown="if(event.key==='Enter')sendResults('Rabhot Frahot','Co-aidant')" aria-label="Partager avec Rabhot Frahot — Co-aidant">
+      <div class="sr-av" style="background:linear-gradient(135deg,#8a2be2,#b228FF);">RF</div>
+      <div class="sr-info"><div class="sr-name">Rabhot Frahot</div><div class="sr-role">Co-aidant · Martin</div></div>
+      <span class="sr-send">Envoyer</span>
+    </div>
+    <div class="sr-contact" tabindex="0" role="button" onclick="sendResults('Antoinette Nakad','Co-aidante')" onkeydown="if(event.key==='Enter')sendResults('Antoinette Nakad','Co-aidante')" aria-label="Partager avec Antoinette Nakad — Co-aidante">
+      <div class="sr-av" style="background:linear-gradient(135deg,#1e3a6e,#27b6cc);">AN</div>
+      <div class="sr-info"><div class="sr-name">Antoinette Nakad</div><div class="sr-role">Co-aidante · Madeleine</div></div>
+      <span class="sr-send">Envoyer</span>
+    </div>
+
+    <button class="btn-dialog-stay" style="margin-top:16px;" onclick="closeShareResults()">Annuler</button>
+  </div>
+</div>
+
+<script>
+/* ── Partage résultats ── */
+function openShareResults(){
+  document.getElementById('share-results-overlay').classList.remove('hidden');
+}
+function closeShareResults(){
+  document.getElementById('share-results-overlay').classList.add('hidden');
+}
+function sendResults(name, role){
+  closeShareResults();
+  var z=document.getElementById('announce');
+  z.textContent='';
+  setTimeout(function(){z.textContent='Résultats partagés avec '+name;},50);
+}
+
+/* ── Navigation ── */
+var quitTarget = 's-liste';
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.add('hidden');});
+  document.getElementById(id).classList.remove('hidden');
+}
+function goHome(){
+  window.location.href = 'sawa_care_home_v41.html';
+}
+function startQuiz(){go('s-question');}
+
+/* ── Dialog abandon ── */
+function askAbandon(){
+  quitTarget = 's-liste';
+  document.getElementById('abandon-overlay').classList.remove('hidden');
+}
+function stayInQuiz(){
+  document.getElementById('abandon-overlay').classList.add('hidden');
+}
+function confirmQuit(){
+  document.getElementById('abandon-overlay').classList.add('hidden');
+  // Effacer la sauvegarde du quiz en cours
+  try { localStorage.removeItem('sawa_quiz_progress'); } catch(e){}
+  go(quitTarget);
+}
+
+/* ── Sauvegarde localStorage ── */
+function saveProgress(qNum, answer){
+  try {
+    var p = JSON.parse(localStorage.getItem('sawa_quiz_progress') || '{}');
+    p['q'+qNum] = answer;
+    p['lastQ'] = qNum;
+    p['quizId'] = 1;
+    localStorage.setItem('sawa_quiz_progress', JSON.stringify(p));
+  } catch(e){}
+}
+function loadProgress(){
+  try {
+    var p = JSON.parse(localStorage.getItem('sawa_quiz_progress') || '{}');
+    return p;
+  } catch(e){ return {}; }
+}
+
+/* ── Sélection option avec sauvegarde ── */
+function selectOpt(el){
+  document.querySelectorAll('#options-list .opt').forEach(function(o){
+    o.classList.remove('sel'); o.setAttribute('aria-checked','false');
+  });
+  el.classList.add('sel'); el.setAttribute('aria-checked','true');
+  // Sauvegarder la réponse
+  var qNum = parseInt(document.getElementById('q-num-lbl').textContent.replace('Question ',''));
+  saveProgress(qNum, el.textContent.trim());
+}
+
+/* ── Intro toggle ── */
+function toggleIntro(){
+  var m=document.getElementById('intro-more');
+  var b=document.getElementById('toggle-intro');
+  var open=m.classList.toggle('open');
+  b.textContent=open?'Réduire':'En savoir plus';
+}
+
+/* ── Restauration à l'ouverture ── */
+(function(){
+  var p = loadProgress();
+  if(p.lastQ && p.quizId === 1){
+    // Mettre à jour le compteur et la barre si progression existante
+    var total = 8;
+    var cur = p.lastQ;
+    var pct = Math.round((cur/total)*100);
+    var el = document.getElementById('q-counter');
+    var fill = document.getElementById('prog-fill');
+    var lbl = document.getElementById('q-num-lbl');
+    if(el) el.textContent = cur + ' / ' + total;
+    if(fill) fill.style.width = pct + '%';
+    if(lbl) lbl.textContent = 'Question ' + cur;
+  }
+})();
+</script>
+</body>
+</html>
