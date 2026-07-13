@@ -7,12 +7,13 @@
 
 ## Mood Functionality
 - **Current functionality**: API allows registering a mood for the day and returns an error message in case the action was already done.
-- **New functionality**: The API needs to also return the time the action was taken.
+- **New functionality**: 
+- add a new api to return the current status and time of last action.
 
 ## Proches Aidés List Functionality
 - **Current status**: An API already exists which shows the aidés data.
 - **To do**: The API needs to also return the aide related pap status (in percentage form).
-- **Note**: Some design text is out of context, needs elaboration from client.
+
 
 ## "Ma charge d'aidant" Button
 - **Clarification needed**: Where does this button take the user?

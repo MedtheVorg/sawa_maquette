@@ -2,13 +2,146 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0;url=sawa_care_home_v41.html">
-  <title>Redirection...</title>
-  <script>
-    window.location.replace("sawa_care_home_v41.html");
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sawa Maquette - Navigation Globale</title>
+  
+  <!-- Librairie Marked.js pour parser le Markdown en HTML côté client -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f9f7ff;
+    }
+    .global-bar {
+      height: 54px;
+      background-color: #2d1060; /* Couleur principale Sawa */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 1000;
+    }
+    .global-bar button {
+      background: #8210cc;
+      color: white;
+      border: 1px solid #b228FF;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .global-bar button:hover {
+      background: #b228FF;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(178, 40, 255, 0.3);
+    }
+    .global-bar button:active {
+      transform: translateY(1px);
+    }
+    
+    /* Section Maquette */
+    #frame {
+      width: 100%;
+      height: calc(100% - 54px);
+      border: none;
+      display: block;
+      background: #f9f7ff;
+    }
+
+    /* Section Markdown rendu */
+    #md-container {
+      display: none; /* Caché par défaut */
+      width: 100%;
+      height: calc(100% - 54px);
+      overflow-y: auto;
+      background: #fff;
+    }
+    
+    /* Styles inspirés de GitHub pour un beau rendu Markdown */
+    .md-content {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: #24292e;
+    }
+    .md-content h1, .md-content h2 { 
+      border-bottom: 1px solid #eaecef; 
+      padding-bottom: 0.3em; 
+      margin-top: 24px; 
+      margin-bottom: 16px; 
+      font-weight: 600; 
+      line-height: 1.25; 
+    }
+    .md-content h3 { margin-top: 24px; font-weight: 600; }
+    .md-content ul, .md-content ol { padding-left: 2em; margin-top: 0; margin-bottom: 16px; }
+    .md-content li + li { margin-top: 0.25em; }
+    .md-content p { margin-top: 0; margin-bottom: 16px; }
+    .md-content code { padding: 0.2em 0.4em; margin: 0; font-size: 85%; background-color: rgba(27,31,35,0.05); border-radius: 3px; font-family: monospace; }
+    .md-content pre { padding: 16px; overflow: auto; font-size: 85%; line-height: 1.45; background-color: #f6f8fa; border-radius: 6px; }
+    .md-content pre code { background-color: transparent; padding: 0; }
+    .md-content blockquote { margin: 0 0 16px; padding: 0 1em; color: #6a737d; border-left: 0.25em solid #dfe2e5; }
+    .md-content input[type="checkbox"] { margin: 0 0.2em 0.25em -1.6em; vertical-align: middle; }
+    
+  </style>
 </head>
 <body>
-  <p>Redirection vers <a href="sawa_care_home_v41.html">l'accueil Sawa Care</a>...</p>
+
+  <!-- Barre globale persistante -->
+  <div class="global-bar">
+    <button onclick="showMaquette()">🏠 Maquette (Sawa Care Home)</button>
+    <button onclick="showMarkdown('checklist.md')">📝 Checklist (MD)</button>
+  </div>
+
+  <!-- Iframe qui charge le HTML de la maquette -->
+  <iframe id="frame" src="sawa_care_home_v41.html" title="Contenu Sawa"></iframe>
+
+  <!-- Container pour le Markdown parsé -->
+  <div id="md-container">
+    <div class="md-content" id="md-content"></div>
+  </div>
+
+  <script>
+    const frame = document.getElementById('frame');
+    const mdContainer = document.getElementById('md-container');
+    const mdContent = document.getElementById('md-content');
+
+    function showMaquette() {
+      mdContainer.style.display = 'none';
+      frame.style.display = 'block';
+    }
+
+    async function showMarkdown(fileUrl) {
+      // Masquer la maquette et afficher la vue Markdown
+      frame.style.display = 'none';
+      mdContainer.style.display = 'block';
+      mdContent.innerHTML = '<p style="color:#8a7ab0;">Chargement du fichier...</p>';
+      
+      try {
+        // Fetch le contenu brut du fichier markdown
+        const response = await fetch(fileUrl);
+        if (!response.ok) throw new Error('Fichier non trouvé : ' + response.statusText);
+        
+        const markdownText = await response.text();
+        
+        // Utilise marked.js pour parser le markdown en HTML
+        mdContent.innerHTML = marked.parse(markdownText);
+      } catch (err) {
+        mdContent.innerHTML = '<p style="color:red; font-weight:bold;">Erreur : ' + err.message + '</p>';
+      }
+    }
+  </script>
+
 </body>
 </html>
