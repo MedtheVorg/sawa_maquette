@@ -1435,8 +1435,8 @@
 
       <!-- Dossier Tous -->
       <div class="folder-card active" role="listitem" tabindex="0" onclick="window.location.href='sawa_folder_v44.html'"
-        onkeydown="if(event.key==='Enter')window.location.href='sawa_folder_v44.html'" aria-label="Tous les documents — 12 documents"
-        aria-pressed="true">
+        onkeydown="if(event.key==='Enter')window.location.href='sawa_folder_v44.html'"
+        aria-label="Tous les documents — 12 documents" aria-pressed="true">
         <div class="folder-ico" style="background:#f0e8ff;" aria-hidden="true">📁</div>
         <div class="folder-name">Tous</div>
         <div class="folder-count">12 docs</div>
@@ -2068,10 +2068,38 @@
       el.setAttribute('aria-pressed', 'true');
       say('Dossier ' + el.querySelector('.folder-name').textContent + ' sélectionné');
     }
+    function selectFolderTarget(el, type) {
+      // Reset all options
+      var opts = document.querySelectorAll('.target-opt');
+      opts.forEach(function(opt) {
+        opt.classList.remove('active');
+        opt.style.borderColor = '#e8e0ff';
+        opt.style.background = '#fff';
+        opt.querySelector('.target-check').style.display = 'none';
+      });
+      // Set active
+      el.classList.add('active');
+      el.style.borderColor = '#b228FF';
+      el.style.background = '#f5eeff';
+      el.querySelector('.target-check').style.display = 'block';
+
+      // Toggle input
+      if(type === 'custom') {
+        document.getElementById('custom-folder-name-container').style.display = 'block';
+        setTimeout(function() { document.getElementById('new-folder-input').focus(); }, 50);
+      } else {
+        document.getElementById('custom-folder-name-container').style.display = 'none';
+      }
+    }
+
     function openNewFolder() {
       document.getElementById('new-folder-input').value = "";
+      
+      // Default select first item
+      var firstOpt = document.querySelector('.target-opt');
+      if(firstOpt) selectFolderTarget(firstOpt, 'aide');
+
       document.getElementById('ov-new-folder').classList.add('open');
-      setTimeout(function () { document.getElementById('new-folder-input').focus(); }, 300);
       document.addEventListener('keydown', trapNewFolder);
     }
     function closeNewFolder() {
@@ -2081,8 +2109,14 @@
     function trapNewFolder(e) { if (e.key === 'Escape') closeNewFolder(); }
     function saveNewFolder() {
       var name = document.getElementById('new-folder-input').value;
-      if (name && name.trim()) {
-        say('Dossier "' + name.trim() + '" créé');
+      if (document.getElementById('custom-folder-name-container').style.display !== 'none') {
+        if (name && name.trim()) say('Dossier personnalisé "' + name.trim() + '" créé');
+      } else {
+        var activeOpt = document.querySelector('.target-opt.active');
+        if (activeOpt) {
+          var aideName = activeOpt.querySelector('div[style*="font-weight:800"]').textContent;
+          say('Dossier créé pour ' + aideName);
+        }
       }
       closeNewFolder();
     }
@@ -2211,10 +2245,10 @@
     function addAction(type) {
       closeAddSheet();
       if (type === 'dossier') {
-        setTimeout(function() { openNewFolder(); }, 300);
+        setTimeout(function () { openNewFolder(); }, 300);
         return;
       }
-      setTimeout(function() { openUploadDoc(); }, 300);
+      setTimeout(function () { openUploadDoc(); }, 300);
     }
 
     /* ── ARIA ANNOUNCE ── */
@@ -2316,19 +2350,25 @@
     <div class="sheet">
       <div class="drag" aria-hidden="true"></div>
       <button class="sheet-x" onclick="closeNewFolder()" aria-label="Fermer">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       </button>
       <h2 class="sheet-h" id="new-folder-title">Créer un nouveau dossier</h2>
-      <div style="margin-bottom:16px;">
+      <div id="custom-folder-name-container" style="margin-bottom:24px;display:block;">
         <label for="new-folder-input" style="font-size:12px;font-weight:700;color:#5e5290;display:block;margin-bottom:8px;">Nom du dossier</label>
         <input type="text" id="new-folder-input" placeholder="Ex: Documents médicaux" style="width:100%;border:1.5px solid #e8e0ff;border-radius:12px;padding:12px 14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#2d1060;outline:none;" />
       </div>
+
       <div style="display:flex;gap:12px;">
-        <button style="flex:1;background:#f5f3ff;border:none;border-radius:14px;padding:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#5e5290;cursor:pointer;" onclick="closeNewFolder()">Annuler</button>
-        <button style="flex:1;background:#b228FF;border:none;border-radius:14px;padding:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#fff;cursor:pointer;" onclick="saveNewFolder()">Créer</button>
+        <button
+          style="flex:1;background:#f5f3ff;border:none;border-radius:14px;padding:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#5e5290;cursor:pointer;"
+          onclick="closeNewFolder()">Annuler</button>
+        <button
+          style="flex:1;background:#b228FF;border:none;border-radius:14px;padding:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#fff;cursor:pointer;"
+          onclick="saveNewFolder()">Créer</button>
       </div>
     </div>
   </div>
@@ -2338,37 +2378,59 @@
     <div class="sheet">
       <div class="drag" aria-hidden="true"></div>
       <button class="sheet-x" onclick="closeUploadDoc()" aria-label="Fermer">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a7ab0" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       </button>
       <h2 class="sheet-h" id="upload-doc-title">Ajouter un document</h2>
-      
+
       <div style="margin-bottom:16px;">
-        <label for="upload-title-input" style="font-size:12px;font-weight:700;color:#5e5290;display:block;margin-bottom:8px;">Titre du document</label>
-        <input type="text" id="upload-title-input" placeholder="Ex: Ordonnance" style="width:100%;border:1.5px solid #e8e0ff;border-radius:12px;padding:12px 14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#2d1060;outline:none;" />
+        <label for="upload-title-input"
+          style="font-size:12px;font-weight:700;color:#5e5290;display:block;margin-bottom:8px;">Titre du
+          document</label>
+        <input type="text" id="upload-title-input" placeholder="Ex: Ordonnance"
+          style="width:100%;border:1.5px solid #e8e0ff;border-radius:12px;padding:12px 14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#2d1060;outline:none;" />
       </div>
 
       <div style="margin-bottom:24px;">
-        <label style="font-size:12px;font-weight:700;color:#5e5290;display:block;margin-bottom:8px;">Fichier sélectionné</label>
-        <div style="display:flex;align-items:center;padding:12px;border:1.5px solid #e8e0ff;border-radius:12px;background:#fcfbff;">
-          <div style="background:#e0f5ff;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:12px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e8fa0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+        <label style="font-size:12px;font-weight:700;color:#5e5290;display:block;margin-bottom:8px;">Fichier
+          sélectionné</label>
+        <div
+          style="display:flex;align-items:center;padding:12px;border:1.5px solid #e8e0ff;border-radius:12px;background:#fcfbff;">
+          <div
+            style="background:#e0f5ff;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:12px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e8fa0" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
           </div>
           <div style="flex:1;overflow:hidden;">
-            <div style="font-size:13px;font-weight:700;color:#2d1060;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">document_scanne_001.pdf</div>
+            <div
+              style="font-size:13px;font-weight:700;color:#2d1060;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              document_scanne_001.pdf</div>
             <div style="font-size:11px;color:#8a7ab0;margin-top:2px;">1.2 Mo</div>
           </div>
-          <button style="background:none;border:none;cursor:pointer;padding:4px;color:#ad1457;flex-shrink:0;" onclick="say('Fichier supprimé')" aria-label="Supprimer le fichier">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <button style="background:none;border:none;cursor:pointer;padding:4px;color:#ad1457;flex-shrink:0;"
+            onclick="say('Fichier supprimé')" aria-label="Supprimer le fichier">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
           </button>
         </div>
       </div>
 
       <div style="display:flex;gap:12px;">
-        <button style="flex:1;background:#f5f3ff;border:none;border-radius:14px;padding:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#5e5290;cursor:pointer;" onclick="closeUploadDoc()">Annuler</button>
-        <button style="flex:1;background:#b228FF;border:none;border-radius:14px;padding:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#fff;cursor:pointer;" onclick="saveUploadDoc()">Ajouter</button>
+        <button
+          style="flex:1;background:#f5f3ff;border:none;border-radius:14px;padding:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#5e5290;cursor:pointer;"
+          onclick="closeUploadDoc()">Annuler</button>
+        <button
+          style="flex:1;background:#b228FF;border:none;border-radius:14px;padding:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#fff;cursor:pointer;"
+          onclick="saveUploadDoc()">Ajouter</button>
       </div>
     </div>
   </div>
